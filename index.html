@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Take to the sky デモ v0.3</title>
+<style>
+:root{--paper:#F6F5F1;--ink:#1F1F1D;--graphite:#5B5A56;--sky:#2B5C8A;--band:#E6EFF6;--room:#EEF3F8;--gate:#E4ECF4;--runway:#E6E3DC;--edge:#CFCBC3;--sign:#24272B;--signText:#F2C94C;--taxi:#D9B44A}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--paper);overflow:hidden;touch-action:manipulation;-webkit-user-select:none;user-select:none}
+body{display:flex;align-items:flex-start;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Rounded","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans CJK JP","Noto Sans JP",sans-serif;color:var(--ink)}
+#app{position:relative;width:390px;height:844px;flex:none;transform-origin:top center;background:var(--paper);overflow:hidden}
+.abs{position:absolute}
+#band{left:0;top:0;width:390px;height:160px;background:linear-gradient(var(--band),var(--paper))}
+#stagePill{left:16px;top:53px;height:32px;padding:0 14px;border-radius:16px;background:#fff;display:flex;align-items:center;font-size:15px;font-weight:700}
+#restart{right:8px;top:47px;height:44px;padding:0 10px;border:0;background:none;font:inherit;font-size:15px;font-weight:600;color:var(--graphite);cursor:pointer}
+#nextLbl{left:16px;top:111px;font-size:12px;font-weight:700;color:var(--graphite)}
+#dots{left:270px;top:108px;font-size:15px;color:var(--graphite)}
+#waitLbl{right:16px;top:101px;font-size:12px;color:var(--graphite);text-align:right}
+#waitNum{right:16px;top:116px;font-size:17px;font-weight:700;text-align:right}
+#room{left:16px;top:147px;width:358px;height:320px;border-radius:16px;background:var(--room)}
+
+#roomCount{right:32px;top:159px;font-size:13px;font-weight:700;color:var(--graphite)}
+.gate{width:77.5px;height:77px;top:377px;border-radius:12px;background:var(--gate)}
+.gate .no{position:absolute;left:5px;top:5px;height:18px;padding:0 6px;border-radius:4px;background:var(--sign);color:#FFFFFF;font-size:12px;font-weight:700;line-height:18px;letter-spacing:.03em}
+.gate .cnt{position:absolute;right:6px;top:6px;font-size:13px;font-weight:700;transform-origin:100% 50%}
+.gate::before{content:'';position:absolute;left:calc(50% - .5px);top:50%;bottom:0;width:1px;background:var(--taxi);opacity:.6}
+.gate .empty{position:absolute;left:50%;top:42px;transform:translateX(-50%);padding:0 6px;border-radius:4px;background:var(--gate);text-align:center;font-size:13px;line-height:20px;color:var(--graphite)}
+#runway{left:16px;top:482px;width:358px;height:308px;border-radius:18px;background:var(--runway);border:1px solid var(--edge)}
+#hint{left:16px;right:16px;top:798px;text-align:center;font-size:13px;color:var(--graphite);transition:color .2s}
+#hint.warn{color:var(--ink);font-weight:600}
+.pax{left:0;top:0;width:26px;height:32px;transition:transform .32s cubic-bezier(.3,.9,.4,1),opacity .28s ease;will-change:transform}
+.plane{left:0;top:0;cursor:pointer;will-change:transform}
+.plane .pop{position:absolute;inset:0}
+.plane.fly{z-index:20}
+#fx,#confetti{left:0;top:0;width:390px;height:844px;pointer-events:none;overflow:visible}
+#fx{z-index:15}
+#confetti{z-index:25}
+.badge{position:absolute;height:20px;padding:0 8px;border-radius:10px;background:#fff;border:1px solid var(--edge);font-size:12px;font-weight:700;line-height:18px;color:var(--ink);z-index:16;transform:translate(-50%,-50%)}
+.spark{position:absolute;width:3px;height:9px;border-radius:2px;left:0;top:0}
+#scrim{z-index:24}
+#card,#sheet{z-index:30}
+.plane .body{position:absolute;inset:0}
+.plane .sym{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.plane .hit{position:absolute;left:50%;top:50%;width:88px;height:96px;transform:translate(-50%,-50%)}
+.plane.atgate,.plane.gone{cursor:default}
+#scrim{left:0;top:0;width:390px;height:844px;background:rgba(31,31,29,.35);opacity:0;pointer-events:none;transition:opacity .2s}
+#scrim.on{opacity:1;pointer-events:auto}
+#sheet{left:0;width:390px;bottom:0;background:#fff;border-radius:24px 24px 0 0;padding:24px 16px 50px;transform:translateY(110%);transition:transform .25s ease}
+#sheet.on{transform:none}
+#card{left:16px;width:358px;top:250px;background:#fff;border-radius:24px;padding:32px 16px 16px;text-align:center;opacity:0;pointer-events:none}
+#card.on{opacity:1;pointer-events:auto}
+h2{margin:0 0 8px;font-size:20px;font-weight:700}
+#card h2{font-size:28px}
+.sub{margin:0 0 24px;font-size:15px;color:var(--graphite)}
+#card .sub{font-size:17px}
+.primary{display:block;width:100%;height:56px;border:0;border-radius:16px;background:var(--sky);color:#fff;font:inherit;font-size:17px;font-weight:700;cursor:pointer}
+#card .primary{height:64px}
+.primary:active{transform:scale(.98)}
+#credit{left:0;right:0;top:826px;text-align:center;font-size:10px;color:#8C8A84;letter-spacing:.02em}
+/* ---- 空港の飾り（v0.3。静止・読み上げなし・タップを通す） ---- */
+.decor{left:0;top:0;width:390px;height:844px;pointer-events:none;overflow:visible}
+#roomTitle{left:24px;top:155px;height:24px;padding:0 10px 0 8px;border-radius:5px;background:var(--sign);color:var(--signText);font-size:14px;line-height:24px;display:flex;align-items:center;gap:5px;letter-spacing:.04em}
+#roomTitle svg{flex:none}
+/* ---- 席数バッジ（v0.3.1・CDレビュー反映）。滑走路で止まっているあいだだけ表示。読み上げはしない（機のラベルに席数あり）。
+   札そのもの（.seat）は当たりなし。当たり（.seathit）は札と自分のマスの重なりだけ（隣の機のタップを取らない）。
+   札は盤面の縮小に合わせて縮めない（実寸）。位置だけ盤面に合わせる ---- */
+#seats{position:absolute;left:0;top:0;width:0;height:0}
+.seat{position:absolute;display:flex;align-items:center;gap:2px;height:16px;padding:0 5px;box-sizing:border-box;border-radius:8px;background:#FFFFFF;border:1px solid var(--edge);color:var(--ink);font-size:11px;font-weight:700;line-height:14px;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none;transform-origin:0 0;transform:scale(var(--seatInv,1));transition:opacity .15s ease}
+.seat svg{flex:none;display:block;width:7px;height:10px}
+#app.seat-numonly .seat svg{display:none}
+#app.dt-large .seat{height:20px;font-size:14px;line-height:18px;border-radius:10px}
+#app.dt-large .seat svg{width:9px;height:13px}
+#app.dt-large.dt-cap .seat{height:19px;font-size:13px;line-height:17px;border-radius:9.5px}
+#app.dt-large.dt-cap .seat svg{width:8.5px;height:12px}
+/* 札は破線・縁の灯火（#decorRunway）より上の層 */
+.seathit{position:absolute;pointer-events:auto;cursor:pointer}
+.seat.off{opacity:0}
+.seathit.off{pointer-events:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<div id="app" aria-label="Take to the sky">
+  <div id="band" class="abs"></div>
+  <svg id="decorSky" class="abs decor" viewBox="0 0 390 844" aria-hidden="true"></svg>
+  <div id="stagePill" class="abs">ステージ 1</div>
+  <button id="restart" class="abs">最初から</button>
+  <div id="nextLbl" class="abs">次</div>
+  <div id="dots" class="abs">…</div>
+  <div id="waitLbl" class="abs">待っている人</div>
+  <div id="waitNum" class="abs">0人</div>
+  <div id="room" class="abs"></div>
+  <svg id="decorRoom" class="abs decor" viewBox="0 0 390 844" aria-hidden="true"></svg>
+  <div id="roomTitle" class="abs"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M2.5 19h19v2h-19zM22.07 9.64c-.21-.8-1.04-1.28-1.84-1.06L14.92 10l-6.9-6.43-1.93.51 4.14 7.17-4.97 1.33-1.97-1.54-1.45.39 2.59 4.49 16.57-4.43c.81-.23 1.28-1.05 1.07-1.85z"/></svg>搭乗口</div>
+  <div id="roomCount" class="abs">20/20</div>
+  <div id="gates"></div>
+  <div id="runway" class="abs"></div>
+  <svg id="decorRunway" class="abs decor" viewBox="0 0 390 844" aria-hidden="true"></svg>
+  <div id="planes"></div>
+  <div id="seats"></div>
+  <div id="paxLayer"></div>
+  <div id="hint" class="abs">搭乗口の乗客と同じ色・同じ記号の飛行機をタップ</div>
+  <div id="credit" class="abs">Reach High Studio　デモ v0.3</div>
+  <svg id="fx" class="abs" viewBox="0 0 390 844"></svg>
+  <div id="scrim" class="abs"></div>
+  <div id="confetti" class="abs"></div>
+  <div id="card" class="abs" role="dialog" aria-modal="true">
+    <h2 id="cardTitle">ステージ1 クリア</h2>
+    <p class="sub">すべての飛行機が飛び立ちました</p>
+    <button class="primary" data-act="next">次のステージへ</button>
+  </div>
+  <div id="sheet" class="abs" role="dialog" aria-modal="true">
+    <h2>動かせる飛行機がありません</h2>
+    <p class="sub">最初からやり直せます</p>
+    <button class="primary" data-act="retry">もう一度</button>
+  </div>
+  <div id="live" class="sr" aria-live="polite"></div>
+</div>
+<script>// Take to the sky — ゲームの中心ルール（DOM なし・純粋関数）。Swift 版へ移すときの手本。
+// 出典：設計書 v0.7.18 1章（体験の芯・手順・判定の流れ）、3-2（ゲート）、5章（座席の整合）。
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory();
+  else root.TTSLogic = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+  var DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  function createGame(rules, stage) {
+    var cap = rules.boardingArea.capacity;
+    var passengers = stage.passengers.map(function (c, i) { return { id: i, color: c, plane: null }; });
+    var slots = [], i;
+    for (i = 0; i < cap; i++) slots.push(i < passengers.length ? i : null);
+    var queue = [];
+    for (i = cap; i < passengers.length; i++) queue.push(i);
+    var planes = stage.planes.map(function (p) {
+      return { id: p.id, color: p.color, size: p.size, col: p.col, row: p.row, dir: p.dir,
+               seats: rules.seats[p.size], filled: 0, status: 'runway', gate: null, arrival: null };
+    });
+    var gates = []; for (i = 0; i < rules.gates.base; i++) gates.push(null);
+    var s = { cols: stage.board.cols, rows: stage.board.rows, planes: planes, gates: gates,
+              slots: slots, queue: queue, passengers: passengers, arrivals: 0, moves: [] };
+    checkSeats(s);
+    return s;
+  }
+
+  // 色＋記号ごとに「座席の合計＝乗客数」（#39）
+  function checkSeats(s) {
+    var need = {};
+    s.passengers.forEach(function (p) { need[p.color] = (need[p.color] || 0) + 1; });
+    s.planes.forEach(function (p) { need[p.color] = (need[p.color] || 0) - p.seats; });
+    Object.keys(need).forEach(function (k) { if (need[k] !== 0) throw new Error('seat mismatch: ' + k + ' ' + need[k]); });
+  }
+
+  function planeById(s, id) { for (var i = 0; i < s.planes.length; i++) if (s.planes[i].id === id) return s.planes[i]; return null; }
+  function planeAt(s, c, r) {
+    for (var i = 0; i < s.planes.length; i++) { var p = s.planes[i]; if (p.status === 'runway' && p.col === c && p.row === r) return p; }
+    return null;
+  }
+  function hasMatch(s, color) {
+    return s.slots.some(function (pid) { return pid !== null && s.passengers[pid].color === color; });
+  }
+  function pathClear(s, p) {
+    var d = DIRS[p.dir], c = p.col + d[0], r = p.row + d[1];
+    while (c >= 0 && r >= 0 && c < s.cols && r < s.rows) { if (planeAt(s, c, r)) return false; c += d[0]; r += d[1]; }
+    return true;
+  }
+  function freeGate(s) { return s.gates.indexOf(null); }
+
+  // 動けるか。確認の順は 1章の図のとおり：一致する客 → 前が端まで空き → 空きゲート
+  function canMove(s, id) {
+    var p = planeById(s, id);
+    if (!p || p.status !== 'runway') return 'not-on-runway';
+    if (!hasMatch(s, p.color)) return 'no-match';
+    if (!pathClear(s, p)) return 'blocked';
+    if (freeGate(s) < 0) return 'no-gate';
+    return 'ok';
+  }
+  function legalMoves(s) {
+    return s.planes.filter(function (p) { return p.status === 'runway' && canMove(s, p.id) === 'ok'; })
+                   .map(function (p) { return p.id; });
+  }
+  function isClear(s) { return s.planes.every(function (p) { return p.status === 'gone'; }); }
+  function isStuck(s) { return !isClear(s) && legalMoves(s).length === 0; }
+  function status(s) { return isClear(s) ? 'clear' : (isStuck(s) ? 'stuck' : 'playing'); }
+
+  // ゲートの機に、搭乗口の一致する客が全員（席の数まで）乗る。先にゲートに着いた機から埋める。
+  function boardAll(s) {
+    var out = [];
+    var gatePlanes = s.gates.filter(function (id) { return id !== null; }).map(function (id) { return planeById(s, id); })
+      .sort(function (a, b) { return a.arrival - b.arrival; });
+    for (var i = 0; i < s.slots.length; i++) {
+      var pid = s.slots[i]; if (pid === null) continue;
+      var pax = s.passengers[pid];
+      for (var j = 0; j < gatePlanes.length; j++) {
+        var pl = gatePlanes[j];
+        if (pl.color === pax.color && pl.filled < pl.seats) {
+          pl.filled++; pax.plane = pl.id; s.slots[i] = null; out.push({ pid: pid, slot: i, planeId: pl.id }); break;
+        }
+      }
+    }
+    return out;
+  }
+  function takeoffFull(s) {
+    var out = [];
+    for (var g = 0; g < s.gates.length; g++) {
+      var id = s.gates[g]; if (id === null) continue;
+      var pl = planeById(s, id);
+      if (pl.filled === pl.seats) { pl.status = 'gone'; s.gates[g] = null; out.push({ planeId: id, gate: g }); }
+    }
+    return out;
+  }
+  // 空いた枠へ、外の待機列の先頭から見えている順に入る（#41）。枠は番号の小さい順。
+  function refill(s) {
+    var out = [];
+    for (var i = 0; i < s.slots.length && s.queue.length; i++) {
+      if (s.slots[i] === null) { var pid = s.queue.shift(); s.slots[i] = pid; out.push({ pid: pid, slot: i }); }
+    }
+    return out;
+  }
+
+  // 1回のタップ。phases は演出用の段階ごとの状態（UI はこれを順に描くだけ）。
+  function tap(state, id, fast) {
+    var why = canMove(state, id);
+    if (why !== 'ok') return { ok: false, reason: why, state: state, phases: [] };
+    var s = clone(state), phases = [];
+    var p = planeById(s, id), g = freeGate(s);
+    p.status = 'gate'; p.gate = g; p.arrival = s.arrivals++; s.gates[g] = id; s.moves.push(id);
+    if (!fast) phases.push({ type: 'move', planeId: id, gate: g, from: { col: state.planes.filter(function (q) { return q.id === id; })[0].col, row: p.row, dir: p.dir }, state: clone(s) });
+    for (var guard = 0; guard < 1000; guard++) {
+      var b = boardAll(s); if (b.length && !fast) phases.push({ type: 'board', items: b, state: clone(s) });
+      var t = takeoffFull(s); if (t.length && !fast) phases.push({ type: 'takeoff', items: t, state: clone(s) });
+      var r = refill(s); if (r.length && !fast) phases.push({ type: 'refill', items: r, state: clone(s) });
+      if (!b.length && !t.length && !r.length) break;
+    }
+    return { ok: true, reason: 'ok', state: s, phases: phases, status: status(s) };
+  }
+
+  function key(s) {
+    var run = s.planes.filter(function (p) { return p.status === 'runway'; }).map(function (p) { return p.id; }).join(',');
+    var gates = s.gates.map(function (id) { return id === null ? '-' : id + ':' + planeById(s, id).filled; }).join(',');
+    var area = s.slots.filter(function (x) { return x !== null; }).map(function (pid) { return s.passengers[pid].color[0]; }).sort().join('');
+    return run + '|' + gates + '|' + area + '|' + s.queue.length;
+  }
+  // 解けるかの確認（深さ優先＋局面のメモ化、5章と同じ考え方）
+  function solve(state, limit) {
+    limit = limit || 200000; var seen = {}, count = 0;
+    function dfs(s) {
+      if (isClear(s)) return [];
+      if (count++ > limit) return null;
+      var k = key(s); if (seen[k]) return null; seen[k] = true;
+      var ms = legalMoves(s);
+      for (var i = 0; i < ms.length; i++) {
+        var res = dfs(tap(s, ms[i], true).state);
+        if (res) return [ms[i]].concat(res);
+      }
+      return null;
+    }
+    var sol = dfs(state);
+    return { solvable: !!sol, moves: sol, explored: count };
+  }
+  // でたらめに遊んだときのクリア率（難しさの目安）
+  function randomClearRate(state, trials, seed) {
+    var rnd = mulberry32(seed || 1), win = 0;
+    for (var t = 0; t < trials; t++) {
+      var s = state;
+      for (;;) { var ms = legalMoves(s); if (!ms.length) break; s = tap(s, ms[Math.floor(rnd() * ms.length)], true).state; }
+      if (isClear(s)) win++;
+    }
+    return win / trials;
+  }
+  function mulberry32(a) {
+    return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a);
+      t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  }
+
+  return { createGame: createGame, canMove: canMove, legalMoves: legalMoves, tap: tap, isClear: isClear,
+           isStuck: isStuck, status: status, solve: solve, randomClearRate: randomClearRate, mulberry32: mulberry32,
+           planeById: planeById, DIRS: DIRS };
+});
+</script>
+<script>
+var RULES = {"schema":"tts.rules/1","source":"設計書 v0.7.18（1章・3-1・3-2・3-4）","gates":{"base":4,"max":8,"lockedInDemo":false},"boardingArea":{"capacity":20,"cols":5,"rows":4},"waitingLine":{"visible":8},"seats":{"S":4,"M":8,"L":12},"planeLengthPt":{"runway":{"S":48,"M":60,"L":76.8},"gate":{"S":48,"M":52.8,"L":57.6}},"directions":["up","down","left","right"],"colors":[{"id":"red","hex":"#E5484D","symbol":"circle","ja":"赤いまる","en":"red circle"},{"id":"blue","hex":"#2F6FED","symbol":"square","ja":"青いしかく","en":"blue square"},{"id":"yellow","hex":"#AC7600","symbol":"triangle","ja":"黄色いさんかく","en":"yellow triangle"},{"id":"green","hex":"#289446","symbol":"star","ja":"緑のほし","en":"green star"}],"tokens":{"paper":"#F6F5F1","ink":"#1F1F1D","graphite":"#5B5A56","sky":"#2B5C8A","skyBand":"#E6EFF6","room":"#EEF3F8","gate":"#E4ECF4","runway":"#E6E3DC","runwayEdge":"#CFCBC3","white":"#FFFFFF"},"resolution":{"gateChoice":"lowestFreeIndex","boardingPriority":"gateArrivalOrder","refillSlot":"lowestEmptyIndex","boardWhom":"allMatchingInBoardingArea","tapCheckOrder":["match","pathClear","freeGate"]}};
+var STAGE = {"schema":"tts.stage/1","name":"ステージ1（デモ）","seed":"demo-v01-s73","note":"passengers は外の並びの順。先頭の20人が最初の搭乗口、残りが待機列。col/row は滑走路のマス（左上が0,0）、dir は機首の向き。","verify":{"solvable":true,"solution":["p02","p04","p05","p03","p06","p07","p11","p09","p01","p08","p12","p10"],"explored":13,"randomClearRate":0.5},"id":1,"board":{"cols":4,"rows":3},"planes":[{"id":"p01","color":"red","size":"L","col":0,"row":0,"dir":"down"},{"id":"p02","color":"blue","size":"S","col":1,"row":0,"dir":"up"},{"id":"p03","color":"yellow","size":"M","col":2,"row":0,"dir":"up"},{"id":"p04","color":"green","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"blue","size":"M","col":0,"row":1,"dir":"left"},{"id":"p06","color":"green","size":"M","col":1,"row":1,"dir":"left"},{"id":"p07","color":"red","size":"S","col":2,"row":1,"dir":"up"},{"id":"p08","color":"yellow","size":"S","col":3,"row":1,"dir":"right"},{"id":"p09","color":"yellow","size":"S","col":0,"row":2,"dir":"left"},{"id":"p10","color":"green","size":"L","col":1,"row":2,"dir":"right"},{"id":"p11","color":"red","size":"M","col":2,"row":2,"dir":"up"},{"id":"p12","color":"blue","size":"S","col":3,"row":2,"dir":"right"}],"passengers":["green","green","green","green","red","red","red","red","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","green","green","green","green","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","red","red","red","red","yellow","yellow","yellow","yellow","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","yellow","yellow","yellow","yellow"]};
+var MOTION = {"schema":"tts.motion/1","source":"ユーザー t94u（搭乗と離陸は存在感のある動きに）。値はデモ v0.2 の初期値で、CD の調整前","units":"時間は ms、距離は pt（390×844 基準）","move":{"speedPtPerMs":0.8,"minMs":500,"maxMs":1200,"easing":"ease-in-out"},"boarding":{"gatherStaggerMs":40,"gatherMs":300,"lineSpacingPt":21,"lineYOffsetFromGateTopPt":-9,"lineScale":0.75,"staggerMs":100,"stepMs":85,"enterMs":170,"enterPopScale":1.15,"enterEndScale":0.2,"hopHeightPt":4,"hopPeriodMs":150,"planePopScale":1.08,"planePopMs":140,"counterBumpScale":1.25,"counterBumpMs":160},"refill":{"durationMs":320,"staggerMs":40,"easing":"cubic-bezier(.3,.9,.4,1)"},"full":{"badgeText":"満席","badgeMs":220,"pulseMs":380,"pulseScales":[1,1.14,1,1.07,1],"sparkleCount":10,"sparkleFromPt":22,"sparkleToPt":46,"sparkleMs":420},"takeoff":{"climbMs":1050,"accelPower":2,"controlRisePt":230,"exitDxPt":250,"exitMinXPt":450,"exitYPt":-90,"endScale":1.5,"contrailStartU":0.15,"contrailWidthPt":3,"contrailOpacity":0.32,"contrailFadeMs":600,"releaseGateAfterMs":250,"totalMsApprox":1430},"clear":{"startAfterLastLiftoffMs":350,"confettiCount":70,"confettiMs":[1500,2000],"confettiSizePt":[7,11],"confettiSpeedPtPerMs":[0.35,0.8],"confettiSpreadRad":1.1,"gravityPtPerMs2":0.0009,"cardDelayMs":450,"cardPopMs":340,"cardPopFromScale":0.92,"cardEasing":"cubic-bezier(.2,1.3,.4,1)"},"reducedMotion":{"moveCrossfadeMs":200,"boardStaggerMs":60,"boardHopPt":6,"boardHopMs":140,"boardFadeMs":160,"takeoffBadgeHoldMs":300,"takeoffSlidePt":90,"takeoffMs":450,"confetti":false,"cardFadeMs":200}};
+</script>
+<script>
+(function(){
+'use strict';
+var L = window.TTSLogic, R = RULES, S = STAGE, M = MOTION;
+var RM = (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) || /[?&]rm=1/.test(location.search);
+var COLOR = {}; R.colors.forEach(function(c){ COLOR[c.id] = c; });
+var SIZE_JA = { S: '小さい', M: '中くらいの', L: '大きい' };
+var DIR_JA = { up: '上向き', down: '下向き', left: '左向き', right: '右向き' };
+var DIR_DEG = { up: 0, right: 90, down: 180, left: -90 };
+var app = document.getElementById('app');
+var SVGNS = 'http://www.w3.org/2000/svg';
+// 席数バッジ。?dt=large で「文字を大きく」（Dynamic Type）を試す：数字14pt・高さ20pt（上限）
+var DT_LARGE = /[?&]dt=large/.test(location.search); if (DT_LARGE) app.classList.add('dt-large');
+// 人の印：頭と胴をつなげた1つの形（#5B5A56）
+var SEAT_GLYPH = '<svg viewBox="0 0 7 10" aria-hidden="true"><path fill="#5B5A56" d="M3.5 0.2a2.05 2.05 0 0 1 1.35 3.6C6 4.2 7 5.3 7 6.7V8.6A1.4 1.4 0 0 1 5.6 10H1.4A1.4 1.4 0 0 1 0 8.6V6.7C0 5.3 1 4.2 2.15 3.8A2.05 2.05 0 0 1 3.5 0.2Z"/></svg>';
+var BOARD_K = 1; // 盤面の倍率（fit() で決まる）
+
+// ---- 配置（pt。iPhone 12 Pro の 390×844 を基準） ----
+var RW = { x: 16, y: 482, w: 358, h: 308 };
+var CELL = { w: RW.w / S.board.cols, h: RW.h / S.board.rows };
+var GATE_X = function(i){ return 28 + i * 85.5; }, GATE_Y = 377, GATE_W = 77.5;
+var TAXI_Y = 474;
+function cellCenter(c, r){ return { x: RW.x + CELL.w * (c + .5), y: RW.y + CELL.h * (r + .5) }; }
+function gateCenter(g){ return { x: GATE_X(g) + GATE_W / 2, y: GATE_Y + 46 }; }
+function slotCenter(i){ var c = i % R.boardingArea.cols, r = Math.floor(i / R.boardingArea.cols); return { x: 115 + 40 * c, y: 211 + 44 * r }; }
+function queueCenter(q){ return { x: 46 + 30 * Math.min(q, R.waitingLine.visible), y: 121 }; }
+var STAGE_PLANE = {}; S.planes.forEach(function(p){ STAGE_PLANE[p.id] = p; });
+
+// ---- 空港の飾り（v0.3）。動かない・意味を持たせない・読み上げない ----
+(function decor(){
+  var sky = document.getElementById('decorSky'), room = document.getElementById('decorRoom'), rw = document.getElementById('decorRunway');
+  // 空の帯：ターミナルの屋根と管制塔の影（帯の色より少し濃いだけ）
+  var sil = '#C9D8E6';
+  sky.innerHTML =
+    '<path d="M132 98 L132 88 Q190 78 232 86 L232 98 Z" fill="'+sil+'"/>' +           // ターミナル（ゆるい弧の屋根）
+    '<rect x="232" y="89" width="58" height="9" fill="'+sil+'"/>' +                       // 低い棟
+    '<rect x="250" y="56" width="7" height="34" fill="'+sil+'"/>' +                       // 管制塔の軸
+    '<path d="M241 50 L266 50 L262 58 L245 58 Z" fill="'+sil+'"/>' +                       // 管制室
+    '<rect x="244" y="45" width="19" height="5" rx="1" fill="'+sil+'"/>' +
+    '<rect x="253" y="40" width="1.4" height="5" fill="'+sil+'"/>';                        // アンテナ
+  // 搭乗口：左右に大きな窓（外の空）。縦の桟2本
+  var win = '';
+  [[26, 64], [300, 64]].forEach(function(a){ // 乗客の列（x 102–288）から12pt以上離す
+    var x = a[0], w = a[1], y = 192, h = 160;
+    win += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="6" fill="url(#winSky)" opacity=".8"/>';
+    for (var i = 1; i < 3; i++) win += '<rect x="'+(x + w * i / 3 - .5)+'" y="'+y+'" width="1" height="'+h+'" fill="#F7FAFC"/>';
+  });
+  room.innerHTML = '<defs><linearGradient id="winSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E3ECF5"/><stop offset="1" stop-color="#EDF3F8"/></linearGradient></defs>' + win;
+  // 誘導路：ゲートの前を通る黄色の中心線と、各ゲートへの引き込み線
+  var t = '<line x1="16" y1="'+TAXI_Y+'" x2="374" y2="'+TAXI_Y+'" stroke="var(--taxi)" stroke-width="1" opacity=".6"/>';
+  for (var g = 0; g < R.gates.base; g++){ var cx = GATE_X(g) + GATE_W / 2; t += '<line x1="'+cx+'" y1="'+(GATE_Y + 77)+'" x2="'+cx+'" y2="'+RW.y+'" stroke="var(--taxi)" stroke-width="1" opacity=".6"/>'; } // ゲートの中の部分は .gate::before
+  // 滑走路：中心線の破線（列のあいだ・飛行機の層より下）、縁の灯火
+  var cx0 = RW.x + RW.w / 2, y;
+  for (y = RW.y + 14; y < RW.y + RW.h - 30; y += 28) t += '<rect class="dash" x="'+(cx0 - 1.5)+'" y="'+y+'" width="3" height="14" rx="1" fill="#fff" opacity=".85"/>';
+  for (y = RW.y + 14; y < RW.y + RW.h - 6; y += 40){
+    [RW.x + 6, RW.x + RW.w - 6].forEach(function(x){ t += '<circle cx="'+x+'" cy="'+y+'" r="1.8" fill="#FBF6E6" stroke="#BFB9AE" stroke-width=".8"/>'; });
+  }
+  rw.innerHTML = t;
+})();
+
+// ---- 図形 ----
+function symbol(kind, cx, cy, u, fill){
+  var h = u / 2; fill = fill || '#fff';
+  if (kind === 'circle') return '<circle cx="'+cx+'" cy="'+cy+'" r="'+(h*.92)+'" fill="'+fill+'"/>';
+  if (kind === 'square') return '<rect x="'+(cx-h*.84)+'" y="'+(cy-h*.84)+'" width="'+(u*.84)+'" height="'+(u*.84)+'" rx="'+(u*.12)+'" fill="'+fill+'"/>';
+  if (kind === 'triangle') return '<path d="M'+cx+' '+(cy-h*1.0)+' L'+(cx+h*1.05)+' '+(cy+h*.8)+' L'+(cx-h*1.05)+' '+(cy+h*.8)+' Z" fill="'+fill+'" stroke="'+fill+'" stroke-width="'+(u*.1)+'" stroke-linejoin="round"/>';
+  var p = [], i, a, rr;
+  for (i = 0; i < 10; i++){ a = -Math.PI/2 + i * Math.PI/5; rr = i % 2 ? h*.48 : h*1.08; p.push((cx + rr*Math.cos(a)).toFixed(2) + ' ' + (cy + rr*Math.sin(a) + h*.06).toFixed(2)); }
+  return '<path d="M'+p.join(' L')+' Z" fill="'+fill+'" stroke="'+fill+'" stroke-width="'+(u*.06)+'" stroke-linejoin="round"/>';
+}
+function planeBody(hex){
+  return '<svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true"><g fill="'+hex+'" stroke="'+hex+'" stroke-linejoin="round" stroke-width="4">'+
+    '<rect x="42" y="3" width="16" height="91" rx="8"/>'+
+    '<path d="M50 36 L95 58 L95 66 L50 59 L5 66 L5 58 Z"/>'+
+    '<path d="M50 80 L72 90 L72 95 L50 92 L28 95 L28 90 Z"/></g>'+
+    '<circle cx="50" cy="50" r="21" fill="'+hex+'"/></svg>';
+}
+function planeSym(kind){ return '<svg viewBox="0 0 100 100" width="100%" height="100%" aria-hidden="true">'+symbol(kind, 50, 50, 26)+'</svg>'; }
+function paxSvg(c){
+  return '<svg viewBox="0 0 26 32" width="26" height="32" aria-hidden="true"><circle cx="13" cy="6.5" r="6" fill="'+c.hex+'"/>'+
+    '<rect x="1" y="14" width="24" height="18" rx="7" fill="'+c.hex+'"/>'+symbol(c.symbol, 13, 23.2, 11.5)+'</svg>';
+}
+
+// ---- 部品 ----
+var gatesEl = document.getElementById('gates'), planesEl = document.getElementById('planes'), paxEl = document.getElementById('paxLayer');
+var fxSvg = document.getElementById('fx'), confEl = document.getElementById('confetti');
+var fxd = document.createElement('div'); fxd.className = 'abs'; fxd.style.cssText = 'left:0;top:0;width:390px;height:844px;pointer-events:none;z-index:16';
+app.insertBefore(fxd, document.getElementById('scrim'));
+var gateEls = [], planeEls = {}, paxEls = [], seatEls = {}, seatsEl = document.getElementById('seats');
+function build(){
+  gatesEl.innerHTML = ''; planesEl.innerHTML = ''; seatsEl.innerHTML = ''; seatEls = {}; paxEl.innerHTML = ''; fxSvg.innerHTML = ''; fxd.innerHTML = ''; confEl.innerHTML = '';
+  gateEls = []; planeEls = {}; paxEls = [];
+  for (var g = 0; g < R.gates.base; g++){
+    var d = document.createElement('div'); d.className = 'gate abs'; d.style.left = GATE_X(g) + 'px';
+    d.innerHTML = '<span class="no">A'+(g+1)+'</span><span class="cnt"></span><span class="empty">空き</span>';
+    gatesEl.appendChild(d); gateEls.push(d);
+  }
+  S.planes.forEach(function(p){
+    var c = COLOR[p.color], len = R.planeLengthPt.runway[p.size];
+    var e = document.createElement('div'); e.className = 'plane abs'; e.style.width = len + 'px'; e.style.height = len + 'px';
+    e.setAttribute('role', 'button');
+    e.setAttribute('aria-label', c.ja + '、' + SIZE_JA[p.size] + '飛行機（' + R.seats[p.size] + '席）、' + DIR_JA[p.dir]);
+    e.innerHTML = '<div class="hit"></div><div class="pop"><div class="body">' + planeBody(c.hex) + '</div><div class="sym">' + planeSym(c.symbol) + '</div></div>';
+    // 席数バッジ：飛行機より上の別の層。見た目（.seat）と当たり（.seathit）を分ける。位置は layoutSeats() で決める
+    var sb = document.createElement('div'); sb.className = 'seat'; sb.setAttribute('aria-hidden', 'true');
+    sb.innerHTML = SEAT_GLYPH + '<span class="n">' + R.seats[p.size] + '</span>';
+    var sh = document.createElement('div'); sh.className = 'seathit'; sh.setAttribute('aria-hidden', 'true');
+    sh.addEventListener('click', function(){ onTap(p.id); });
+    seatsEl.appendChild(sb); seatsEl.appendChild(sh); seatEls[p.id] = { pill: sb, hit: sh };
+    e.addEventListener('click', function(){ onTap(p.id); });
+    planesEl.appendChild(e); planeEls[p.id] = e;
+  });
+  S.passengers.forEach(function(color){
+    var e = document.createElement('div'); e.className = 'pax abs'; e.innerHTML = paxSvg(COLOR[color]);
+    paxEl.appendChild(e); paxEls.push(e);
+  });
+}
+// ---- 席数バッジの配置（CDレビュー反映） ----
+// 機の外形（planeBody と同じ形。100×100 の座標、線の太さ4・角は丸）
+var PLANE_PATH = (function(){ var q = new Path2D(); q.roundRect(42, 3, 16, 91, 8); q.moveTo(50,36); q.lineTo(95,58); q.lineTo(95,66); q.lineTo(50,59); q.lineTo(5,66); q.lineTo(5,58); q.closePath();
+  q.moveTo(50,80); q.lineTo(72,90); q.lineTo(72,95); q.lineTo(50,92); q.lineTo(28,95); q.lineTo(28,90); q.closePath(); q.arc(50, 50, 21, 0, Math.PI * 2); q.closePath(); return q; })();
+var HIT_CTX = document.createElement('canvas').getContext('2d'); HIT_CTX.lineWidth = 4; HIT_CTX.lineJoin = 'round';
+function inPlane(pl, x, y){ // 盤面の点 (x,y) が機 pl の外形の中か
+  var c = cellCenter(pl.col, pl.row), l = R.planeLengthPt.runway[pl.size], t = DIR_DEG[pl.dir] * Math.PI / 180;
+  var dx = x - c.x, dy = y - c.y, lx = dx * Math.cos(t) + dy * Math.sin(t), ly = -dx * Math.sin(t) + dy * Math.cos(t);
+  var ux = lx / l * 100 + 50, uy = ly / l * 100 + 50;
+  if (ux < -3 || ux > 103 || uy < -3 || uy > 103) return false;
+  return HIT_CTX.isPointInPath(PLANE_PATH, ux, uy) || HIT_CTX.isPointInStroke(PLANE_PATH, ux, uy);
+}
+function gapToPlane(pl, r, maxGap){ // 札の四角 r と機の外形のすき間（maxGap まで、0.5pt 刻み）。重なれば 0
+  for (var g = 0; g <= maxGap; g += 0.5){
+    var x0 = r.x - g, y0 = r.y - g, x1 = r.x + r.w + g, y1 = r.y + r.h + g, x, y;
+    for (x = x0; x <= x1 + 1e-6; x += 0.5) if (inPlane(pl, x, y0) || inPlane(pl, x, y1)) return g;
+    for (y = y0; y <= y1 + 1e-6; y += 0.5) if (inPlane(pl, x0, y) || inPlane(pl, x1, y)) return g;
+  }
+  return Infinity;
+}
+var SEAT_INFO = {}; // 確認用：各機の札の配置結果
+// 札の配置（CDの最終判断）。条件：となりの機と画面上で4pt以上・滑走路の縁から画面上で4pt以上内側・自分の機と盤面で1pt以上・当たりは自分のマスの中だけ。
+// 満たせないときの順番：(a) 盤面のすべての札を数字だけにする（1枚でも必要なら全部）→ (b) その札だけ機の右下から左下へ → (c) 文字を大きくする設定をこの端末では13ptで止める
+var SEAT_NUM_ONLY = false, SEAT_DT_CAP = false, SEAT_HINT_SHOWN = false, SEAT_HINT_DUE = false;
+function seatCandidate(pl, corner, ke, inv){
+  var se = seatEls[pl.id], len = R.planeLengthPt.runway[pl.size], c = cellCenter(pl.col, pl.row), off = Math.round(len * 0.24 + 1);
+  var br = se.pill.getBoundingClientRect(), w = br.width / BOARD_K, h = br.height / BOARD_K; // 小数まで正確な幅（盤面の座標）
+  var r = { x: corner === 'R' ? c.x + off : c.x - off - w, y: c.y + off, w: w, h: h }, nb = Infinity, edge = 4 / ke;
+  state.planes.forEach(function(o){ if (o !== pl && o.status === 'runway' && Math.abs(o.col - pl.col) <= 1 && Math.abs(o.row - pl.row) <= 1) nb = Math.min(nb, gapToPlane(o, r, 12)); });
+  var own = gapToPlane(pl, r, 9);
+  var inset = Math.min(r.x - RW.x, r.y - RW.y, RW.x + RW.w - r.x - r.w, RW.y + RW.h - r.y - r.h);
+  return { corner: corner, r: r, nb: nb, own: own, inset: inset, ok: own >= 1 && nb >= 4 / ke && inset >= edge - 0.01 };
+}
+function layoutSeats(){
+  if (!state) return;
+  var ke = Math.min(BOARD_K, 1), inv = 1 / ke; // 盤面が縮むときだけ、札を逆に拡大して実寸に保つ
+  app.style.setProperty('--seatInv', inv);
+  var pls = state.planes.filter(function(pl){ var se = seatEls[pl.id]; return se && !se.pill.classList.contains('off'); });
+  function setMode(numOnly, cap){ app.classList.toggle('seat-numonly', numOnly); app.classList.toggle('dt-cap', cap); }
+  function tryAll(numOnly, cap, allowLeft){
+    setMode(numOnly, cap);
+    var picks = {}, allOk = true;
+    pls.forEach(function(pl){
+      var q = seatCandidate(pl, 'R', ke, inv);
+      if (!q.ok && allowLeft){ var q2 = seatCandidate(pl, 'L', ke, inv); if (q2.ok) q = q2; }
+      picks[pl.id] = q; if (!q.ok) allOk = false;
+    });
+    return { picks: picks, ok: allOk, numOnly: numOnly, cap: cap };
+  }
+  // いったん決めた「数字だけ」「13ptで止める」は、その盤面（ページを開いているあいだ）では戻さない（札が増えたり減ったりして見えないように）
+  var steps = [[false, false, false], [true, false, false], [true, false, true], [true, true, true]].filter(function(st){
+    return (st[0] || !SEAT_NUM_ONLY) && (st[1] || !SEAT_DT_CAP) && (!st[1] || DT_LARGE);
+  });
+  var res = null;
+  var why = [];
+  for (var i = 0; i < steps.length; i++){
+    res = tryAll(steps[i][0], steps[i][1], steps[i][2]); if (res.ok) break;
+    Object.keys(res.picks).forEach(function(id){ var q = res.picks[id]; if (!q.ok) why.push('step' + i + ' ' + id + ' ' + q.corner + ' own ' + (q.own * ke).toFixed(1) + ' nb ' + (q.nb * ke).toFixed(1) + ' inset ' + (q.inset * ke).toFixed(1)); });
+  }
+  if (res.numOnly && !SEAT_NUM_ONLY){ SEAT_NUM_ONLY = true; if (!SEAT_HINT_SHOWN) SEAT_HINT_DUE = true; }
+  if (res.cap) SEAT_DT_CAP = true;
+  setMode(SEAT_NUM_ONLY, SEAT_DT_CAP);
+  SEAT_INFO = { _board: { numOnly: SEAT_NUM_ONLY, dtCap: SEAT_DT_CAP, allOk: res.ok, k: +BOARD_K.toFixed(3), why: why } };
+  pls.forEach(function(pl){
+    var se = seatEls[pl.id], q = res.picks[pl.id];
+    var cell = { x: RW.x + CELL.w * pl.col, y: RW.y + CELL.h * pl.row, w: CELL.w, h: CELL.h };
+    se.pill.style.left = q.r.x + 'px'; se.pill.style.top = q.r.y + 'px';
+    // 当たり：札と自分のマスの重なりだけ（マスの境目から0.5pt内側まで）
+    var hx0 = Math.max(q.r.x, cell.x + 0.5), hy0 = Math.max(q.r.y, cell.y + 0.5), hx1 = Math.min(q.r.x + q.r.w, cell.x + cell.w - 0.5), hy1 = Math.min(q.r.y + q.r.h, cell.y + cell.h - 0.5);
+    se.hit.style.left = hx0 + 'px'; se.hit.style.top = hy0 + 'px'; se.hit.style.width = Math.max(0, hx1 - hx0) + 'px'; se.hit.style.height = Math.max(0, hy1 - hy0) + 'px';
+    SEAT_INFO[pl.id] = { corner: q.corner, rect: q.r, ok: q.ok, widthPt: +(q.r.w * ke).toFixed(1), heightPt: +(q.r.h * ke).toFixed(1),
+      neighborGapPt: q.nb === Infinity ? '>' + (12 * ke).toFixed(1) : +(q.nb * ke).toFixed(1), ownGapPt: +(Math.min(q.own, 9) * ke).toFixed(1), edgeInsetPt: +(q.inset * ke).toFixed(1) };
+  });
+  updateDashes();
+}
+// 中心線の破線：札に一部でもかかる破線は、その1本だけ描かない（札が消えたら戻す）
+function updateDashes(){
+  var rects = []; Object.keys(seatEls).forEach(function(id){ var se = seatEls[id], q = SEAT_INFO[id]; if (q && q.rect && !se.pill.classList.contains('off')) rects.push(q.rect); });
+  document.querySelectorAll('#decorRunway .dash').forEach(function(d){
+    var x = +d.getAttribute('x'), y = +d.getAttribute('y'), w = +d.getAttribute('width'), h = +d.getAttribute('height');
+    var hit = rects.some(function(r){ return x < r.x + r.w && x + w > r.x && y < r.y + r.h && y + h > r.y; });
+    d.style.display = hit ? 'none' : '';
+  });
+}
+function maybeSeatHint(){ // 数字だけの札が初めて出たとき、下の案内に1回だけ出す
+  if (!SEAT_HINT_DUE) return; SEAT_HINT_DUE = false; SEAT_HINT_SHOWN = true;
+  hint(SEAT_HINT_TEXT); hintTimer = setTimeout(function(){ hint(HINT); }, SEAT_HINT_MS);
+}
+function planeLen(id){ return R.planeLengthPt.runway[STAGE_PLANE[id].size]; }
+function gateScale(id){ return R.planeLengthPt.gate[STAGE_PLANE[id].size] / planeLen(id); }
+function planeTf(id, x, y, k){ var l = planeLen(id); return 'translate(' + (x - l/2) + 'px,' + (y - l/2) + 'px) scale(' + k + ')'; }
+function setPlane(id, x, y, deg, k, op){
+  var e = planeEls[id]; e.style.transform = planeTf(id, x, y, k);
+  e.querySelector('.body').style.transform = 'rotate(' + deg + 'deg)'; e.style.opacity = op;
+}
+function paxTf(x, y, k){ return 'translate(' + (x - 13) + 'px,' + (y - 16) + 'px) scale(' + k + ')'; }
+function paxNow(i){ // 今見えている位置（動きの途中でも）
+  var m = new DOMMatrix(getComputedStyle(paxEls[i]).transform);
+  return { x: m.m41 + 13, y: m.m42 + 16, k: Math.hypot(m.a, m.b) || 1 };
+}
+
+// ---- 見た目の状態（ロジックの状態とは別。動きが追いつくまでの表示） ----
+var state, epoch = 0, pending = 0, seq = 0, celebrated = false;
+var visGate, gateWaiters, PV, paxSeq, paxWhere, hintTimer = null;
+function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+function deferred(){ var d = {}; d.p = new Promise(function(r){ d.r = r; }); return d; }
+
+function placePaxFromSnapshot(snap, sq, delayStep){
+  var n = 0;
+  snap.slots.forEach(function(pid, i){
+    if (pid === null || paxSeq[pid] >= sq) return;
+    var was = paxWhere[pid]; paxSeq[pid] = sq; paxWhere[pid] = 'slot';
+    var e = paxEls[pid], p = slotCenter(i);
+    e.style.transition = ''; e.style.transitionDelay = (was === 'slot' ? 0 : (n++) * (delayStep || 0)) + 'ms';
+    e.style.transform = paxTf(p.x, p.y, 1); e.style.opacity = 1;
+  });
+  snap.queue.forEach(function(pid, q){
+    if (paxSeq[pid] >= sq) return;
+    paxSeq[pid] = sq; paxWhere[pid] = 'queue';
+    var e = paxEls[pid], p = queueCenter(q);
+    e.style.transition = ''; e.style.transitionDelay = '0ms';
+    e.style.transform = paxTf(p.x, p.y, 0.8125); e.style.opacity = q < R.waitingLine.visible ? 1 : 0;
+  });
+  updateCounts();
+}
+function updateCounts(){
+  var inSlot = 0, inQ = 0;
+  paxWhere.forEach(function(w){ if (w === 'slot') inSlot++; else if (w === 'queue') inQ++; });
+  document.getElementById('roomCount').textContent = inSlot + '/' + R.boardingArea.capacity;
+  document.getElementById('waitNum').textContent = inQ + '人';
+  document.getElementById('dots').style.visibility = inQ > R.waitingLine.visible ? '' : 'hidden';
+  document.getElementById('nextLbl').style.visibility = inQ ? '' : 'hidden';
+}
+function showGate(g){
+  var el = gateEls[g], id = visGate[g], pv = id ? PV[id] : null;
+  el.querySelector('.cnt').textContent = pv && pv.arrived ? pv.filled + '/' + pv.seats : '';
+  el.querySelector('.empty').style.display = pv ? 'none' : '';
+}
+function allocGate(id){
+  var g = visGate.indexOf(null);
+  if (g >= 0){ visGate[g] = id; PV[id].gate = g; PV[id].gateD.r(g); showGate(g); return Promise.resolve(g); }
+  return new Promise(function(r){ gateWaiters.push(function(g2){ visGate[g2] = id; PV[id].gate = g2; PV[id].gateD.r(g2); showGate(g2); r(g2); }); });
+}
+function releaseGate(g){ visGate[g] = null; showGate(g); if (gateWaiters.length) gateWaiters.shift()(g); }
+
+// ---- 移動（滑走路 → ゲート） ----
+function unwrap(prev, a){ while (a - prev > 180) a -= 360; while (a - prev < -180) a += 360; return a; }
+function movePath(p, gate){
+  var a = cellCenter(p.col, p.row), pts = [a], d = p.dir, left = a.x < RW.x + RW.w / 2;
+  var sideX = function(isLeft){ return isLeft ? RW.x - 2 : RW.x + RW.w + 2; };
+  if (d === 'up') pts.push({ x: a.x, y: TAXI_Y });
+  else if (d === 'left' || d === 'right'){ var x = sideX(d === 'left'); pts.push({ x: x, y: a.y }, { x: x, y: TAXI_Y }); }
+  else { var x2 = sideX(left), yb = RW.y + RW.h + 2; pts.push({ x: a.x, y: yb }, { x: x2, y: yb }, { x: x2, y: TAXI_Y }); }
+  var g = gateCenter(gate); pts.push({ x: g.x, y: TAXI_Y - 2 }, g);
+  return pts;
+}
+function animateMove(id, gate){
+  var p = STAGE_PLANE[id], e = planeEls[id], body = e.querySelector('.body'), pts = movePath(p, gate), gk = gateScale(id), g = gateCenter(gate);
+  e.style.pointerEvents = 'none';
+  var sb = seatEls[id]; if (sb){ if (RM) sb.pill.style.transition = 'none'; sb.pill.classList.add('off'); sb.hit.classList.add('off'); updateDashes(); } // 動き出したら隠す（ゲートでは n/席数 の表示に引き継ぐ）
+  if (RM){
+    var mf = M.reducedMotion.moveCrossfadeMs / 2;
+    return e.animate([{ opacity: 1 }, { opacity: 0 }], { duration: mf, fill: 'forwards' }).finished.then(function(a){
+      a.cancel(); setPlane(id, g.x, g.y, 0, gk, 0);
+      return e.animate([{ opacity: 0 }, { opacity: 1 }], { duration: mf }).finished; }).then(function(){ e.style.opacity = 1; });
+  }
+  var segs = [], segAng = [], tot = 0, i, prev = DIR_DEG[p.dir];
+  for (i = 1; i < pts.length; i++){
+    var dx = pts[i].x - pts[i-1].x, dy = pts[i].y - pts[i-1].y, dl = Math.hypot(dx, dy);
+    var ang = dl < 1 ? prev : unwrap(prev, Math.atan2(dx, -dy) * 180 / Math.PI);
+    segs.push(dl); segAng.push(ang); prev = ang; tot += dl;
+  }
+  var dur = Math.max(M.move.minMs, Math.min(M.move.maxMs, tot / M.move.speedPtPerMs)), kf = [], kb = [], acc = 0, off;
+  for (i = 0; i < pts.length; i++){
+    off = tot ? acc / tot : 1;
+    kf.push({ offset: off, transform: planeTf(id, pts[i].x, pts[i].y, 1 + (gk - 1) * off) });
+    if (i < segs.length){
+      var before = i === 0 ? DIR_DEG[p.dir] : segAng[i-1], turn = Math.min(0.05, segs[i] / tot * 0.5);
+      kb.push({ offset: off, transform: 'rotate(' + before + 'deg)' });
+      kb.push({ offset: Math.min(1, off + turn), transform: 'rotate(' + segAng[i] + 'deg)' });
+      acc += segs[i];
+    }
+  }
+  kb.push({ offset: 1, transform: 'rotate(' + unwrap(prev, 0) + 'deg)' });
+  var o = { duration: dur, easing: M.move.easing, fill: 'forwards' };
+  var a1 = e.animate(kf, o), a2 = body.animate(kb, o);
+  return a1.finished.then(function(){ setPlane(id, g.x, g.y, 0, gk, 1); a1.cancel(); a2.cancel(); });
+}
+
+// ---- 搭乗：一列に並んで、1人ずつ機に入る ----
+function hopFrames(frames, t0, t1, a, b, k, hop){
+  // a→b を、跳ねながら進む（hop 回）。frames は {t,x,y,k,o}
+  var n = Math.max(1, Math.round((t1 - t0) / M.boarding.hopPeriodMs));
+  for (var i = 1; i <= n; i++){
+    var tm = t0 + (t1 - t0) * (i - .5) / n, te = t0 + (t1 - t0) * i / n, um = (i - .5) / n, ue = i / n;
+    frames.push({ t: tm, x: a.x + (b.x - a.x) * um, y: a.y + (b.y - a.y) * um - hop, k: k, o: 1, e: 'ease-in' });
+    frames.push({ t: te, x: a.x + (b.x - a.x) * ue, y: a.y + (b.y - a.y) * ue, k: k, o: 1, e: 'ease-out' });
+  }
+}
+function runFrames(el, frames, total){
+  var kf = frames.map(function(f){ return { offset: Math.min(1, Math.max(0, f.t / total)), transform: paxTf(f.x, f.y, f.k), opacity: f.o, easing: f.e || 'linear' }; });
+  for (var i = 1; i < kf.length; i++) if (kf[i].offset < kf[i-1].offset) kf[i].offset = kf[i-1].offset;
+  kf[0].offset = 0; kf[kf.length-1].offset = 1;
+  return el.animate(kf, { duration: total, fill: 'forwards' });
+}
+function onArrive(id, ep){
+  if (ep !== epoch) return;
+  var pv = PV[id]; pv.filled++;
+  var gel = gateEls[pv.gate], cnt = gel.querySelector('.cnt');
+  showGate(pv.gate);
+  if (!RM){
+    var b = M.boarding;
+    planeEls[id].querySelector('.pop').animate([{ transform: 'scale(1)' }, { transform: 'scale(' + b.planePopScale + ')' }, { transform: 'scale(1)' }], { duration: b.planePopMs, easing: 'ease-out' });
+    cnt.animate([{ transform: 'scale(1)' }, { transform: 'scale(' + b.counterBumpScale + ')' }, { transform: 'scale(1)' }], { duration: b.counterBumpMs, easing: 'ease-out' });
+  }
+  if (pv.filled >= pv.seats) pv.fullD.r();
+}
+function boardGroup(id, items, sq, ep){
+  return PV[id].gateD.p.then(function(gate){ return PV[id].arriveD.p.then(function(){ return gate; }); }).then(function(gate){
+    if (ep !== epoch) return;
+    var g = gateCenter(gate), b = M.boarding, n = items.length, rm = M.reducedMotion;
+    items.forEach(function(it){ paxSeq[it.pid] = sq; paxWhere[it.pid] = 'walk'; });
+    updateCounts();
+    if (RM){
+      return Promise.all(items.map(function(it, k){
+        var el = paxEls[it.pid], s0 = paxNow(it.pid), tot = rm.boardHopMs + rm.boardFadeMs, d = k * rm.boardStaggerMs;
+        el.style.transition = 'none'; el.style.transform = paxTf(s0.x, s0.y, s0.k);
+        var a = el.animate([{ transform: paxTf(s0.x, s0.y, s0.k), opacity: 1 },
+          { offset: rm.boardHopMs / 2 / tot, transform: paxTf(s0.x, s0.y - rm.boardHopPt, s0.k), opacity: 1 },
+          { offset: rm.boardHopMs / tot, transform: paxTf(s0.x, s0.y, s0.k), opacity: 1 },
+          { transform: paxTf(s0.x, s0.y, s0.k * .6), opacity: 0 }], { duration: tot, delay: d, fill: 'forwards' });
+        return a.finished.then(function(){ el.style.opacity = 0; a.cancel(); paxWhere[it.pid] = 'gone'; onArrive(id, ep); });
+      }));
+    }
+    var dirX = g.x < 195 ? 1 : -1, lineY = GATE_Y + b.lineYOffsetFromGateTopPt, door = { x: g.x, y: g.y - 6 };
+    var spot = function(i){ return { x: g.x + dirX * (i + 1) * b.lineSpacingPt, y: lineY }; };
+    var T0 = (n - 1) * b.gatherStaggerMs + b.gatherMs;
+    return Promise.all(items.map(function(it, k){
+      var el = paxEls[it.pid], s0 = paxNow(it.pid), fr = [], ls = b.lineScale;
+      el.style.transition = 'none'; el.style.transform = paxTf(s0.x, s0.y, s0.k);
+      var tg0 = k * b.gatherStaggerMs, tg1 = tg0 + b.gatherMs;
+      fr.push({ t: 0, x: s0.x, y: s0.y, k: s0.k, o: 1 }, { t: tg0, x: s0.x, y: s0.y, k: s0.k, o: 1 });
+      // 列に並ぶ（列の k 番目へ）
+      var nH = Math.max(1, Math.round(b.gatherMs / b.hopPeriodMs)), A = s0, B = spot(k);
+      for (var i = 1; i <= nH; i++){
+        var um = (i - .5) / nH, ue = i / nH;
+        fr.push({ t: tg0 + b.gatherMs * um, x: A.x + (B.x - A.x) * um, y: A.y + (B.y - A.y) * um - b.hopHeightPt * 1.5, k: s0.k + (ls - s0.k) * um, o: 1, e: 'ease-in' });
+        fr.push({ t: tg0 + b.gatherMs * ue, x: A.x + (B.x - A.x) * ue, y: A.y + (B.y - A.y) * ue, k: s0.k + (ls - s0.k) * ue, o: 1, e: 'ease-out' });
+      }
+      // 前の人が入るたびに1つずつ前へ
+      for (var j = 0; j < k; j++){
+        var ts = T0 + j * b.staggerMs; fr.push({ t: ts, x: spot(k - j).x, y: lineY, k: ls, o: 1 });
+        hopFrames(fr, ts, ts + b.stepMs, spot(k - j), spot(k - j - 1), ls, b.hopHeightPt);
+      }
+      // 自分の番：ドアへ入る（少しふくらんで、小さくなって消える）
+      var te = T0 + k * b.staggerMs, sp = spot(0);
+      fr.push({ t: te, x: sp.x, y: lineY, k: ls, o: 1 });
+      fr.push({ t: te + b.enterMs * .4, x: (sp.x + door.x) / 2, y: lineY - b.hopHeightPt * 1.5, k: ls * b.enterPopScale, o: 1, e: 'ease-in' });
+      fr.push({ t: te + b.enterMs, x: door.x, y: door.y, k: b.enterEndScale, o: 0, e: 'ease-in' });
+      var total = te + b.enterMs, a = runFrames(el, fr, total);
+      return a.finished.then(function(){ el.style.opacity = 0; el.style.transform = paxTf(door.x, door.y, .2); a.cancel(); paxWhere[it.pid] = 'gone'; onArrive(id, ep); });
+    }));
+  });
+}
+
+// ---- 満席の合図と離陸 ----
+function sparkle(id, c){
+  var f = M.full, hex = COLOR[STAGE_PLANE[id].color].hex;
+  for (var i = 0; i < f.sparkleCount; i++){
+    var a = i / f.sparkleCount * Math.PI * 2 + 0.3, s = document.createElement('div'); s.className = 'spark'; s.style.background = hex;
+    fxd.appendChild(s);
+    var tf = function(r, sc){ return 'translate(' + (c.x + Math.sin(a) * r - 1.5) + 'px,' + (c.y - Math.cos(a) * r - 4.5) + 'px) rotate(' + (a * 180 / Math.PI) + 'deg) scale(' + sc + ')'; };
+    s.animate([{ transform: tf(f.sparkleFromPt, 1), opacity: 1 }, { transform: tf(f.sparkleToPt, .5), opacity: 0 }], { duration: f.sparkleMs, easing: 'cubic-bezier(.2,.8,.4,1)', fill: 'forwards' })
+      .finished.then((function(el){ return function(){ el.remove(); }; })(s));
+  }
+}
+function bez(a, c, e, u){ var v = 1 - u; return { x: v*v*a.x + 2*v*u*c.x + u*u*e.x, y: v*v*a.y + 2*v*u*c.y + u*u*e.y }; }
+function bezT(a, c, e, u){ return { x: 2*(1-u)*(c.x-a.x) + 2*u*(e.x-c.x), y: 2*(1-u)*(c.y-a.y) + 2*u*(e.y-c.y) }; }
+function takeoff(id, ep){
+  var pv = PV[id];
+  return pv.arriveD.p.then(function(){ return pv.fullD.p; }).then(function(){
+    if (ep !== epoch) return;
+    var gate = pv.gate, g = gateCenter(gate), e = planeEls[id], f = M.full, t = M.takeoff, gk = gateScale(id);
+    var badge = document.createElement('div'); badge.className = 'badge'; badge.textContent = f.badgeText;
+    badge.style.left = g.x + 'px'; badge.style.top = (GATE_Y - 13) + 'px'; fxd.appendChild(badge);
+    badge.animate(RM ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'translate(-50%,-50%) scale(.6)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1.1)', offset: .7 }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1)' }], { duration: f.badgeMs, easing: 'ease-out' });
+    if (RM){
+      var r = M.reducedMotion;
+      return wait(r.takeoffBadgeHoldMs).then(function(){
+        if (ep !== epoch) return;
+        pv.present = false; maybeCelebrate(0);
+        var a = e.animate([{ transform: planeTf(id, g.x, g.y, gk), opacity: 1 }, { transform: planeTf(id, g.x, g.y - r.takeoffSlidePt, gk), opacity: 0 }], { duration: r.takeoffMs, easing: 'ease-in', fill: 'forwards' });
+        badge.animate([{ opacity: 1 }, { opacity: 0 }], { duration: r.takeoffMs, fill: 'forwards' });
+        return a.finished.then(function(){ badge.remove(); releaseGate(gate); e.style.display = 'none'; });
+      });
+    }
+    var ks = f.pulseScales.map(function(s){ return { transform: 'scale(' + s + ')' }; });
+    e.querySelector('.pop').animate(ks, { duration: f.pulseMs, easing: 'ease-in-out' });
+    sparkle(id, g);
+    return wait(f.pulseMs).then(function(){
+      if (ep !== epoch) return;
+      // 上昇：だんだん速く、弧を描いて右上の空へ。飛行機雲を残す
+      var S0 = { x: g.x, y: g.y }, C = { x: g.x, y: g.y - t.controlRisePt }, E = { x: Math.max(g.x + t.exitDxPt, t.exitMinXPt), y: t.exitYPt };
+      var N = 28, kf = [], kb = [], pts = [], lens = [0], i, prevA = 0;
+      for (i = 0; i <= 80; i++){ var uu = i / 80; pts.push(bez(S0, C, E, uu)); if (i) lens.push(lens[i-1] + Math.hypot(pts[i].x - pts[i-1].x, pts[i].y - pts[i-1].y)); }
+      var lenAt = function(u){ var x = u * 80, i0 = Math.floor(x), i1 = Math.min(80, i0 + 1); return lens[i0] + (lens[i1] - lens[i0]) * (x - i0); };
+      var cs = lenAt(t.contrailStartU), ctot = lens[80] - cs;
+      var path = document.createElementNS(SVGNS, 'path'), dpts = pts.filter(function(_, i){ return i / 80 >= t.contrailStartU; });
+      path.setAttribute('d', 'M' + dpts.map(function(p){ return p.x.toFixed(1) + ' ' + p.y.toFixed(1); }).join(' L'));
+      path.setAttribute('fill', 'none'); path.setAttribute('stroke', COLOR[STAGE_PLANE[id].color].hex); path.setAttribute('stroke-width', t.contrailWidthPt);
+      path.setAttribute('stroke-linecap', 'round'); path.setAttribute('opacity', t.contrailOpacity);
+      path.style.strokeDasharray = ctot + ' ' + (ctot + 10); path.style.strokeDashoffset = ctot;
+      fxSvg.appendChild(path);
+      var kp = [];
+      for (i = 0; i <= N; i++){
+        var tt = i / N, u = Math.pow(tt, t.accelPower), p = bez(S0, C, E, u), d = bezT(S0, C, E, Math.max(u, 0.001));
+        var ang = unwrap(prevA, Math.atan2(d.x, -d.y) * 180 / Math.PI); prevA = ang;
+        var sc = gk + (t.endScale - gk) * (u * u * (3 - 2 * u));
+        kf.push({ offset: tt, transform: planeTf(id, p.x, p.y, sc) });
+        kb.push({ offset: tt, transform: 'rotate(' + ang + 'deg)' });
+        kp.push({ offset: tt, strokeDashoffset: ctot - Math.max(0, lenAt(u) - cs) });
+      }
+      e.classList.add('fly'); pv.present = false; maybeCelebrate(M.clear.startAfterLastLiftoffMs);
+      var o = { duration: t.climbMs, fill: 'forwards' };
+      var a1 = e.animate(kf, o); e.querySelector('.body').animate(kb, o); path.animate(kp, o);
+      badge.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 200, fill: 'forwards' });
+      setTimeout(function(){ if (ep === epoch) releaseGate(gate); }, t.releaseGateAfterMs);
+      return a1.finished.then(function(){
+        e.style.display = 'none'; badge.remove();
+        path.animate([{ opacity: t.contrailOpacity }, { opacity: 0 }], { duration: t.contrailFadeMs, fill: 'forwards' }).finished.then(function(){ path.remove(); });
+      });
+    });
+  });
+}
+
+// ---- クリアのお祝い ----
+function maybeCelebrate(delay){
+  if (celebrated || L.status(state) !== 'clear') return;
+  for (var id in PV) if (PV[id].present) return;
+  celebrated = true; var ep = epoch;
+  setTimeout(function(){ if (ep === epoch) celebrate(); }, delay);
+}
+function celebrate(){
+  var c = M.clear, card = document.getElementById('card'), scrim = document.getElementById('scrim');
+  document.getElementById('live').textContent = 'ステージ1 クリア。すべての飛行機が飛び立ちました';
+  if (RM){ scrim.classList.add('on'); card.classList.add('on'); card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: M.reducedMotion.cardFadeMs }); return; }
+  var rnd = L.mulberry32(20261103), cols = R.colors, origin = { x: 195, y: 330 };
+  for (var i = 0; i < c.confettiCount; i++){
+    var col = cols[i % cols.length], sz = c.confettiSizePt[0] + rnd() * (c.confettiSizePt[1] - c.confettiSizePt[0]);
+    var el = document.createElement('div'); el.className = 'abs'; el.style.left = 0; el.style.top = 0;
+    el.innerHTML = '<svg width="' + sz + '" height="' + sz + '" viewBox="0 0 10 10">' + symbol(col.symbol, 5, 5, 8.4, col.hex) + '</svg>';
+    confEl.appendChild(el);
+    var ang = -Math.PI / 2 + (rnd() * 2 - 1) * c.confettiSpreadRad, sp = c.confettiSpeedPtPerMs[0] + rnd() * (c.confettiSpeedPtPerMs[1] - c.confettiSpeedPtPerMs[0]);
+    var dur = c.confettiMs[0] + rnd() * (c.confettiMs[1] - c.confettiMs[0]), spin = (rnd() * 2 - 1) * 540, kf = [];
+    var ox = origin.x + (rnd() * 2 - 1) * 40;
+    for (var s = 0; s <= 10; s++){
+      var tm = dur * s / 10, x = ox + Math.cos(ang) * sp * tm * (1 - s / 30), y = origin.y + Math.sin(ang) * sp * tm + 0.5 * c.gravityPtPerMs2 * tm * tm;
+      kf.push({ offset: s / 10, transform: 'translate(' + (x - sz/2) + 'px,' + (y - sz/2) + 'px) rotate(' + (spin * s / 10) + 'deg)', opacity: s < 7 ? 1 : 1 - (s - 7) / 3 });
+    }
+    el.animate(kf, { duration: dur, easing: 'linear', fill: 'forwards' });
+  }
+  setTimeout(function(){
+    scrim.classList.add('on'); card.classList.add('on');
+    card.animate([{ opacity: 0, transform: 'scale(' + c.cardPopFromScale + ')' }, { opacity: 1, transform: 'scale(1)' }], { duration: c.cardPopMs, easing: c.cardEasing });
+  }, c.cardDelayMs);
+}
+
+// ---- 進行 ----
+var HINT = '搭乗口の乗客と同じ色・同じ記号の飛行機をタップ';
+// 数字だけの札が初めて出たときの案内（文言はオーナー確認済み 2026-11-03）。表示時間は4秒
+var SEAT_HINT_TEXT = '数字は乗れる人数です', SEAT_HINT_MS = 4000;
+var WHY = { 'no-match': '搭乗口に、同じ色・同じ記号の乗客がいません', 'blocked': '前に飛行機があって進めません', 'no-gate': '空いている搭乗ゲートがありません' };
+function hint(t, warn){
+  var h = document.getElementById('hint'); h.textContent = t; h.classList.toggle('warn', !!warn);
+  clearTimeout(hintTimer); if (warn) hintTimer = setTimeout(function(){ hint(HINT); }, 1800);
+}
+function shake(id){
+  var b = planeEls[id].querySelector('.body');
+  b.animate([{ translate: '0 0' }, { translate: '-3px 0' }, { translate: '3px 0' }, { translate: '0 0' }], { duration: 220, easing: 'ease-in-out' });
+}
+function start(){
+  epoch++; pending = 0; seq = 0; celebrated = false;
+  state = L.createGame(R, S);
+  visGate = state.gates.map(function(){ return null; }); gateWaiters = []; PV = {}; paxSeq = []; paxWhere = [];
+  state.planes.forEach(function(p){ PV[p.id] = { seats: p.seats, filled: 0, gate: null, arrived: false, present: true, gateD: deferred(), arriveD: deferred(), fullD: deferred() }; });
+  build();
+  state.planes.forEach(function(p){ var c = cellCenter(p.col, p.row); setPlane(p.id, c.x, c.y, DIR_DEG[p.dir], 1, 1); });
+  state.passengers.forEach(function(_, i){ paxSeq[i] = -1; paxWhere[i] = null; paxEls[i].style.transition = 'none'; });
+  placePaxFromSnapshot(state, 0, 0);
+  layoutSeats();
+  for (var g = 0; g < visGate.length; g++) showGate(g);
+  ['scrim', 'sheet', 'card'].forEach(function(k){ document.getElementById(k).classList.remove('on'); });
+  hint(HINT);
+  maybeSeatHint();
+  checkEnd();
+}
+function runPhases(phases, ep){
+  var chain = Promise.resolve(), id0 = phases[0].planeId;
+  // 移動
+  chain = allocGate(id0).then(function(g){ if (ep !== epoch) return; return animateMove(id0, g); })
+    .then(function(){ if (ep !== epoch) return; PV[id0].arrived = true; PV[id0].arriveD.r(); showGate(PV[id0].gate); });
+  phases.slice(1).forEach(function(ph){
+    chain = chain.then(function(){
+      if (ep !== epoch) return;
+      if (ph.type === 'board'){
+        var groups = {}; ph.items.forEach(function(it){ (groups[it.planeId] = groups[it.planeId] || []).push(it); });
+        return Promise.all(Object.keys(groups).map(function(pid){ return boardGroup(pid, groups[pid], ph.seq, ep); }));
+      }
+      if (ph.type === 'takeoff'){
+        // 満席の合図までは待ち、上昇は裏で続ける（その間も他の機はタップできる）
+        ph.items.forEach(function(it){ pending++; takeoff(it.planeId, ep).then(function(){ if (ep === epoch){ pending--; checkEnd(); } }); });
+        return wait(RM ? M.reducedMotion.takeoffBadgeHoldMs : M.full.pulseMs);
+      }
+      if (ph.type === 'refill'){
+        placePaxFromSnapshot(ph.state, ph.seq, M.refill.staggerMs);
+        return wait(M.refill.durationMs + M.refill.staggerMs * Math.min(ph.items.length, 8));
+      }
+    });
+  });
+  return chain;
+}
+function onTap(id){
+  var res = L.tap(state, id);
+  if (!res.ok){ if (res.reason !== 'not-on-runway'){ shake(id); hint(WHY[res.reason], true); } return false; }
+  state = res.state;
+  var ep = epoch; pending++;
+  res.phases.forEach(function(ph){ ph.seq = ++seq; });
+  runPhases(res.phases, ep).then(function(){ if (ep === epoch){ pending--; checkEnd(); } });
+  return true;
+}
+function checkEnd(){
+  if (pending > 0) return;
+  var st = L.status(state);
+  if (st === 'clear') maybeCelebrate(0);
+  else if (st === 'stuck'){ document.getElementById('scrim').classList.add('on'); document.getElementById('sheet').classList.add('on'); document.getElementById('live').textContent = '動かせる飛行機がありません'; }
+}
+document.querySelectorAll('[data-act="retry"]').forEach(function(b){ b.addEventListener('click', start); });
+// デモはステージ1のみ。本番では次のステージを読み込む。
+document.querySelectorAll('[data-act="next"]').forEach(function(b){ b.addEventListener('click', start); });
+document.getElementById('restart').addEventListener('click', start);
+function fit(){ var k = Math.min(window.innerWidth / 390, window.innerHeight / 844); app.style.transform = 'scale(' + k + ')'; BOARD_K = k; layoutSeats(); maybeSeatHint(); }
+window.addEventListener('resize', fit); fit();
+start();
+// 録画・確認用
+window.TTS = { tap: onTap, state: function(){ return state; }, status: function(){ return L.status(state); },
+  solution: function(){ return L.solve(state).moves; }, idle: function(){ return pending === 0; }, celebrated: function(){ return celebrated; }, restart: start, reducedMotion: RM, seatInfo: function(){ return SEAT_INFO; } };
+})();
+</script>
+</body>
+</html>
