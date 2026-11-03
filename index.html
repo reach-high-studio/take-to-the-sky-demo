@@ -81,6 +81,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #cardEn:empty{display:none}
 #stampMsg{margin:14px 24px 0;text-align:center;opacity:0;min-height:44px}
 #stampHead{margin:0;font-size:17px;font-weight:700;color:var(--sky);line-height:24px}
+#stampDay{margin:10px 24px 0;text-align:center;font-size:12px;line-height:17px;color:var(--graphite)}
 #stampSub{margin:2px 0 0;font-size:13px;color:var(--graphite);line-height:18px}
 #hGreet{position:absolute;left:24px;right:24px;top:104px;font-size:15px;line-height:20px;color:var(--graphite)}
 #hGreet:empty{display:none}
@@ -94,6 +95,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #adPreview{left:24px;right:24px;top:560px;z-index:60;background:#fff;border-radius:16px;padding:12px;box-shadow:0 4px 16px rgba(31,31,29,.15)}
 #adPreview .primary[disabled]{background:#CFCBC3;color:#5B5A56;cursor:default}
 #adPreview .coinBtn{display:block;width:100%;height:48px;margin-top:10px;border-radius:14px;background:#fff;border:1px solid #CFCBC3;color:var(--ink);font:inherit;font-size:15px;font-weight:600}
+#adPreview p.sm{font-size:12px}
 #adPreview p{margin:8px 0 0;font-size:13px;line-height:18px;color:var(--graphite);text-align:center}
 .primary{display:block;width:100%;height:56px;border:0;border-radius:16px;background:var(--sky);color:#fff;font:inherit;font-size:17px;font-weight:700;cursor:pointer}
 #card .primary{height:64px}
@@ -356,7 +358,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     <p class="desc">毎日最初に開いたとき、自動で押されます。<br>休んだ日があっても、続きから押せます。</p>
     <div id="sBp"></div>
     <div id="stampMsg" role="group"><p id="stampHead" lang="en"></p><p id="stampSub"></p></div>
-    <p class="foot">7日目のあとは、新しいカードになります。<br>1日の区切りは午前4時です。</p>
+    <p id="stampDay" aria-hidden="true"></p><p class="foot">7日目のあとは、新しいカードになります。</p>
     <button class="obtn" data-close>閉じる</button>
   </div>
   <div class="sheet2" id="sAbout" role="dialog" aria-modal="true" aria-labelledby="sAboutH">
@@ -613,9 +615,16 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   function heartAdReward(st, rules) { return heartAdOffered(st.hearts, rules) ? heartGain(st, rules, 1) : st; }
   function heartShopRefill(st, rules) { return heartGain(st, rules, rules.hearts.max); } // 満タンまでだけ
 
-  // 解除の広告が上限のとき：コインが足りれば上限の文＋コインで開けるボタン、足りなければ「コインがたまったら」の文（買う画面へは誘わない）
+  // 解除の広告が上限のとき（CD 確定）：コインが足りれば上限の文＋「コインn枚で開ける」、足りなければ「あとコインd枚で開けられるよ」＋小さく「コインは、ステージをクリアするとたまるよ」（ボタンなし・ショップへは誘わない）
+  // d＝値段−持っているコイン。値段が決まっていないときは何も出さない（文もボタンもなし）
   function unlockCapState(coins, price) {
-    return typeof price === 'number' && coins >= price ? { note: 'unlockCap', coinButton: true } : { note: 'unlockCapNeedCoins', coinButton: false };
+    if (typeof price !== 'number') return { note: null, coinButton: false };
+    return coins >= price ? { note: 'unlockCap', coinButton: true, price: price } : { note: 'unlockCapShort', coinButton: false, short: price - coins, small: 'earnByClearing' };
+  }
+  // クリアのごほうび（コイン）。いつも1枚以上
+  function clearReward(rules, c) {
+    var R = rules.clearReward, n = c.first ? R.firstClearByStars[Math.max(0, Math.min(R.firstClearByStars.length - 1, (c.stars || 1) - 1))] + (c.hard ? R.hardBonus : 0) : R.reclear;
+    return Math.max(R.minCoins, n);
   }
 
   // 返金：StoreKit 2 の revocationDate を端末で見たときだけ。そのパックのコイン（ボーナス込み。ボーナスも買ったコイン扱い）を買ったコインから引き、0で止める。
@@ -626,6 +635,15 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     var take = (tx.coins || 0) + (tx.bonus || 0);
     return Object.assign({}, wallet, { paid: Math.max(0, wallet.paid - take), processed: done.concat([tx.id]) });
   }
+  // コインを使う：買ったコインから先に使い、足りない分をもらったコインから。足りなければ使わない（null）
+  function spendCoins(wallet, n) {
+    if (wallet.paid + wallet.free < n) return null;
+    var p = Math.min(wallet.paid, n);
+    return Object.assign({}, wallet, { paid: wallet.paid - p, free: wallet.free - (n - p) });
+  }
+  // パックを買ったとき：コインとボーナスを、どちらも買ったコインに足す
+  function grantPack(wallet, product) { return Object.assign({}, wallet, { paid: wallet.paid + (product.coins || 0) + (product.bonus || 0) }); }
+
   // ハート無制限：使えるあいだは「満タンにする」とハートの広告を出さない。返金・取り消しで終わったら、ハートは上限（5）にして通常に戻る。いまのステージはふつうに最後まで
   function unlimitedOffers(active) { return { fullRefill: !active, heartAd: !active }; }
   function unlimitedEnd(st, rules) { return { unlimited: false, hearts: rules.hearts.max, inUse: false, carryMs: 0, stageContinues: true }; }
@@ -668,11 +686,11 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   return { createGame: createGame, canMove: canMove, legalMoves: legalMoves, tap: tap, isClear: isClear,
            isStuck: isStuck, status: status, solve: solve, randomClearRate: randomClearRate, mulberry32: mulberry32,
            planeById: planeById, hasMatch: hasMatch, DIRS: DIRS,
-           moveRange: moveRange, isPerfectClear: isPerfectClear, pickClear: pickClear, quitNeedsConfirm: quitNeedsConfirm, saveProgress: saveProgress, restoreProgress: restoreProgress, heartRegen: heartRegen, guardedNow: guardedNow, adButtonState: adButtonState, heartSpend: heartSpend, heartGain: heartGain, heartClearRefund: heartClearRefund, heartAdOffered: heartAdOffered, heartAdReward: heartAdReward, heartShopRefill: heartShopRefill, unlockCapState: unlockCapState, applyRevocation: applyRevocation, unlimitedOffers: unlimitedOffers, unlimitedEnd: unlimitedEnd, adDayKey: adDayKey, adToday: adToday, adCounter: adCounter, adFinish: adFinish };
+           moveRange: moveRange, isPerfectClear: isPerfectClear, pickClear: pickClear, quitNeedsConfirm: quitNeedsConfirm, saveProgress: saveProgress, restoreProgress: restoreProgress, heartRegen: heartRegen, guardedNow: guardedNow, adButtonState: adButtonState, heartSpend: heartSpend, heartGain: heartGain, heartClearRefund: heartClearRefund, heartAdOffered: heartAdOffered, heartAdReward: heartAdReward, heartShopRefill: heartShopRefill, unlockCapState: unlockCapState, clearReward: clearReward, applyRevocation: applyRevocation, spendCoins: spendCoins, grantPack: grantPack, unlimitedOffers: unlimitedOffers, unlimitedEnd: unlimitedEnd, adDayKey: adDayKey, adToday: adToday, adCounter: adCounter, adFinish: adFinish };
 });
 </script>
 <script>
-var RULES = {"schema":"tts.rules/1","source":"設計書 v0.7.18（1章・3-1・3-2・3-4）／オーナー決定 2026-11-03（hearts・ads・clear・gateUnlock）","gates":{"base":4,"max":8,"lockedInDemo":false},"boardingArea":{"capacity":20,"cols":5,"rows":4},"waitingLine":{"visible":8},"seats":{"S":4,"M":8,"L":12},"planeLengthPt":{"runway":{"S":48,"M":60,"L":76.8},"gate":{"S":48,"M":52.8,"L":57.6}},"directions":["up","down","left","right"],"colors":[{"id":"red","hex":"#E5484D","symbol":"circle","ja":"赤い丸","en":"red circle"},{"id":"blue","hex":"#2F6FED","symbol":"square","ja":"青い四角","en":"blue square"},{"id":"yellow","hex":"#AC7600","symbol":"triangle","ja":"黄色い三角","en":"yellow triangle"},{"id":"green","hex":"#289446","symbol":"star","ja":"緑の星","en":"green star"}],"tokens":{"paper":"#F6F5F1","ink":"#1F1F1D","graphite":"#5B5A56","sky":"#2B5C8A","skyBand":"#E6EFF6","room":"#EEF3F8","gate":"#E4ECF4","runway":"#E6E3DC","runwayEdge":"#CFCBC3","white":"#FFFFFF"},"resolution":{"gateChoice":"lowestFreeIndex","boardingPriority":"gateArrivalOrder","refillSlot":"lowestEmptyIndex","boardWhom":"allMatchingInBoardingArea","tapCheckOrder":["pathClear","freeGate"],"boardWhen":"afterEveryMoveBoardTakeoffRefillUntilStable","noMatchPlaneMayPark":true},"hearts":{"max":5,"regenMinutes":30,"regenClock":"sinceLastBackground","webBackgroundEvents":["visibilitychange","pagehide"],"spentAtStageStart":true,"refundOnClear":"onceIdempotent","quitMidStageCostsHeart":true,"retryMidStageCostsHeart":true,"lostOnlyIfStateUnrestorable":true,"unlimitedHidesHeartNote":true,"quitBeforeFirstMoveCostsHeart":true,"unlimitedConfirmOnlyIfUnlocked":true,"clock":"monotonicInSession_deviceClockAfterReboot_capped_neverPunish_noServerTime","maxCreditPerGapMin":150,"hardCap":"max_everywhere_clearRefund_regen_adReward_shopRefill","regenStopsWhenFull":true,"adOfferedOnlyBelowMax":true,"shopRefill":"toMaxOnly","spentWhen":"stageStartTapped_preStageScreenFree"},"ads":{"rewardedOnly":true,"playerInitiatedOnly":true,"maxSeconds":30,"adCaps":{"heart":5,"unlock":10},"adCapsShared":false,"adResetHour":0,"afterCap":"hideButton","att":false,"personalizedAds":false,"sdk":"AdMobOnlyNoMediation","npa":1,"clock":"sameAsHearts_monotonicInSession_deviceLocalMidnightAfterReboot_noServerTime","priority":["cap","offline","noFill"],"offline":"showButtonDisabled_autoReenable_noCount","noFill":"message_noCount","mediation":false},"clear":{"perfect":"movesLessOrEqualStageReference","comeback":"clearAfterRetry","flights":"cumulativeClears","milestones":[10,25,50,100],"specialPriority":["first","perfect","comeback","milestone"]},"gateUnlock":{"currency":"coins","homeConfirmAfterUnlock":true,"slots":[{"slot":5,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":6,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":7,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":8,"coins":true,"ad":true,"priceCoins":"TBD"}],"rule":"everyLockedSlotCoinsOrOneAd_noAdOnlySlots","afterAdCap":"coinsEnough_capText+coinButton__coinsShort_capTextNeedCoins_noPurchasePush"},"loginBonus":{"loginResetHour":4},"coins":{"purchasedExpire":false,"packBonus":[30,70],"packBonusCountsAsPaid":true,"refund":"storeKit2RevocationDateOnDevice_subtractPackInclBonus_clamp0_keepProgress_dedupeTransactionIds"},"resume":{"saveAfterEveryMove":true,"format":"moveList","seed":null},"release":{"excludeRegionsAtLaunch":["EEA (EU27 + NO, IS, LI)","UK","CH"],"ump":"later"},"support":{"contactUrl":"TBD","contact":"supportPageFormOnly","ledgerExport":"shareSheetOnly_noPresetRecipient"},"tutorialReward":{"coins":100,"coinKind":"free","items":[]},"unlimitedHearts":{"hidesFullRefill":true,"hidesHeartAd":true,"onRevocation":"hearts=max_normalRules_currentStageFinishesNormally","familySharing":false,"familySharingStatus":"要確認（オーナー）"}};
+var RULES = {"schema":"tts.rules/1","source":"設計書 v0.7.18（1章・3-1・3-2・3-4）／オーナー決定 2026-11-03（hearts・ads・clear・gateUnlock）","gates":{"base":4,"max":8,"lockedInDemo":false},"boardingArea":{"capacity":20,"cols":5,"rows":4},"waitingLine":{"visible":8},"seats":{"S":4,"M":8,"L":12},"planeLengthPt":{"runway":{"S":48,"M":60,"L":76.8},"gate":{"S":48,"M":52.8,"L":57.6}},"directions":["up","down","left","right"],"colors":[{"id":"red","hex":"#E5484D","symbol":"circle","ja":"赤の丸","en":"red circle"},{"id":"blue","hex":"#2F6FED","symbol":"square","ja":"青の四角","en":"blue square"},{"id":"yellow","hex":"#AC7600","symbol":"triangle","ja":"黄色の三角","en":"yellow triangle"},{"id":"green","hex":"#289446","symbol":"star","ja":"緑の星","en":"green star"}],"tokens":{"paper":"#F6F5F1","ink":"#1F1F1D","graphite":"#5B5A56","sky":"#2B5C8A","skyBand":"#E6EFF6","room":"#EEF3F8","gate":"#E4ECF4","runway":"#E6E3DC","runwayEdge":"#CFCBC3","white":"#FFFFFF"},"resolution":{"gateChoice":"lowestFreeIndex","boardingPriority":"gateArrivalOrder","refillSlot":"lowestEmptyIndex","boardWhom":"allMatchingInBoardingArea","tapCheckOrder":["pathClear","freeGate"],"boardWhen":"afterEveryMoveBoardTakeoffRefillUntilStable","noMatchPlaneMayPark":true},"hearts":{"max":5,"regenMinutes":30,"regenClock":"sinceLastBackground","webBackgroundEvents":["visibilitychange","pagehide"],"spentAtStageStart":true,"refundOnClear":"onceIdempotent","quitMidStageCostsHeart":true,"retryMidStageCostsHeart":true,"lostOnlyIfStateUnrestorable":true,"unlimitedHidesHeartNote":true,"quitBeforeFirstMoveCostsHeart":true,"unlimitedConfirmOnlyIfUnlocked":true,"clock":"monotonicInSession_deviceClockAfterReboot_capped_neverPunish_noServerTime","maxCreditPerGapMin":150,"hardCap":"max_everywhere_clearRefund_regen_adReward_shopRefill","regenStopsWhenFull":true,"adOfferedOnlyBelowMax":true,"shopRefill":"toMaxOnly","spentWhen":"stageStartTapped_preStageScreenFree"},"ads":{"rewardedOnly":true,"playerInitiatedOnly":true,"maxSeconds":30,"adCaps":{"heart":5,"unlock":10},"adCapsShared":false,"adResetHour":0,"afterCap":"hideButton","att":false,"personalizedAds":false,"sdk":"AdMobOnlyNoMediation","npa":1,"clock":"sameAsHearts_monotonicInSession_deviceLocalMidnightAfterReboot_noServerTime","priority":["cap","offline","noFill"],"offline":"showButtonDisabled_autoReenable_noCount","noFill":"message_noCount","mediation":false},"clear":{"perfect":"movesLessOrEqualStageReference","comeback":"clearAfterRetry","flights":"cumulativeClears","milestones":[10,25,50,100],"specialPriority":["first","perfect","comeback","milestone"]},"gateUnlock":{"currency":"coins","homeConfirmAfterUnlock":true,"slots":[{"slot":5,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":6,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":7,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":8,"coins":true,"ad":true,"priceCoins":"TBD"}],"rule":"everyLockedSlotCoinsOrOneAd_noAdOnlySlots","afterAdCap":"coinsEnough_capText+unlockForNCoinsButton__coinsShort_capTextDMoreCoins+smallEarnByClearing_noButton_noShopLink"},"loginBonus":{"loginResetHour":4},"coins":{"purchasedExpire":false,"packBonus":[30,70],"packBonusCountsAsPaid":true,"refund":"storeKit2RevocationDateOnDevice_subtractPackInclBonus_clamp0_keepProgress_dedupeTransactionIds"},"resume":{"saveAfterEveryMove":true,"format":"moveList","seed":null},"release":{"excludeRegionsAtLaunch":["EEA (EU27 + NO, IS, LI)","UK","CH"],"ump":"later"},"support":{"contactUrl":"TBD","contact":"supportPageFormOnly_externalSafari_noWKWebView","prefill":"appVersionOnly","ledgerExport":"shareSheetOnly_noPresetRecipient"},"tutorialReward":{"coins":100,"coinKind":"free","items":[]},"unlimitedHearts":{"hidesFullRefill":true,"hidesHeartAd":true,"onRevocation":"hearts=max_normalRules_currentStageFinishesNormally","familySharing":false},"clearReward":{"firstClearByStars":[20,25,30],"hardBonus":10,"reclear":5,"minCoins":1,"status":"値は調整可"},"familySharing":{"allIAP":false,"status":"decided_owner","enableRequiresOwnerApproval":"irreversibleInAppStoreConnect"},"stamps":{"dayResetHourFrom":"loginBonus.loginResetHour","note":"スタンプの日の区切りはログインボーナスと同じ値（午前4時）を読む。別の数字を持たない"},"iap":{"products":[{"id":"studio.reachhigh.taketothesky.coins100","type":"consumable","coins":100,"bonus":0,"priceJPY":160},{"id":"studio.reachhigh.taketothesky.coins300","type":"consumable","coins":300,"bonus":30,"priceJPY":480},{"id":"studio.reachhigh.taketothesky.coins500","type":"consumable","coins":500,"bonus":70,"priceJPY":800},{"id":"studio.reachhigh.taketothesky.unlimitedhearts","type":"nonConsumable","priceJPY":800}],"heartRefill":{"currency":"coins","price":60,"paidSpentFirst":true,"isIAP":false,"status":"デモのあと調整可"},"bonusCopy":"factsOnly_noPercent_noStrikethrough","wallet":"paidAndFreeShownSeparately_paidSpentFirst"}};
 var STAGE = {"schema":"tts.stage/1","name":"ステージ1（デモ）","seed":"demo-v01-s73","note":"passengers は外の並びの順。先頭の20人が最初の搭乗口、残りが待機列。col/row は滑走路のマス（左上が0,0）、dir は機首の向き。","verify":{"solvable":true,"solution":["p02","p04","p05","p03","p06","p07","p11","p08","p09","p01","p12","p10"],"explored":12,"randomClearRate":0.5625,"moveRange":{"min":12,"max":12}},"id":1,"board":{"cols":4,"rows":3},"planes":[{"id":"p01","color":"red","size":"L","col":0,"row":0,"dir":"down"},{"id":"p02","color":"blue","size":"S","col":1,"row":0,"dir":"up"},{"id":"p03","color":"yellow","size":"M","col":2,"row":0,"dir":"up"},{"id":"p04","color":"green","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"blue","size":"M","col":0,"row":1,"dir":"left"},{"id":"p06","color":"green","size":"M","col":1,"row":1,"dir":"left"},{"id":"p07","color":"red","size":"S","col":2,"row":1,"dir":"up"},{"id":"p08","color":"yellow","size":"S","col":3,"row":1,"dir":"right"},{"id":"p09","color":"yellow","size":"S","col":0,"row":2,"dir":"left"},{"id":"p10","color":"green","size":"L","col":1,"row":2,"dir":"right"},{"id":"p11","color":"red","size":"M","col":2,"row":2,"dir":"up"},{"id":"p12","color":"blue","size":"S","col":3,"row":2,"dir":"right"}],"passengers":["green","green","green","green","red","red","red","red","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","green","green","green","green","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","red","red","red","red","yellow","yellow","yellow","yellow","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","yellow","yellow","yellow","yellow"]};
 var MOTION = {"schema":"tts.motion/1","source":"ユーザー t94u（搭乗と離陸は存在感のある動きに）。値はデモ v0.2 の初期値で、CD の調整前","units":"時間は ms、距離は pt（390×844 基準）","move":{"speedPtPerMs":0.8,"minMs":500,"maxMs":1200,"easing":"ease-in-out"},"boarding":{"gatherStaggerMs":40,"gatherMs":300,"lineSpacingPt":21,"lineYOffsetFromGateTopPt":-9,"lineScale":0.75,"staggerMs":100,"stepMs":85,"enterMs":170,"enterPopScale":1.15,"enterEndScale":0.2,"hopHeightPt":4,"hopPeriodMs":150,"planePopScale":1.08,"planePopMs":140,"counterBumpScale":1.25,"counterBumpMs":160},"refill":{"durationMs":320,"staggerMs":40,"easing":"cubic-bezier(.3,.9,.4,1)"},"full":{"badgeText":"満席","badgeMs":220,"pulseMs":380,"pulseScales":[1,1.14,1,1.07,1],"sparkleCount":10,"sparkleFromPt":22,"sparkleToPt":46,"sparkleMs":420},"takeoff":{"climbMs":1050,"accelPower":2,"controlRisePt":230,"exitDxPt":250,"exitMinXPt":450,"exitYPt":-90,"endScale":1.5,"contrailStartU":0.15,"contrailWidthPt":3,"contrailOpacity":0.32,"contrailFadeMs":600,"releaseGateAfterMs":250,"totalMsApprox":1430},"clear":{"startAfterLastLiftoffMs":350,"confettiCount":70,"confettiMs":[1500,2000],"confettiSizePt":[7,11],"confettiSpeedPtPerMs":[0.35,0.8],"confettiSpreadRad":1.1,"gravityPtPerMs2":0.0009,"cardDelayMs":450,"cardPopMs":340,"cardPopFromScale":0.92,"cardEasing":"cubic-bezier(.2,1.3,.4,1)"},"reducedMotion":{"moveCrossfadeMs":200,"boardStaggerMs":60,"boardHopPt":6,"boardHopMs":140,"boardFadeMs":160,"takeoffBadgeHoldMs":300,"takeoffSlidePt":90,"takeoffMs":450,"confetti":false,"cardFadeMs":200}};
 </script>
@@ -1169,8 +1187,6 @@ function celebrate(){
 // 文と文は「。」で区切り、最後の文のあとには「。」も「！」も付けない（英語は本文・注記だけピリオド、「!」なし）
 // tone（t115u、オーナー→CD の決まり）：'guide' ＝アプリの中の案内（くだけた口調）／ 'official' ＝公式の知らせ（プライバシー・利用規約・購入と復元・広告の同意/ATT・課金のエラー。ていねい語）
 // provisional: true ＝ CD レビュー前の仮の文言
-function clockJa(h){ return (h === 0 ? '夜0' : h >= 4 && h < 11 ? '朝' + h : h < 12 ? '午前' + h : h === 12 ? '正午' : '午後' + (h - 12)) + (h === 12 ? '' : '時'); } // rules.json ads.adResetHour → 「夜0時」
-function clockEn(h){ return h === 0 ? 'midnight' : h < 12 ? h + ' a.m.' : h === 12 ? 'noon' : (h - 12) + ' p.m.'; }
 var LANG = /[?&]lang=en/.test(location.search) ? 'en' : 'ja';
 var STR = {
   ja: {
@@ -1178,7 +1194,7 @@ var STR = {
       tone: 'guide',
       steps: [
         '乗客と同じ色の飛行機をタップできるよ',
-        'ゲートに入ると乗客が乗りこむよ。数字は乗れる人数だよ',
+        'ゲートに入ると乗客が乗り込むよ。数字は乗れる人数だよ',
         '前がふさがった飛行機は動かせないよ。先に別の飛行機を動かして道を開けられるよ',
         '満席になると離陸するよ。搭乗口の乗客がいなくなればクリア'
       ],
@@ -1204,19 +1220,21 @@ var STR = {
         milestone: { big: function(n){ return n + ' flights flown.'; }, small: function(n){ return n + '便目も、いい空だったね'; } }
       } },
     board: { tone: 'guide', full: 'みんな乗ったよ', takeoff: '離陸どうぞ', vo: '満席、離陸どうぞ' }, // 札は「!」なし。読み上げは離陸のとき1回だけ
-    stamp: { tone: 'guide', head: 'Have a nice trip!', sub: 'いい旅を。スタンプが1つ増えたよ', // 見出しは英語（lang=en）。「!」は大きな英語見出しだけ
+    stamp: { tone: 'guide', head: 'Have a nice trip.', sub: '良い旅を。スタンプが1つ増えたよ', // 見出しは英語（lang=en）。1つのスタンプは「.」（CD）。カード完成の Frequent flyer! だけ「!」
+      dayChange: 'スタンプは、朝4時に新しい日になるよ', tonight: '今夜の分も、今日のスタンプに入っているよ', // CD 確定。カードの下に小さく（読み上げはカードの一部）。tonight は 0:00〜3:59 に今日のスタンプがもう押してあるときだけ。広告のことは書かない
       doneHead: 'Frequent flyer!', doneSub: '搭乗券がいっぱいに。いい旅の記録だね' }, // スタンプカード完成（オーナー決定 v0.3）
     title: { tone: 'guide', welcome: 'ようこそ、空の玄関口へ', vo: 'Take to the sky。ようこそ、空の玄関口へ' }, // 扉絵のひとこと。初回だけ
     greet: { tone: 'guide', // ホームのあいさつ。朝5〜10時／昼10〜17時／夕17〜21時／夜21〜5時。その日最初の起動か、前回から4時間以上あいたときだけ
       morning: 'おはよう。ゲートはもう開いてるよ', day: 'こんにちは。ひと便、飛ばしていく？', evening: 'おつかれさま。夕方の便も出せるよ', night: '夜の便も出ているよ。のんびりどうぞ',
       back: 'おかえり。滑走路は整えてあるよ', // 3日以上あいたとき。あいさつより優先。日数や連続記録には触れない
       back14: function(n){ return 'おかえり。続きはステージ' + n + 'からだよ'; } }, // 14日以上
-    ad: { tone: 'guide', // オーナー決定（2026-11-03）。上限は rules.json ads.adCaps（1日にハート5・解除10、別々に数える）。広告の「今日」は ads.adResetHour（夜0時、端末の時刻）。ログインボーナスの区切り（午前4時）とは別
+    ad: { tone: 'guide', // オーナー決定（2026-11-03）。上限は rules.json ads.adCaps（1日にハート5・解除10、別々に数える）。広告の「今日」は ads.adResetHour（夜0時、端末の時刻。オーナー決定）。スタンプ・ログインボーナスの区切り（午前4時）とは別
       before: '広告が流れるよ（30秒以内）。最後まで見ると、ハートが1つ増えるよ', // 報酬型広告の再生前（本人が選んだときだけ。デモに画面なし）
       remaining: function(n){ return '今日はあと' + n + '回'; }, // ハートの広告ボタンに残りの回数
-      heartCap: function(h){ return '今日のハートの広告はここまでだよ。' + clockJa(h) + 'にまた見られるよ'; }, // h＝adResetHour（0 →「夜0時」）。上限のあと。広告ボタンはグレーにせず出さない
+      heartCap: '今日のハートの広告はここまでだよ。夜0時にまた見られるよ', // 広告の回数は夜0時にもどる（オーナー決定。rules.json ads.adResetHour=0）。上限のあと。広告ボタンはグレーにせず出さない
       unlockCap: '今日はこの広告での解除はここまでだよ。コインでも開けられるよ',
-      unlockCapNeedCoins: '今日はこの広告での解除はここまでだよ。コインがたまったら開けられるよ', coinUnlock: 'コインで開ける', // 要確認（仮。CD 待ち）。コインが足りないとき。買う画面へは誘わない。coinUnlock も要確認
+      unlockCapShort: function(d){ return '今日はこの広告での解除はここまでだよ。あとコイン' + d + '枚で開けられるよ'; }, earnByClearing: 'コインは、ステージをクリアするとたまるよ', // CD 確定。コインが足りないとき（d＝値段−持っているコイン）。ボタンなし、ショップへは誘わない
+      coinUnlock: function(n){ return 'コイン' + n + '枚で開ける'; }, // コインが足りるとき、上限の文の下に
       noFill: '今は広告を用意できなかったよ。少したってから試してみてね', offline: 'インターネットにつながると、広告を見られるよ' /* オフライン：ボタンはグレーで押せない、下にこの一文。つながれば自動で戻る */ }, // ゲート解除の広告の上限のあと（ATT は求めないので説明の文もなし）
     home: { tone: 'guide', label: 'ホーム', // やめる確認（CD 確定）。右「続ける」が主ボタン・最初のフォーカス、左は失う側（枠だけ・ふつうの文字色、赤にしない）。外をタップ／下へスワイプ＝続ける
       q: 'ホームに戻る？', body: 'ここでやめると、使ったハート1つは戻らないよ', unlocked: '開けた枠も元に戻るよ', go: 'ホームに戻る', stay: '続ける',
@@ -1226,6 +1244,7 @@ var STR = {
       back: 'ハートが戻ったよ', inUse: '使用中', // back はクリアの読み上げの中で1回だけ
       resume: '続きから遊べるよ', restoreFail: '前回の続きを戻せなかったので、ハートが1つ減ったよ', // restoreFail は戻せなかったときだけ、ホームで1回
       hud: function(n, u){ return 'ハート 5つ中' + n + 'つ' + (u ? '、1つ使用中' : ''); }, hudUnlimited: 'ハート無制限' },
+    shop: { tone: 'official', bonus: function(n){ return '+' + n; } }, // ボーナスは事実だけ（「+30」）。「％お得」や取り消し線の値段は使わない。ショップの画面はデモにない
     restore: { tone: 'official', // 購入の復元（CD 確定 v1.7 前の分）。商品名は「ハート無制限」／"Unlimited Hearts"（英語は文中でも頭文字を大文字）。結果は画面に出して VoiceOver で1回読む。赤や警告のアイコンは使わない。ショップの画面はデモにない
       button: '購入を復元', note: '復元できるのは、ハート無制限です。', // button は要確認
       success: '購入を復元しました。ハート無制限が使えます。', successCoins: 'コインは復元できません。', // 要確認（日本語は CD ガイド／QA 報告 v1.7 待ち）
@@ -1264,7 +1283,7 @@ var STR = {
         milestone: { big: function(n){ return n + ' flights flown!'; }, small: function(){ return 'And the sky keeps getting better'; } }
       } },
     board: { tone: 'guide', full: 'All aboard', takeoff: 'Cleared for takeoff', vo: 'All aboard, cleared for takeoff' },
-    stamp: { tone: 'guide', head: 'Have a nice trip!', sub: 'One more stamp in your passport', doneHead: 'Frequent flyer!', doneSub: 'A full card of good trips.' },
+    stamp: { tone: 'guide', head: 'Have a nice trip.', sub: 'One more stamp in your passport', doneHead: 'Frequent flyer!', doneSub: 'A full card of good trips.', dayChange: 'Stamps start a new day at 4 a.m.', tonight: 'Tonight still counts as today.' },
     title: { tone: 'guide', welcome: 'Welcome aboard.', vo: 'Take to the sky. Welcome aboard.' },
     greet: { tone: 'guide',
       morning: 'Good morning. The gates are open.', day: 'Hi there. Time for a quick flight?', evening: 'Long day? The evening flights are ready.', night: 'Night flights are running. Take it easy.',
@@ -1273,14 +1292,15 @@ var STR = {
     ad: { tone: 'guide', // 英語は CD の最終版（2026-11-03）
       before: 'An ad will play (30 seconds or less). Watch it to the end and you’ll get 1 heart.',
       remaining: function(n){ return n + ' left today'; },
-      heartCap: function(h){ return 'That’s all the heart ads for today. More at ' + clockEn(h) + '.'; },
-      unlockCap: 'That’s all the unlock ads for today. You can also unlock it with coins.', unlockCapNeedCoins: 'That’s all the unlock ads for today. You can unlock it once you have enough coins.', coinUnlock: 'Unlock with coins', pending: ['unlockCapNeedCoins', 'coinUnlock'], noFill: 'No ad is ready right now. Try again in a little while.', offline: 'Connect to the internet to watch an ad.' },
+      heartCap: 'That’s all the heart ads for today. More at midnight.',
+      unlockCap: 'That’s all the unlock ads for today. You can also unlock it with coins.', unlockCapShort: function(d){ return 'That’s all the unlock ads for today. ' + (d === 1 ? '1 more coin' : d + ' more coins') + ' to unlock it.'; }, earnByClearing: 'You earn coins by clearing stages.', coinUnlock: function(n){ return 'Unlock for ' + n + (n === 1 ? ' coin' : ' coins'); }, noFill: 'No ad is ready right now. Try again in a little while.', offline: 'Connect to the internet to watch an ad.' },
     home: { tone: 'guide', label: 'Home', q: 'Head home?', body: 'If you stop now, the heart you used won’t come back.', unlocked: 'Opened spots will reset too.', go: 'Go home', stay: 'Keep playing',
       retryQ: 'Restart?', retryBody: 'The heart you used won’t come back, and restarting uses 1 more.', retryGo: 'Restart',
       unlimited: 'You have Unlimited Hearts, so you won’t lose one. Opened spots will reset too.', provisional: ['unlimited'] }, // CD 確定（unlimited だけ仮。ガイドに英語なし）
     heart: { tone: 'guide', tip: 'Starting a stage uses 1 heart. Clear it and you’ll get it back.', back: 'Your heart is back.', inUse: 'in use',
       resume: 'You can pick up where you left off.', restoreFail: 'We couldn’t restore your last game, so you lost 1 heart.',
       hud: function(n, u){ return 'Hearts: ' + n + ' of 5' + (u ? ', 1 in use' : ''); }, hudUnlimited: 'Unlimited Hearts', provisional: ['tip', 'back', 'inUse', 'resume', 'restoreFail', 'hud'] },
+    shop: { tone: 'official', bonus: function(n){ return '+' + n + ' bonus'; } },
     restore: { tone: 'official', button: 'Restore Purchases', note: 'Only Unlimited Hearts can be restored.',
       success: 'Purchases restored. Unlimited Hearts is active.', successCoins: 'Coins can’t be restored.', active: 'Unlimited Hearts is already active.',
       none: 'There’s nothing to restore.', failed: 'Couldn’t restore purchases.', retry: 'Try again', close: 'Close',
@@ -1583,9 +1603,16 @@ function depStamp(ang){ // 出発のスタンプ（Sky の二重の輪・細身�
   return '<svg width="56" height="56" viewBox="-28 -28 56 56" aria-hidden="true"><g transform="rotate(' + ang + ')"><circle r="25" fill="none" stroke="#2B5C8A" stroke-width="2"/><circle r="20" fill="none" stroke="#2B5C8A" stroke-width="1"/>' +
     '<path d="' + sceneryD(14) + '" fill="#2B5C8A" transform="translate(0 -9)"/><text x="0" y="11" text-anchor="middle" font-size="12" font-weight="700" fill="#2B5C8A">出発</text></g></svg>';
 }
+function stampDayLines(){ // カードの下の小さな行（CD 確定）。0:00〜3:59 で今日のスタンプが押してあるときは「今夜の分も…」を足す（?hour=H で試せる）
+  var S = STR[LANG].stamp, hq = /[?&]hour=(\d+)/.exec(location.search), h = hq ? (+hq[1]) % 24 : new Date().getHours(), out = [S.dayChange];
+  if (h < stampResetHour() && STAMP_TODAY_TAKEN) out.push(S.tonight);
+  return out;
+}
+function stampResetHour(){ return RULES.loginBonus.loginResetHour; } // rules.json stamps.dayResetHourFrom＝loginBonus.loginResetHour（同じ値を読む）
+var STAMP_TODAY_TAKEN = true; // デモ：スタンプの画面を開いた時点で今日の分は押してある
 function boardingPass(today){ // 搭乗券（#145・#146）。値はすべて表示例
   var f = [[16, '便', 'FLIGHT', 'TTS 007'], [116, '搭乗口', 'GATE', 'A1'], [184, '特典', 'BONUS', '90<small>コイン</small>'], [275, '日付', 'DATE', '11/03']];
-  var h = '<div class="bp" role="img" aria-label="スタンプカード（表示例）：7日中' + today + '日目まで押してあります。今日は' + today + '日目、もらったコイン10"><div class="top"><span class="en">BOARDING PASS</span><span class="ja">搭乗券</span><span class="r">TAKE TO THE SKY</span></div><div class="flds">';
+  var h = '<div class="bp" role="img" aria-label="スタンプカード（表示例）：7日中' + today + '日目まで押してあります。今日は' + today + '日目、もらったコイン10。' + stampDayLines().join('。') + '"><div class="top"><span class="en">BOARDING PASS</span><span class="ja">搭乗券</span><span class="r">TAKE TO THE SKY</span></div><div class="flds">';
   f.forEach(function(q){ h += '<div class="f" style="left:' + q[0] + 'px"><div class="l1">' + q[1] + '</div><div class="l2">' + q[2] + '</div><div class="v">' + q[3] + '</div></div>'; });
   h += '</div><div class="perf"></div><span class="notch" style="left:-10px"></span><span class="notch" style="right:-10px"></span><div class="grid">';
   for (var n = 1; n <= 7; n++){
@@ -1727,7 +1754,7 @@ function openSheet(id){ Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k
   if (!RM) s.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 250, easing: 'ease-out' }); }
 function closeSheet(){ document.querySelectorAll('.sheet2.on').forEach(function(s){ s.classList.remove('on'); }); document.getElementById('sScrim').classList.remove('on'); setInert(); }
 var STAMP_DAY = Math.min(7, Math.max(1, +((/[?&]stamps=(\d)/.exec(location.search) || [])[1] || 3))); // ?stamps=7 で完成の場面
-document.getElementById('sBp').innerHTML = boardingPass(STAMP_DAY);
+document.getElementById('sBp').innerHTML = boardingPass(STAMP_DAY); document.getElementById('stampDay').innerHTML = stampDayLines().map(function(t){ return '<span>' + t + '</span>'; }).join('<br>'); document.getElementById('stampDay').lang = LANG;
 buildTitle();
 document.getElementById('tStart').addEventListener('click', function(){ show('home'); });
 document.getElementById('tInfo').addEventListener('click', function(){ openSheet('sAbout'); });
@@ -1923,8 +1950,9 @@ function adUi(store, kind, nowMs){
   var c = L.adCounter(store, RULES, kind, nowMs), A = STR[LANG].ad, net = AD_Q === 'offline' ? false : navigator.onLine !== false;
   var b = L.adButtonState(c, { online: net, noFill: AD_Q === 'nofill', heartsFull: kind === 'heart' && !L.heartAdOffered(AD_HEARTS, RULES) }); // 優先：上限 → オフライン → 在庫なし（?ad=offline / ?ad=nofill で試せる）
   if (b.note === 'full') return { button: false, note: null }; // 満タン：ハートの広告ボタンは出さない
-  if (b.note === 'cap'){ if (kind === 'heart') return { button: false, note: A.heartCap(RULES.ads.adResetHour) };
-    var u = L.unlockCapState(AD_COINS, AD_PRICE); return { button: false, note: A[u.note], coinButton: u.coinButton ? A.coinUnlock : null }; } // 解除：コインが足りれば上限の文＋コインで開ける、足りなければ「コインがたまったら」
+  if (b.note === 'cap'){ if (kind === 'heart') return { button: false, note: A.heartCap };
+    var u = L.unlockCapState(AD_COINS, AD_PRICE); if (!u.note) return { button: false, note: null };
+    return u.coinButton ? { button: false, note: A.unlockCap, coinButton: A.coinUnlock(u.price), state: 'enough' } : { button: false, note: A.unlockCapShort(u.short), small: A.earnByClearing, state: 'short' }; } // 解除：コインが足りれば上限の文＋「コインn枚で開ける」、足りなければ「あとコインd枚」＋小さな一文
   return { button: true, enabled: b.enabled, label: A.remaining(b.remaining), note: b.note ? A[b.note] : null };
 }
 // ?restorepreview=before|success|active|none|failed：購入の復元の見た目だけ（ショップの画面はデモにない）。結果は画面に出して1回だけ読む。赤・警告のアイコンなし
@@ -1939,10 +1967,13 @@ function adUi(store, kind, nowMs){
 // ?adpreview=heart|unlock：広告ボタンの見た目だけ（広告の画面はデモにない）。?adused=N で今日使った回数、?ad=offline / ?ad=nofill
 (function(){
   var m = /[?&]adpreview=(heart|unlock)/.exec(location.search); if (!m) return;
-  var kind = m[1], used = +((/[?&]adused=(\d+)/.exec(location.search) || [])[1] || 0), now = Date.now(), st = { day: L.adDayKey(now, RULES.ads.adResetHour), used: {} }; st.used[kind] = used;
+  var kind = m[1], used = +((/[?&]adused=(\d+)/.exec(location.search) || [])[1] || 0), hq = /[?&]hour=(\d+)/.exec(location.search), now = hq ? new Date().setHours(+hq[1], 0, 0, 0) : Date.now(), /* ?hour=H でその時刻に */ st = { day: L.adDayKey(now, RULES.ads.adResetHour), used: {} }; st.used[kind] = used;
   var box = document.createElement('div'); box.id = 'adPreview'; box.className = 'abs'; box.lang = LANG; document.getElementById('app').appendChild(box);
   function draw(){ var u = adUi(st, kind, now);
-    box.innerHTML = (u.button ? '<button type="button" class="primary"' + (u.enabled ? '' : ' disabled aria-disabled="true"') + '>' + u.label + '</button>' : '') + (u.note ? '<p>' + u.note + '</p>' : '') + (u.coinButton ? '<button type="button" class="coinBtn">' + u.coinButton + '</button>' : ''); }
+    box.innerHTML = (u.button ? '<button type="button" class="primary"' + (u.enabled ? '' : ' disabled aria-disabled="true"') + '>' + u.label + '</button>' : '') + (u.note ? '<p>' + u.note + '</p>' : '') + (u.small ? '<p class="sm">' + u.small + '</p>' : '') + (u.coinButton ? '<button type="button" class="coinBtn">' + u.coinButton + '</button>' : ''); }
+  var lastState = null; function say(u){ if (u.state && u.state !== lastState){ lastState = u.state; var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = u.note + (u.small ? ' ' + u.small : ''); }, 300); } } // 文と小さな一文を1回読む。足りるようになったら読み直す
+  var draw0 = draw; draw = function(){ draw0(); say(adUi(st, kind, now)); };
+  window.TTS_setCoins = function(n){ AD_COINS = n; draw(); }; // 確認用：コインが増えたら「足りる」へ切り替え
   draw(); window.addEventListener('online', draw); window.addEventListener('offline', draw); // つながれば自動で戻る
 })();
 window.TTS = { tap: onTap, adUi: adUi, state: function(){ return state; }, canMove: function(id){ return L.canMove(state, id); }, status: function(){ return L.status(state); },
