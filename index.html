@@ -195,6 +195,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .row + .row{border-top:1px solid #E6E3DC}
 .row .val{font-weight:700;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
 .row .muted{color:var(--graphite);font-weight:400;font-size:13px}
+.row .chev{color:#4A4945;font-weight:600;font-size:22px;line-height:20px;margin-left:8px;flex:none}
 .stats{display:flex}
 .stat{flex:1;padding:12px 16px 12px}
 .stat + .stat{border-left:1px solid #E6E3DC}
@@ -257,8 +258,9 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .dtag{display:inline-block;height:22px;padding:0 10px;border-radius:11px;background:#fff;border:1.5px solid var(--ink);color:var(--ink);font-size:12px;font-weight:700;line-height:19px;white-space:nowrap}
 #sheet .obtn2{display:block;width:100%;height:48px;margin:0 0 12px;border-radius:12px;border:1.5px solid var(--sky);background:#fff;color:var(--sky);font:inherit;font-size:16px;font-weight:700;cursor:pointer}
 #sheet .obtn2[hidden]{display:none}
-#cardCoins{display:flex;align-items:center;justify-content:center;gap:6px;margin:4px 0 14px;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+#cardCoins{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;margin:4px 0 14px;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
 #cardCoins:empty{display:none}
+#cardCoins .ccl{display:flex;align-items:center;justify-content:center;gap:6px}
 #adScr{left:0;top:0;width:390px;height:844px;z-index:90;background:#24272B;color:#fff;display:none}
 #adScr.on{display:block}
 #adScr .dtag{position:absolute;left:16px;top:56px;background:#24272B;border-color:#fff;color:#fff}
@@ -397,13 +399,9 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
           <div class="row" role="group" id="myRowPaid"><span data-t="paidCoins">買ったコイン</span><span class="val" aria-hidden="true"><span id="myCart"></span><span id="myPaid">120</span></span></div>
           <div class="row" role="group" id="myRowFree"><span data-t="freeCoins">もらったコイン</span><span class="val" aria-hidden="true"><span id="myGift"></span><span id="myFree">340</span></span></div>
           <div class="row" role="group" id="myRowHearts"><span data-t="hearts">ハート</span><span class="val" aria-hidden="true"><span id="myHearts" class="hearts"></span><span id="myHeartsN">5 / 5</span></span></div>
-          <button type="button" class="row" id="myShop"><span data-t="shop">ショップ</span><span class="muted" aria-hidden="true">›</span></button>
+          <button type="button" class="row" id="myShop"><span data-t="shop">ショップ</span><span class="chev" aria-hidden="true">›</span></button>
         </div>
         <div class="mynote" data-t="itemsNote">このデモの中だけのコインとハートだよ。実際のお金は使わないよ</div>
-      </div>
-      <div class="grp"><div class="gl"><span data-t="stampCard">スタンプカード</span><span class="ex" data-t="sampleDemo">表示例（デモ）</span></div>
-        <div id="myBp"></div>
-        <div class="mynote" data-t="stampHow">毎日最初に開いたとき、自動で押されるよ。休んだ日があっても、続きから押せるよ</div>
       </div>
       <div class="grp"><div class="gl" data-t="saving">記録の保存</div>
         <div class="box para"><p data-t="icloud">記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。</p><p data-t="noSave">このデモでは保存しません。ページを閉じると最初に戻ります。</p></div>
@@ -1227,9 +1225,9 @@ function maybeCelebrate(delay){
 function celebrate(){
   var c = M.clear, card = document.getElementById('card'), scrim = document.getElementById('scrim');
   CLEAR_TOTAL++; var back = heartRefund();
-  var first = !CLEARED_SET[STAGE_N], stars = L.demoStars({ retried: RETRIED, unlocked: GATE_UNLOCKED }), got = L.clearReward(R, { first: first, stars: stars, hard: false }) + L.tutorialRewardCoins(R, { first: first, stage: STAGE_N, given: TUT_REWARD_GIVEN });
+  var first = !CLEARED_SET[STAGE_N], stars = L.demoStars({ retried: RETRIED, unlocked: GATE_UNLOCKED }), got = L.clearReward(R, { first: first, stars: stars, hard: false }), tut = L.tutorialRewardCoins(R, { first: first, stage: STAGE_N, given: TUT_REWARD_GIVEN });
   if (first && STAGE_N === 1) TUT_REWARD_GIVEN = true;
-  CLEARED_SET[STAGE_N] = true; CLEARED = Math.max(CLEARED, STAGE_N); WALLET = { paid: WALLET.paid, free: WALLET.free + got }; CLEAR_COINS = got; renderClearCoins(got);
+  CLEARED_SET[STAGE_N] = true; CLEARED = Math.max(CLEARED, STAGE_N); WALLET = { paid: WALLET.paid, free: WALLET.free + got + tut }; CLEAR_COINS = got; CLEAR_TUT = tut; renderClearCoins(got, tut);
   renderClear(pickClear(), back); RETRIED = false;
   if (RM){ scrim.classList.add('on'); card.classList.add('on'); card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: M.reducedMotion.cardFadeMs }); return; }
   var rnd = L.mulberry32(20261103), cols = R.colors, origin = { x: 195, y: 330 };
@@ -1502,11 +1500,11 @@ function pickClear(){
   if (CLEAR_Q) return CLEAR_Q === 'milestone' ? { id: 'milestone', n: CLEAR_N_Q } : { id: CLEAR_Q };
   return L.pickClear({ clearedBefore: CLEARED, moves: MOVES, ref: MIN_MOVES, range: MOVE_RANGE, retried: RETRIED, flights: CLEAR_TOTAL, milestones: CLEAR_MILESTONES, regular: ids, last: CLEAR_LAST });
 }
-var CLEAR_COINS = 0, TUT_REWARD_GIVEN = false;
-function renderClearCoins(n){ var e = document.getElementById('cardCoins'), C = STR[LANG].coins; if (!n){ e.innerHTML = ''; return; }
-  e.innerHTML = ICON.gift(22) + '<span id="ccN">' + C.clear(RM ? n : 0) + '</span>'; if (RM) return;
-  var t0 = performance.now(), d = 700, step = function(t){ var k = Math.min(1, (t - t0) / d), el = document.getElementById('ccN'); if (!el) return; el.textContent = C.clear(Math.round(n * k)); if (k < 1) requestAnimationFrame(step); };
-  setTimeout(function(){ t0 = performance.now(); requestAnimationFrame(step); }, M.clear.cardDelayMs + 200); }
+var CLEAR_COINS = 0, CLEAR_TUT = 0, TUT_REWARD_GIVEN = false;
+function renderClearCoins(n, tut){ var e = document.getElementById('cardCoins'), C = STR[LANG].coins, vals = [n, tut || 0].filter(function(v){ return v > 0; }); if (!vals.length){ e.innerHTML = ''; return; }
+  e.innerHTML = vals.map(function(v, i){ return '<span class="ccl">' + ICON.gift(22) + '<span class="ccN" id="ccN' + i + '">' + C.clear(RM ? v : 0) + '</span></span>'; }).join(''); if (RM) return;
+  vals.forEach(function(v, i){ var t0 = performance.now(), d = 700, step = function(t){ var k = Math.min(1, (t - t0) / d), el = document.getElementById('ccN' + i); if (!el) return; el.textContent = C.clear(Math.round(v * k)); if (k < 1) requestAnimationFrame(step); };
+    setTimeout(function(){ t0 = performance.now(); requestAnimationFrame(step); }, M.clear.cardDelayMs + 200); }); }
 function renderClear(v, heartBack){
   var C = STR[LANG].clear, r = C.regular.filter(function(x){ return x.id === v.id; })[0], sp = C.special[v.id], big, small;
   if (r){ big = r.big; small = r.small; } else if (sp){ big = typeof sp.big === 'function' ? sp.big(v.n) : sp.big; small = typeof sp.small === 'function' ? sp.small(v.n) : sp.small; } else return renderClear({ id: 'nice' });
@@ -1516,7 +1514,7 @@ function renderClear(v, heartBack){
   document.getElementById('cardSub').lang = LANG; document.getElementById('cardNext').textContent = C.next;
   if (r) CLEAR_LAST = v.id; CLEAR_SHOWN = v;
   var live = document.getElementById('live'); live.innerHTML = '';
-  setTimeout(function(){ if (C.head) live.appendChild(document.createTextNode(C.head + ' ')); var a = document.createElement('span'); a.lang = 'en'; a.textContent = big; live.appendChild(a); live.appendChild(document.createTextNode(' ' + small + (heartBack ? (LANG === 'en' ? ' ' : '。') + STR[LANG].heart.back : '') + (CLEAR_COINS ? (LANG === 'en' ? ' ' : '。') + STR[LANG].coins.vo(CLEAR_COINS) : ''))); }, 30);
+  setTimeout(function(){ if (C.head) live.appendChild(document.createTextNode(C.head + ' ')); var a = document.createElement('span'); a.lang = 'en'; a.textContent = big; live.appendChild(a); live.appendChild(document.createTextNode(' ' + small + (heartBack ? (LANG === 'en' ? ' ' : '。') + STR[LANG].heart.back : '') + (CLEAR_COINS ? (LANG === 'en' ? ' ' : '。') + STR[LANG].coins.vo(CLEAR_COINS) : '') + (CLEAR_TUT ? (LANG === 'en' ? ' ' : '。') + STR[LANG].coins.vo(CLEAR_TUT) : ''))); }, 30);
 }
 document.getElementById('scrim').addEventListener('click', function(){ if (HC_ON) homeConfirmClose(); });
 (function(){ var y0 = null, d = document.getElementById('homeConfirm');
@@ -1891,7 +1889,6 @@ function buildMy(){
   document.getElementById('myCart').innerHTML = ICON.cart(16); document.getElementById('myGift').innerHTML = ICON.gift(16);
   var hs = ''; for (var i = 0; i < 5; i++) hs += ICON.heart(14, UNLIMITED_HEARTS || i < HEARTS); document.getElementById('myHearts').innerHTML = UNLIMITED_HEARTS ? ICON.heart(14, true) : hs;
   document.getElementById('myHeartsN').textContent = UNLIMITED_HEARTS ? '∞' : HEARTS + ' / 5';
-  document.getElementById('myBp').innerHTML = boardingPass(3);
 }
 var toastTimer = null;
 function toast(t){ var e = document.getElementById('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function(){ e.classList.remove('on'); }, 1800); }
@@ -1976,7 +1973,7 @@ document.getElementById('hShop').addEventListener('click', function(){ show('sho
 document.getElementById('myShop').addEventListener('click', function(){ show('shop'); document.getElementById('shopBack').focus(); });
 document.getElementById('shopBack').addEventListener('click', function(){ show(PREV_SCREEN); });
 document.getElementById('setBack').addEventListener('click', function(){ show(PREV_SCREEN); });
-document.getElementById('hStamp').addEventListener('click', function(){ openSheet('sStamp'); stampScene(); });
+document.getElementById('hStamp').addEventListener('click', function(){ openSheet('sStamp'); SHEET_AFTER = function(){ document.getElementById('hStamp').focus({ preventScroll: true }); }; stampScene(); });
 document.getElementById('hMy').addEventListener('click', function(){ show('my'); document.getElementById('myBack').focus(); });
 document.getElementById('myBack').addEventListener('click', function(){ show('home'); document.getElementById('hMy').focus(); });
 document.getElementById('hPlay').addEventListener('click', function(){ if (CLEARED + 1 <= DEMO_LAST_STAGE) play(CLEARED + 1); else toast(STR[LANG].ui.stageSoon(CLEARED + 1, STAGES.length)); });
@@ -2332,7 +2329,7 @@ function showResult(t){ var s = document.getElementById('sResult');
 function buildSettings(keep){
   var T = STR[LANG].settingsScr, U = STR[LANG].ui, el = document.getElementById('setScroll'), top = el.scrollTop, h = '';
   h += '<div class="grp"><div class="box">' + [T.music, T.sfx, T.haptics].map(function(k){ return '<div class="row" role="group" aria-label="' + esc(T.soonAria(k)) + '"><span aria-hidden="true">' + esc(k) + '</span><span class="rt" aria-hidden="true"><span class="muted">' + esc(U.soon) + '</span><span class="tg"></span></span></div>'; }).join('') +
-    '<button type="button" class="row" id="stTut"><span>' + esc(T.replayTut) + '</span><span class="muted" aria-hidden="true">›</span></button></div></div>';
+    '<button type="button" class="row" id="stTut"><span>' + esc(T.replayTut) + '</span><span class="chev" aria-hidden="true">›</span></button></div></div>';
   h += '<div class="grp"><div class="gl" id="stLangL">' + esc(T.lang) + '</div><div class="box"><div class="seg" role="group" aria-labelledby="stLangL">' + ['ja', 'en'].map(function(k){ return '<button type="button" data-lang="' + k + '" lang="' + k + '" aria-pressed="' + (LANG === k) + '">' + T.langs[k] + '</button>'; }).join('') + '</div></div></div>';
   h += restoreHtml('st');
   h += '<div class="grp"><div class="gl">' + esc(T.aboutGrp) + '</div><div class="box">' +
