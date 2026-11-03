@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Take to the sky デモ v0.7</title>
+<title>Take to the sky デモ v0.8</title>
 <style>
 :root{--paper:#F6F5F1;--ink:#1F1F1D;--graphite:#5B5A56;--sky:#2B5C8A;--band:#E6EFF6;--room:#EEF3F8;--gate:#E4ECF4;--runway:#E6E3DC;--edge:#CFCBC3;--sign:#24272B;--signText:#F2C94C;--taxi:#D9B44A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -207,7 +207,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .para p{margin:0}
 .para p + p{margin-top:6px;color:var(--graphite)}
 .mycredit{margin:28px 0 0;text-align:center;font-size:12px;line-height:18px;color:var(--graphite)}
-#toast{position:absolute;left:50%;top:668px;transform:translateX(-50%);z-index:80;max-width:340px;padding:10px 16px;border-radius:12px;background:rgba(31,31,29,.88);color:#fff;font-size:13px;line-height:18px;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap}
+#toast{position:absolute;left:50%;top:668px;transform:translateX(-50%);z-index:80;max-width:340px;padding:10px 16px;border-radius:12px;background:rgba(31,31,29,.88);color:#fff;font-size:13px;line-height:18px;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s;width:max-content;box-sizing:border-box;word-break:auto-phrase;overflow-wrap:anywhere}
 #toast.on{opacity:1}
 #tut{left:0;top:0;width:390px;height:844px;z-index:26;display:none;--tk:1;--tf:1}
 #tut.on{display:block}
@@ -234,6 +234,68 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .tutPulse{animation:tutPulse 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 @keyframes tutPulse{0%,100%{opacity:1}50%{opacity:.55}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.gate.side{width:70px;height:77px}
+.gate.side::before{display:none}
+.gate .empty{white-space:nowrap}
+.gate.locked{background:none;border:1.5px dashed #6E7781;box-sizing:border-box;cursor:pointer}
+.gate.locked::before{display:none}
+.gate.locked .no{left:50%;top:12px;transform:translateX(-50%);background:none;color:#5B5A56;padding:0;font-size:12px}
+.gate.locked .lk{position:absolute;left:50%;top:36px;transform:translateX(-50%);width:22px;height:22px}
+.gate.locked .cnt,.gate.locked .empty{display:none}
+.gate .lk{display:none}
+.gate.locked .lk{display:block}
+.sheet2 .row2{display:flex;gap:12px;margin:16px 24px 0}
+.sheet2 .row2 button{flex:1;margin:0;width:auto}
+.sheet2 .pbtn{display:block;width:342px;height:56px;margin:16px 24px 0;border:0;border-radius:16px;background:var(--sky);color:#fff;font:inherit;font-size:17px;font-weight:700;cursor:pointer}
+.sheet2 .row2 .pbtn{height:48px;border-radius:12px}
+.obtn[disabled],.pbtn[disabled]{border-color:#CFCBC3;background:#F1EFEA;color:#5B5A56;cursor:default}
+.sheet2 .sub2{margin:6px 24px 0;font-size:13px;line-height:18px;color:var(--graphite);text-align:center}
+.sheet2 .sub2.l{text-align:left}
+.sheet2 .bal{display:flex;justify-content:flex-start;margin:12px 24px 0}
+.sheet2 .bal .cap{margin-left:0}
+.sheet2 .sep{height:1px;background:#E6E3DC;margin:18px 24px 0}
+.dtag{display:inline-block;height:22px;padding:0 10px;border-radius:11px;background:#fff;border:1.5px solid var(--ink);color:var(--ink);font-size:12px;font-weight:700;line-height:19px;white-space:nowrap}
+#sheet .obtn2{display:block;width:100%;height:48px;margin:0 0 12px;border-radius:12px;border:1.5px solid var(--sky);background:#fff;color:var(--sky);font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+#sheet .obtn2[hidden]{display:none}
+#cardCoins{display:flex;align-items:center;justify-content:center;gap:6px;margin:4px 0 14px;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+#cardCoins:empty{display:none}
+#adScr{left:0;top:0;width:390px;height:844px;z-index:90;background:#24272B;color:#fff;display:none}
+#adScr.on{display:block}
+#adScr .dtag{position:absolute;left:16px;top:56px;background:#24272B;border-color:#fff;color:#fff}
+#adClose{position:absolute;right:8px;top:47px;width:44px;height:44px;border:0;background:none;color:#fff;font:inherit;font-size:28px;line-height:44px;cursor:pointer;padding:0}
+#adScr .abox{position:absolute;left:24px;right:24px;top:300px;text-align:center}
+#adScr .abox svg{display:block;margin:0 auto 16px}
+#adScr #adT{margin:0;font-size:22px;font-weight:700;line-height:30px}
+#adScr #adPre{margin:10px 0 0;font-size:15px;line-height:22px;color:#E3E6EA}
+#adScr #adPre:empty{display:none}
+#adScr #adB{margin:10px 0 0;font-size:15px;line-height:22px;color:#E3E6EA}
+#adScr #adN{margin:28px 0 0;min-height:28px;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+.dbanner{display:flex;gap:10px;align-items:flex-start;margin:16px 16px 0;padding:12px 14px;border-radius:12px;background:#fff;border:1.5px solid var(--ink);font-size:13px;line-height:19px}
+.dbanner .dtag{flex:none}
+.shopLead{margin:16px 24px 0;font-size:17px;font-weight:700;line-height:24px}
+.row .nm{display:flex;flex-direction:column;padding:10px 0}
+.row .nm small{font-size:12px;color:var(--graphite);line-height:16px;margin-top:2px}
+.row .nm .ln{display:flex;align-items:center;gap:6px}
+.pr{min-width:88px;height:44px;padding:0 14px;border-radius:12px;border:1.5px solid var(--sky);background:#fff;color:var(--sky);font:inherit;font-size:15px;font-weight:700;cursor:pointer;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pr[disabled]{border-color:#CFCBC3;background:#F1EFEA;color:#5B5A56;cursor:default}
+.rowNote{display:block;padding:0 16px 10px;margin-top:-6px;font-size:12px;color:var(--graphite);line-height:16px;text-align:right}
+.rnote2{margin:8px 8px 0;font-size:12px;line-height:18px;color:var(--graphite)}
+.rres2{margin:10px 8px 0;padding:10px 12px;border-radius:12px;background:#fff;border:1px solid var(--edge);font-size:14px;line-height:20px}
+.rres2 small{display:block;font-size:12px;color:var(--graphite);margin-top:2px}
+.rres2:empty{display:none}
+.rres2 .rbtns{display:flex;gap:8px;margin-top:10px}
+.rres2 .rbtns button{flex:1;height:44px;border-radius:12px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;background:#fff;border:1.5px solid var(--sky);color:var(--sky)}
+.wbtn{display:block;width:100%;height:48px;border:1.5px solid var(--sky);border-radius:12px;background:#fff;color:var(--sky);font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+.tg{width:51px;height:31px;border-radius:16px;background:#E6E3DC;position:relative;flex:none}
+.tg::after{content:'';position:absolute;left:2px;top:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.row .rt{display:flex;align-items:center;gap:10px}
+.seg{display:flex;gap:8px;padding:10px 16px}
+.seg button{flex:1;height:44px;border-radius:12px;border:1.5px solid #CFCBC3;background:#fff;color:var(--ink);font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.seg button[aria-pressed="true"]{border-color:var(--sky);background:#E6EFF6;color:var(--sky);font-weight:700}
+button.row{width:100%;border:0;background:#fff;font:inherit;color:var(--ink);text-align:left;cursor:pointer}
+button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
+#hNote .rp{display:flex;gap:8px;justify-content:center}
+.rnote2,.dbanner,.sheet2 .desc,.sheet2 .foot,.sheet2 .sub2,.rres2,.row .nm small{word-break:auto-phrase}
 </style>
 </head>
 <body>
@@ -260,7 +322,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   <div id="seats"></div>
   <div id="paxLayer"></div>
   <div id="whyTag" class="abs" lang="ja" aria-hidden="true"></div>
-  <div id="credit" class="abs" data-t="credit">Reach High Studio　デモ v0.7</div>
+  <div id="credit" class="abs" data-t="credit">Reach High Studio　デモ v0.8</div>
   <svg id="fx" class="abs" viewBox="0 0 390 844"></svg>
   <div id="scrim" class="abs"></div>
   <div id="confetti" class="abs"></div>
@@ -268,11 +330,13 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     <h2 id="cardTitle" lang="en"></h2>
     <p id="cardEn" lang="en"></p>
     <p id="cardSub" class="sub"></p>
+    <p id="cardCoins" aria-hidden="true"></p>
     <button id="cardNext" class="primary" data-act="next"></button>
   </div>
   <div id="sheet" class="abs" role="dialog" aria-modal="true">
     <h2 data-t="stuckHead">ここで渋滞みたい。作戦を立て直そうか</h2>
-    <button class="primary" data-act="retry" data-t="tryAgain">やり直す</button>
+    <button type="button" class="obtn2" id="jamOpen" data-t="jamOpen" hidden>枠を開ける</button>
+    <button class="primary" data-act="retry" id="jamRetry">やり直す（ハートを1つ使うよ）</button>
     <button type="button" class="tclose" id="jamClose" data-t="jamClose">閉じる</button>
   </div>
   <div id="homeConfirm" class="abs" role="alertdialog" aria-modal="true" aria-labelledby="hcQ" aria-describedby="hcBody hcNote">
@@ -297,25 +361,25 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     <h1 class="sr">Take to the sky</h1>
     <div class="subttl" id="tSub"></div>
     <button class="ibtn tfade" id="tInfo" style="left:288px;top:41px" aria-label="このアプリについて" data-ta="about"></button>
-    <button class="ibtn tfade" id="tGear" style="left:332px;top:41px" aria-label="設定（準備中）" data-ta="settingsSoon" aria-disabled="true"></button>
+    <button class="ibtn tfade" id="tGear" style="left:332px;top:41px" aria-label="設定" data-ta="settings"></button>
     <button class="bigbtn tfade" id="tStart" data-t="start">スタート</button>
-    <div class="credit2 tfade" data-t="credit">Reach High Studio　デモ v0.7</div>
+    <div class="credit2 tfade" data-t="credit">Reach High Studio　デモ v0.8</div>
   </section>
   <section id="scrHome" class="screen" aria-label="ホーム" data-ta="home">
     <svg class="scene" id="hScene" viewBox="0 0 390 844" aria-hidden="true"></svg>
     <h1 class="sr" data-t="home">ホーム</h1>
     <p id="hGreet"></p>
     <div id="hHud" role="img"></div>
-    <button class="ibtn" id="hGear" style="left:330px;top:53px" aria-label="設定（準備中）" data-ta="settingsSoon" aria-disabled="true"></button>
+    <button class="ibtn" id="hGear" style="left:330px;top:53px" aria-label="設定" data-ta="settings"></button>
     <div id="hRouteT" data-t="route">飛行ルート</div>
     <div id="hRouteN"></div>
     <div id="hRouteA" class="sr"></div>
     <div class="hcards">
       <button class="hcard" id="hStamp" aria-haspopup="dialog"><span class="ic" id="icStamp"></span><span class="lb" data-t="stamps">スタンプ</span><span class="sb" data-t="day3sample">3日目（表示例）</span></button>
       <button class="hcard" id="hMy"><span class="ic" id="icMy"></span><span class="lb" data-t="profile">マイページ</span><span class="sb" data-t="logItems">記録と持ち物</span></button>
-      <button class="hcard" id="hShop" aria-disabled="true" aria-label="ショップ（準備中）" data-ta="shopSoon"><span class="ic" id="icShop"></span><span class="lb" data-t="shop">ショップ</span><span class="sb" data-t="soon">準備中</span></button>
+      <button class="hcard" id="hShop"><span class="ic" id="icShop"></span><span class="lb" data-t="shop">ショップ</span><span class="sb" data-t="shopSub">コインとハート</span></button>
     </div>
-    <div id="hNote"><div id="hNoteT"></div><button id="hReplay" data-t="playStage1">ステージ1を遊ぶ</button></div>
+    <div id="hNote"><div id="hNoteT"></div><div class="rp" id="hReplays"></div></div>
     <button class="bigbtn" id="hPlay"><span data-t="play">プレイ</span><span id="hPlayN">ステージ1</span></button>
   </section>
   <section id="scrMy" class="screen" aria-label="マイページ" data-ta="profile">
@@ -328,14 +392,14 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
         </div>
         <div class="mynote" data-t="myResults">このデモで遊んだ結果だよ</div>
       </div>
-      <div class="grp"><div class="gl"><span data-t="items">持ち物</span><span class="ex" data-t="sampleDemo">表示例（デモ）</span></div>
+      <div class="grp"><div class="gl"><span data-t="items">持ち物</span></div>
         <div class="box">
           <div class="row" role="group" id="myRowPaid"><span data-t="paidCoins">買ったコイン</span><span class="val" aria-hidden="true"><span id="myCart"></span><span id="myPaid">120</span></span></div>
           <div class="row" role="group" id="myRowFree"><span data-t="freeCoins">もらったコイン</span><span class="val" aria-hidden="true"><span id="myGift"></span><span id="myFree">340</span></span></div>
-          <div class="row" role="group" id="myRowHearts"><span data-t="hearts">ハート</span><span class="val" aria-hidden="true"><span id="myHearts" class="hearts"></span>4 / 5</span></div>
-          <div class="row" aria-disabled="true" aria-label="ショップ（準備中）" data-ta="shopSoon"><span style="color:var(--graphite)" data-t="shop">ショップ</span><span class="muted" data-t="soon">準備中</span></div>
+          <div class="row" role="group" id="myRowHearts"><span data-t="hearts">ハート</span><span class="val" aria-hidden="true"><span id="myHearts" class="hearts"></span><span id="myHeartsN">5 / 5</span></span></div>
+          <button type="button" class="row" id="myShop"><span data-t="shop">ショップ</span><span class="muted" aria-hidden="true">›</span></button>
         </div>
-        <div class="mynote" data-t="notInGame">コインとハートは、まだゲームに入っていないよ。数字は見た目の例だよ</div>
+        <div class="mynote" data-t="itemsNote">このデモの中だけのコインとハートだよ。実際のお金は使わないよ</div>
       </div>
       <div class="grp"><div class="gl"><span data-t="stampCard">スタンプカード</span><span class="ex" data-t="sampleDemo">表示例（デモ）</span></div>
         <div id="myBp"></div>
@@ -344,8 +408,17 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
       <div class="grp"><div class="gl" data-t="saving">記録の保存</div>
         <div class="box para"><p data-t="icloud">記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。</p><p data-t="noSave">このデモでは保存しません。ページを閉じると最初に戻ります。</p></div>
       </div>
-      <div class="mycredit">Take to the sky<br><span data-t="credit">Reach High Studio　デモ v0.7</span></div>
+      <div class="mycredit">Take to the sky<br><span data-t="credit">Reach High Studio　デモ v0.8</span></div>
     </div>
+  </section>
+  
+  <section id="scrShop" class="screen" aria-label="ショップ" data-ta="shop">
+    <div class="nav"><button class="back" id="shopBack" aria-label="戻る" data-ta="back"><svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="back">戻る</span></button><h1 data-t="shop">ショップ</h1></div>
+    <div class="scroll" id="shopScroll"></div>
+  </section>
+  <section id="scrSettings" class="screen" aria-label="設定" data-ta="settings">
+    <div class="nav"><button class="back" id="setBack" aria-label="戻る" data-ta="back"><svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="back">戻る</span></button><h1 data-t="settings">設定</h1></div>
+    <div class="scroll" id="setScroll"></div>
   </section>
   <div class="scrim2" id="sScrim"></div>
   <div class="sheet2" id="sStamp" role="dialog" aria-modal="true" aria-labelledby="sStampH">
@@ -361,8 +434,19 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   <div class="sheet2" id="sAbout" role="dialog" aria-modal="true" aria-labelledby="sAboutH">
     <div class="grab"></div>
     <h2 id="sAboutH" data-t="about">このアプリについて</h2>
-    <p class="desc">Take to the sky<br><span data-t="madeBy">制作：Reach High Studio</span><br><span data-t="demoVer">デモ v0.7（ステージ1だけ遊べるよ）</span></p>
+    <p class="desc">Take to the sky<br><span data-t="madeBy">制作：Reach High Studio</span><br><span data-t="demoVer">デモ v0.8（ステージ2まで遊べるよ）</span></p>
     <button class="obtn" data-close data-t="close">閉じる</button>
+  </div>
+  <div class="sheet2" id="sUnlock" role="dialog" aria-modal="true" aria-labelledby="sUnlockH"></div>
+  <div class="sheet2" id="sConfirm" role="alertdialog" aria-modal="true" aria-labelledby="sConfirmH" aria-describedby="sConfirmB sConfirmP"></div>
+  <div class="sheet2" id="sHeartOut" role="dialog" aria-modal="true" aria-labelledby="sHeartOutH"></div>
+  <div class="sheet2" id="sBuy" role="dialog" aria-modal="true" aria-labelledby="sBuyH"></div>
+  <div class="sheet2" id="sResult" role="dialog" aria-modal="true" aria-labelledby="sResultT"></div>
+  <div id="adScr" class="abs" role="dialog" aria-modal="true" aria-labelledby="adT adPre adB">
+    <span class="dtag" id="adTag"></span>
+    <button type="button" id="adClose">×</button>
+    <div class="abox"><svg width="64" height="64" viewBox="0 0 100 100" aria-hidden="true"><g fill="#E3E6EA" stroke="#E3E6EA" stroke-linejoin="round" stroke-width="4"><rect x="42" y="3" width="16" height="91" rx="8"/><path d="M50 36 L95 58 L95 66 L50 59 L5 66 L5 58 Z"/><path d="M50 80 L72 90 L72 95 L50 92 L28 95 L28 90 Z"/></g></svg>
+      <p id="adT"></p><p id="adPre"></p><p id="adB"></p><p id="adN" aria-hidden="true"></p></div>
   </div>
   <div id="toast" role="status" aria-live="polite"></div>
   <div id="live" class="sr" aria-live="polite"></div>
@@ -386,8 +470,9 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
       return { id: p.id, color: p.color, size: p.size, col: p.col, row: p.row, dir: p.dir,
                seats: rules.seats[p.size], filled: 0, status: 'runway', gate: null, arrival: null };
     });
-    var gates = []; for (i = 0; i < rules.gates.base; i++) gates.push(null);
-    var s = { cols: stage.board.cols, rows: stage.board.rows, planes: planes, gates: gates,
+    var gates = [], locked = [], max = Math.max(rules.gates.base, rules.gates.max || rules.gates.base);
+    for (i = 0; i < max; i++) { gates.push(null); locked.push(i >= rules.gates.base); }
+    var s = { cols: stage.board.cols, rows: stage.board.rows, planes: planes, gates: gates, locked: locked,
               slots: slots, queue: queue, passengers: passengers, arrivals: 0, moves: [] };
     checkSeats(s);
     return s;
@@ -411,7 +496,32 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     while (c >= 0 && r >= 0 && c < s.cols && r < s.rows) { if (planeAt(s, c, r)) return false; c += d[0]; r += d[1]; }
     return true;
   }
-  function freeGate(s) { return s.gates.indexOf(null); }
+  function freeGate(s) {
+    for (var g = 0; g < s.gates.length; g++) if (s.gates[g] === null && !(s.locked && s.locked[g])) return g;
+    return -1;
+  }
+  function lockedSlots(s) { var out = []; (s.locked || []).forEach(function (l, g) { if (l) out.push(g); }); return out; }
+  function unlockGate(state, g) {
+    if (!state.locked || !state.locked[g]) return null;
+    var s = clone(state); s.locked[g] = false; s.unlocked = (s.unlocked || 0) + 1; return s;
+  }
+  function unlockHelps(s) {
+    if (status(s) !== 'stuck' || !lockedSlots(s).length) return false;
+    return s.planes.some(function (p) { return p.status === 'runway' && pathClear(s, p); });
+  }
+  function unlockPrice(rules, g) {
+    var U = rules.gateUnlock, list = U && U.slots || [];
+    for (var i = 0; i < list.length; i++) if (list[i].slot === g + 1) return typeof list[i].priceCoins === 'number' ? list[i].priceCoins : null;
+    return null;
+  }
+  function unlockWithCoins(state, wallet, rules, g) {
+    var price = unlockPrice(rules, g); if (price === null || !state.locked || !state.locked[g]) return null;
+    var w = spendCoins(wallet, price); if (!w) return null;
+    return { state: unlockGate(state, g), wallet: w, price: price };
+  }
+  function demoStars(c) { return Math.max(1, 3 - (c.retried ? 1 : 0)); }
+  function tutorialRewardCoins(rules, c) { var t = rules.tutorialReward; return t && c.first && c.stage === 1 && !c.given ? t.coins : 0; }
+  function jamRetryLabel(ui, rules, unlimited) { return rules.hearts.retryMidStageCostsHeart && !unlimited ? ui.tryAgainHeart : ui.tryAgain; }
   function canMove(s, id) {
     var p = planeById(s, id);
     if (!p || p.status !== 'runway') return 'not-on-runway';
@@ -475,7 +585,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   }
   function key(s) {
     var run = s.planes.filter(function (p) { return p.status === 'runway'; }).map(function (p) { return p.id; }).join(',');
-    var gates = s.gates.map(function (id) { return id === null ? '-' : id + ':' + planeById(s, id).filled; }).join(',');
+    var gates = s.gates.map(function (id, g) { return s.locked && s.locked[g] ? 'L' : id === null ? '-' : id + ':' + planeById(s, id).filled; }).join(',');
     var area = s.slots.filter(function (x) { return x !== null; }).map(function (pid) { return s.passengers[pid].color[0]; }).sort().join('');
     return run + '|' + gates + '|' + area + '|' + s.queue.length;
   }
@@ -596,6 +706,13 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     var p = Math.min(wallet.paid, n);
     return Object.assign({}, wallet, { paid: wallet.paid - p, free: wallet.free - (n - p) });
   }
+  function heartRefillOffer(st, rules, wallet) {
+    var H = rules.iap && rules.iap.heartRefill, price = H && H.price;
+    if (st.unlimited) return { show: false };
+    if (st.hearts >= rules.hearts.max) return { show: true, enabled: false, note: 'full', price: price };
+    if (wallet.paid + wallet.free < price) return { show: true, enabled: false, note: 'short', short: price - wallet.paid - wallet.free, price: price };
+    return { show: true, enabled: true, price: price };
+  }
   function grantPack(wallet, product) { return Object.assign({}, wallet, { paid: wallet.paid + (product.coins || 0) + (product.bonus || 0) }); }
   function unlimitedOffers(active) { return { fullRefill: !active, heartAd: !active }; }
   function unlimitedEnd(st, rules) { return { unlimited: false, hearts: rules.hearts.max, inUse: false, carryMs: 0, stageContinues: true }; }
@@ -668,12 +785,12 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   return { greetBand: greetBand, greetKind: greetKind, jaNoBreakHtml: jaNoBreakHtml, ariaJoin: ariaJoin, planeAria: planeAria, gateAria: gateAria, stampCoins: stampCoins, stampAria: stampAria, stampDoneShown: stampDoneShown, isInnerCell: isInnerCell, createGame: createGame, canMove: canMove, legalMoves: legalMoves, tap: tap, isClear: isClear,
            isStuck: isStuck, status: status, solve: solve, randomClearRate: randomClearRate, mulberry32: mulberry32,
            planeById: planeById, hasMatch: hasMatch, DIRS: DIRS,
-           moveRange: moveRange, isPerfectClear: isPerfectClear, pickClear: pickClear, quitNeedsConfirm: quitNeedsConfirm, saveProgress: saveProgress, restoreProgress: restoreProgress, heartRegen: heartRegen, guardedNow: guardedNow, adButtonState: adButtonState, heartSpend: heartSpend, heartGain: heartGain, heartClearRefund: heartClearRefund, heartAdOffered: heartAdOffered, heartAdReward: heartAdReward, heartShopRefill: heartShopRefill, unlockCapState: unlockCapState, clearReward: clearReward, applyRevocation: applyRevocation, spendCoins: spendCoins, grantPack: grantPack, unlimitedOffers: unlimitedOffers, unlimitedEnd: unlimitedEnd, adDayKey: adDayKey, adToday: adToday, adCounter: adCounter, adFinish: adFinish };
+           moveRange: moveRange, isPerfectClear: isPerfectClear, pickClear: pickClear, quitNeedsConfirm: quitNeedsConfirm, saveProgress: saveProgress, restoreProgress: restoreProgress, heartRegen: heartRegen, guardedNow: guardedNow, adButtonState: adButtonState, heartSpend: heartSpend, heartGain: heartGain, heartClearRefund: heartClearRefund, heartAdOffered: heartAdOffered, heartAdReward: heartAdReward, heartShopRefill: heartShopRefill, unlockCapState: unlockCapState, freeGate: freeGate, lockedSlots: lockedSlots, unlockGate: unlockGate, unlockHelps: unlockHelps, unlockPrice: unlockPrice, unlockWithCoins: unlockWithCoins, demoStars: demoStars, tutorialRewardCoins: tutorialRewardCoins, jamRetryLabel: jamRetryLabel, heartRefillOffer: heartRefillOffer, clearReward: clearReward, applyRevocation: applyRevocation, spendCoins: spendCoins, grantPack: grantPack, unlimitedOffers: unlimitedOffers, unlimitedEnd: unlimitedEnd, adDayKey: adDayKey, adToday: adToday, adCounter: adCounter, adFinish: adFinish };
 });
 </script>
 <script>
-var RULES = {"schema":"tts.rules/1","gates":{"base":4,"max":8,"lockedInDemo":false},"boardingArea":{"capacity":20,"cols":5,"rows":4},"waitingLine":{"visible":8},"seats":{"S":4,"M":8,"L":12},"planeLengthPt":{"runway":{"S":48,"M":60,"L":76.8},"gate":{"S":48,"M":52.8,"L":57.6}},"directions":["up","down","left","right"],"colors":[{"id":"red","hex":"#E5484D","symbol":"circle","ja":"赤の丸","en":"red circle"},{"id":"blue","hex":"#2F6FED","symbol":"square","ja":"青の四角","en":"blue square"},{"id":"yellow","hex":"#AC7600","symbol":"triangle","ja":"黄色の三角","en":"yellow triangle"},{"id":"green","hex":"#289446","symbol":"star","ja":"緑の星","en":"green star"}],"tokens":{"paper":"#F6F5F1","ink":"#1F1F1D","graphite":"#5B5A56","sky":"#2B5C8A","skyBand":"#E6EFF6","room":"#EEF3F8","gate":"#E4ECF4","runway":"#E6E3DC","runwayEdge":"#CFCBC3","white":"#FFFFFF"},"resolution":{"gateChoice":"lowestFreeIndex","boardingPriority":"gateArrivalOrder","refillSlot":"lowestEmptyIndex","boardWhom":"allMatchingInBoardingArea","tapCheckOrder":["pathClear","freeGate"],"boardWhen":"afterEveryMoveBoardTakeoffRefillUntilStable","noMatchPlaneMayPark":true},"hearts":{"max":5,"regenMinutes":30,"regenClock":"sinceLastBackground","webBackgroundEvents":["visibilitychange","pagehide"],"spentAtStageStart":true,"refundOnClear":"onceIdempotent","quitMidStageCostsHeart":true,"retryMidStageCostsHeart":true,"lostOnlyIfStateUnrestorable":true,"unlimitedHidesHeartNote":true,"quitBeforeFirstMoveCostsHeart":true,"unlimitedConfirmOnlyIfUnlocked":true,"clock":"monotonicInSession_deviceClockAfterReboot_capped_neverPunish_noServerTime","maxCreditPerGapMin":150,"hardCap":"max_everywhere_clearRefund_regen_adReward_shopRefill","regenStopsWhenFull":true,"adOfferedOnlyBelowMax":true,"shopRefill":"toMaxOnly","spentWhen":"stageStartTapped_preStageScreenFree"},"ads":{"rewardedOnly":true,"playerInitiatedOnly":true,"maxSeconds":30,"adCaps":{"heart":5,"unlock":10},"adCapsShared":false,"adResetHour":0,"afterCap":"hideButton","att":false,"personalizedAds":false,"sdk":"AdMobOnlyNoMediation","npa":1,"clock":"sameAsHearts_monotonicInSession_deviceLocalMidnightAfterReboot_noServerTime","priority":["cap","offline","noFill"],"offline":"showButtonDisabled_autoReenable_noCount","noFill":"message_noCount","mediation":false},"clear":{"perfect":"movesLessOrEqualStageReference","comeback":"clearAfterRetry","flights":"cumulativeClears","milestones":[10,25,50,100],"specialPriority":["first","perfect","comeback","milestone"]},"gateUnlock":{"currency":"coins","homeConfirmAfterUnlock":true,"slots":[{"slot":5,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":6,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":7,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":8,"coins":true,"ad":true,"priceCoins":"TBD"}],"rule":"everyLockedSlotCoinsOrOneAd_noAdOnlySlots","afterAdCap":"coinsEnough_capText+unlockForNCoinsButton__coinsShort_capTextDMoreCoins+smallEarnByClearing_noButton_noShopLink"},"loginBonus":{"loginResetHour":4},"coins":{"purchasedExpire":false,"packBonus":[30,70],"packBonusCountsAsPaid":true,"refund":"storeKit2RevocationDateOnDevice_subtractPackInclBonus_clamp0_keepProgress_dedupeTransactionIds"},"resume":{"saveAfterEveryMove":true,"format":"moveList","seed":null},"release":{"excludeRegionsAtLaunch":["EEA (EU27 + NO, IS, LI)","UK","CH"],"ump":"later"},"support":{"contactUrl":"TBD","contact":"supportPageFormOnly_externalSafari_noWKWebView","prefill":"appVersionOnly","ledgerExport":"shareSheetOnly_noPresetRecipient"},"tutorialReward":{"coins":100,"coinKind":"free","items":[]},"unlimitedHearts":{"hidesFullRefill":true,"hidesHeartAd":true,"onRevocation":"hearts=max_normalRules_currentStageFinishesNormally","familySharing":false},"clearReward":{"firstClearByStars":[20,25,30],"hardBonus":10,"reclear":5,"minCoins":1},"familySharing":{"allIAP":false,"enableRequiresOwnerApproval":"irreversibleInAppStoreConnect"},"stamps":{"dayResetHourFrom":"loginBonus.loginResetHour"},"iap":{"products":[{"id":"studio.reachhigh.taketothesky.coins100","type":"consumable","coins":100,"bonus":0,"priceJPY":160},{"id":"studio.reachhigh.taketothesky.coins300","type":"consumable","coins":300,"bonus":30,"priceJPY":480},{"id":"studio.reachhigh.taketothesky.coins500","type":"consumable","coins":500,"bonus":70,"priceJPY":800},{"id":"studio.reachhigh.taketothesky.unlimitedhearts","type":"nonConsumable","priceJPY":800}],"heartRefill":{"currency":"coins","price":60,"paidSpentFirst":true,"isIAP":false},"bonusCopy":"factsOnly_noPercent_noStrikethrough","wallet":"paidAndFreeShownSeparately_paidSpentFirst"}};
-var STAGE = {"schema":"tts.stage/1","name":"ステージ1（デモ）","seed":"demo-v01-s73","verify":{"solvable":true,"solution":["p02","p04","p05","p03","p06","p07","p11","p08","p09","p01","p12","p10"],"explored":12,"randomClearRate":0.5625,"moveRange":{"min":12,"max":12}},"id":1,"board":{"cols":4,"rows":3},"planes":[{"id":"p01","color":"red","size":"L","col":0,"row":0,"dir":"down"},{"id":"p02","color":"blue","size":"S","col":1,"row":0,"dir":"up"},{"id":"p03","color":"yellow","size":"M","col":2,"row":0,"dir":"up"},{"id":"p04","color":"green","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"blue","size":"M","col":0,"row":1,"dir":"left"},{"id":"p06","color":"green","size":"M","col":1,"row":1,"dir":"left"},{"id":"p07","color":"red","size":"S","col":2,"row":1,"dir":"up"},{"id":"p08","color":"yellow","size":"S","col":3,"row":1,"dir":"right"},{"id":"p09","color":"yellow","size":"S","col":0,"row":2,"dir":"left"},{"id":"p10","color":"green","size":"L","col":1,"row":2,"dir":"right"},{"id":"p11","color":"red","size":"M","col":2,"row":2,"dir":"up"},{"id":"p12","color":"blue","size":"S","col":3,"row":2,"dir":"right"}],"passengers":["green","green","green","green","red","red","red","red","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","green","green","green","green","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","red","red","red","red","yellow","yellow","yellow","yellow","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","yellow","yellow","yellow","yellow"]};
+var RULES = {"schema":"tts.rules/1","gates":{"base":4,"max":8,"lockedInDemo":true},"boardingArea":{"capacity":20,"cols":5,"rows":4},"waitingLine":{"visible":8},"seats":{"S":4,"M":8,"L":12},"planeLengthPt":{"runway":{"S":48,"M":60,"L":76.8},"gate":{"S":48,"M":52.8,"L":57.6}},"directions":["up","down","left","right"],"colors":[{"id":"red","hex":"#E5484D","symbol":"circle","ja":"赤の丸","en":"red circle"},{"id":"blue","hex":"#2F6FED","symbol":"square","ja":"青の四角","en":"blue square"},{"id":"yellow","hex":"#AC7600","symbol":"triangle","ja":"黄色の三角","en":"yellow triangle"},{"id":"green","hex":"#289446","symbol":"star","ja":"緑の星","en":"green star"}],"tokens":{"paper":"#F6F5F1","ink":"#1F1F1D","graphite":"#5B5A56","sky":"#2B5C8A","skyBand":"#E6EFF6","room":"#EEF3F8","gate":"#E4ECF4","runway":"#E6E3DC","runwayEdge":"#CFCBC3","white":"#FFFFFF"},"resolution":{"gateChoice":"lowestFreeIndex","boardingPriority":"gateArrivalOrder","refillSlot":"lowestEmptyIndex","boardWhom":"allMatchingInBoardingArea","tapCheckOrder":["pathClear","freeGate"],"boardWhen":"afterEveryMoveBoardTakeoffRefillUntilStable","noMatchPlaneMayPark":true},"hearts":{"max":5,"regenMinutes":30,"regenClock":"sinceLastBackground","webBackgroundEvents":["visibilitychange","pagehide"],"spentAtStageStart":true,"refundOnClear":"onceIdempotent","quitMidStageCostsHeart":true,"retryMidStageCostsHeart":true,"lostOnlyIfStateUnrestorable":true,"unlimitedHidesHeartNote":true,"quitBeforeFirstMoveCostsHeart":true,"unlimitedConfirmOnlyIfUnlocked":true,"clock":"monotonicInSession_deviceClockAfterReboot_capped_neverPunish_noServerTime","maxCreditPerGapMin":150,"hardCap":"max_everywhere_clearRefund_regen_adReward_shopRefill","regenStopsWhenFull":true,"adOfferedOnlyBelowMax":true,"shopRefill":"toMaxOnly","spentWhen":"stageStartTapped_preStageScreenFree"},"ads":{"rewardedOnly":true,"playerInitiatedOnly":true,"maxSeconds":30,"adCaps":{"heart":5,"unlock":10},"adCapsShared":false,"adResetHour":0,"afterCap":"hideButton","att":false,"personalizedAds":false,"sdk":"AdMobOnlyNoMediation","npa":1,"clock":"sameAsHearts_monotonicInSession_deviceLocalMidnightAfterReboot_noServerTime","priority":["cap","offline","noFill"],"offline":"showButtonDisabled_autoReenable_noCount","noFill":"message_noCount","mediation":false},"clear":{"perfect":"movesLessOrEqualStageReference","comeback":"clearAfterRetry","flights":"cumulativeClears","milestones":[10,25,50,100],"specialPriority":["first","perfect","comeback","milestone"]},"gateUnlock":{"currency":"coins","homeConfirmAfterUnlock":true,"slots":[{"slot":5,"coins":true,"ad":true,"priceCoins":30},{"slot":6,"coins":true,"ad":true,"priceCoins":30},{"slot":7,"coins":true,"ad":true,"priceCoins":30},{"slot":8,"coins":true,"ad":true,"priceCoins":30}],"rule":"everyLockedSlotCoinsOrOneAd_noAdOnlySlots","afterAdCap":"coinsEnough_capText+unlockForNCoinsButton__coinsShort_capTextDMoreCoins+smallEarnByClearing_noButton_noShopLink"},"loginBonus":{"loginResetHour":4},"coins":{"purchasedExpire":false,"packBonus":[30,70],"packBonusCountsAsPaid":true,"refund":"storeKit2RevocationDateOnDevice_subtractPackInclBonus_clamp0_keepProgress_dedupeTransactionIds"},"resume":{"saveAfterEveryMove":true,"format":"moveList","seed":null},"release":{"excludeRegionsAtLaunch":["EEA (EU27 + NO, IS, LI)","UK","CH"],"ump":"later"},"support":{"contactUrl":"TBD","contact":"supportPageFormOnly_externalSafari_noWKWebView","prefill":"appVersionOnly","ledgerExport":"shareSheetOnly_noPresetRecipient"},"tutorialReward":{"coins":100,"coinKind":"free","items":[]},"unlimitedHearts":{"hidesFullRefill":true,"hidesHeartAd":true,"onRevocation":"hearts=max_normalRules_currentStageFinishesNormally","familySharing":false},"clearReward":{"firstClearByStars":[20,25,30],"hardBonus":10,"reclear":5,"minCoins":1},"familySharing":{"allIAP":false,"enableRequiresOwnerApproval":"irreversibleInAppStoreConnect"},"stamps":{"dayResetHourFrom":"loginBonus.loginResetHour"},"iap":{"products":[{"id":"studio.reachhigh.taketothesky.coins100","type":"consumable","coins":100,"bonus":0,"priceJPY":160},{"id":"studio.reachhigh.taketothesky.coins300","type":"consumable","coins":300,"bonus":30,"priceJPY":480},{"id":"studio.reachhigh.taketothesky.coins500","type":"consumable","coins":500,"bonus":70,"priceJPY":800},{"id":"studio.reachhigh.taketothesky.unlimitedhearts","type":"nonConsumable","priceJPY":800}],"heartRefill":{"currency":"coins","price":60,"paidSpentFirst":true,"isIAP":false},"bonusCopy":"factsOnly_noPercent_noStrikethrough","wallet":"paidAndFreeShownSeparately_paidSpentFirst"}};
+var STAGES = [{"schema":"tts.stage/1","name":"ステージ1（デモ）","seed":"demo-v01-s73","verify":{"solvable":true,"solution":["p02","p04","p05","p03","p06","p07","p11","p08","p09","p01","p12","p10"],"explored":12,"randomClearRate":0.5625,"moveRange":{"min":12,"max":12}},"id":1,"board":{"cols":4,"rows":3},"planes":[{"id":"p01","color":"red","size":"L","col":0,"row":0,"dir":"down"},{"id":"p02","color":"blue","size":"S","col":1,"row":0,"dir":"up"},{"id":"p03","color":"yellow","size":"M","col":2,"row":0,"dir":"up"},{"id":"p04","color":"green","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"blue","size":"M","col":0,"row":1,"dir":"left"},{"id":"p06","color":"green","size":"M","col":1,"row":1,"dir":"left"},{"id":"p07","color":"red","size":"S","col":2,"row":1,"dir":"up"},{"id":"p08","color":"yellow","size":"S","col":3,"row":1,"dir":"right"},{"id":"p09","color":"yellow","size":"S","col":0,"row":2,"dir":"left"},{"id":"p10","color":"green","size":"L","col":1,"row":2,"dir":"right"},{"id":"p11","color":"red","size":"M","col":2,"row":2,"dir":"up"},{"id":"p12","color":"blue","size":"S","col":3,"row":2,"dir":"right"}],"passengers":["green","green","green","green","red","red","red","red","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","green","green","green","green","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","red","red","red","red","yellow","yellow","yellow","yellow","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","yellow","yellow","yellow","yellow"]},{"schema":"tts.stage/1","name":"ステージ2（デモ）","seed":"demo-v08-s4756","verify":{"solvable":true,"solution":["p04","p07","p08","p09","p06","p05","p01","p10","p13","p12","p11","p02","p03"],"explored":13,"randomClearRate":0.35,"moveRange":{"min":13,"max":13}},"id":2,"board":{"cols":4,"rows":4},"planes":[{"id":"p01","color":"green","size":"M","col":0,"row":0,"dir":"down"},{"id":"p02","color":"red","size":"S","col":1,"row":0,"dir":"down"},{"id":"p03","color":"blue","size":"L","col":2,"row":0,"dir":"left"},{"id":"p04","color":"yellow","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"red","size":"M","col":0,"row":1,"dir":"right"},{"id":"p06","color":"yellow","size":"M","col":2,"row":1,"dir":"right"},{"id":"p07","color":"green","size":"S","col":3,"row":1,"dir":"up"},{"id":"p08","color":"blue","size":"S","col":0,"row":2,"dir":"down"},{"id":"p09","color":"red","size":"L","col":1,"row":2,"dir":"left"},{"id":"p10","color":"yellow","size":"S","col":3,"row":2,"dir":"up"},{"id":"p11","color":"green","size":"M","col":1,"row":3,"dir":"right"},{"id":"p12","color":"blue","size":"M","col":2,"row":3,"dir":"right"},{"id":"p13","color":"yellow","size":"S","col":3,"row":3,"dir":"up"}],"passengers":["blue","blue","blue","blue","yellow","yellow","yellow","yellow","green","green","green","green","red","red","red","red","red","red","red","red","blue","blue","blue","blue","blue","blue","blue","blue","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","yellow","yellow","yellow","yellow","red","red","red","red","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","blue","blue","blue","blue","green","green","green","green","green","green","green","green","red","red","red","red","green","green","green","green","red","red","red","red","yellow","yellow","yellow","yellow","red","red","red","red"]}], STAGE = STAGES[0];
 var MOTION = {"schema":"tts.motion/1","move":{"speedPtPerMs":0.8,"minMs":500,"maxMs":1200,"easing":"ease-in-out"},"boarding":{"gatherStaggerMs":40,"gatherMs":300,"lineSpacingPt":21,"lineYOffsetFromGateTopPt":-9,"lineScale":0.75,"staggerMs":100,"stepMs":85,"enterMs":170,"enterPopScale":1.15,"enterEndScale":0.2,"hopHeightPt":4,"hopPeriodMs":150,"planePopScale":1.08,"planePopMs":140,"counterBumpScale":1.25,"counterBumpMs":160},"refill":{"durationMs":320,"staggerMs":40,"easing":"cubic-bezier(.3,.9,.4,1)"},"full":{"badgeText":"満席","badgeMs":220,"pulseMs":380,"pulseScales":[1,1.14,1,1.07,1],"sparkleCount":10,"sparkleFromPt":22,"sparkleToPt":46,"sparkleMs":420},"takeoff":{"climbMs":1050,"accelPower":2,"controlRisePt":230,"exitDxPt":250,"exitMinXPt":450,"exitYPt":-90,"endScale":1.5,"contrailStartU":0.15,"contrailWidthPt":3,"contrailOpacity":0.32,"contrailFadeMs":600,"releaseGateAfterMs":250,"totalMsApprox":1430},"clear":{"startAfterLastLiftoffMs":350,"confettiCount":70,"confettiMs":[1500,2000],"confettiSizePt":[7,11],"confettiSpeedPtPerMs":[0.35,0.8],"confettiSpreadRad":1.1,"gravityPtPerMs2":0.0009,"cardDelayMs":450,"cardPopMs":340,"cardPopFromScale":0.92,"cardEasing":"cubic-bezier(.2,1.3,.4,1)"},"reducedMotion":{"moveCrossfadeMs":200,"boardStaggerMs":60,"boardHopPt":6,"boardHopMs":140,"boardFadeMs":160,"takeoffBadgeHoldMs":300,"takeoffSlidePt":90,"takeoffMs":450,"confetti":false,"cardFadeMs":200}};
 </script>
 <script>
@@ -696,12 +813,16 @@ var CELL = { w: RW.w / S.board.cols, h: RW.h / S.board.rows };
 var GATE_X = function(i){ return 28 + i * 85.5; }, GATE_Y = 377, GATE_W = 77.5;
 var TAXI_Y = 474;
 function cellCenter(c, r){ return { x: RW.x + CELL.w * (c + .5), y: RW.y + CELL.h * (r + .5) }; }
-function gateCenter(g){ return { x: GATE_X(g) + GATE_W / 2, y: GATE_Y + 46 }; }
+function gateRect(g){ if (g < R.gates.base) return { x: GATE_X(g), y: GATE_Y, w: GATE_W, h: 77 }; var k = g - R.gates.base; return { x: k % 2 ? 300 : 20, y: 191 + Math.floor(k / 2) * 85, w: 70, h: 77 }; }
+function gateCenter(g){ var r = gateRect(g); return { x: r.x + r.w / 2, y: r.y + 46 }; }
 function slotCenter(i){ var c = i % R.boardingArea.cols, r = Math.floor(i / R.boardingArea.cols); return { x: 115 + 40 * c, y: 211 + 44 * r }; }
 var QX0 = 46, QDX = 30;
 function queueFit(){ var w = document.getElementById('nextLbl').offsetWidth || 0, x0 = Math.max(46, 16 + w + 4 + 11); QDX = Math.min(30, (265 - 11 - x0) / (R.waitingLine.visible - 1)); QX0 = x0; }
 function queueCenter(q){ return { x: QX0 + QDX * Math.min(q, R.waitingLine.visible), y: 121 }; }
 var STAGE_PLANE = {}; S.planes.forEach(function(p){ STAGE_PLANE[p.id] = p; });
+var STAGE_N = 1;
+function setStage(n){ n = Math.max(1, Math.min(STAGES.length, n)); if (n !== STAGE_N){ MIN_MOVES = null; MOVE_RANGE = null; RETRIED = false; }
+  STAGE_N = n; STAGE = STAGES[n - 1]; S = STAGE; CELL = { w: RW.w / S.board.cols, h: RW.h / S.board.rows }; STAGE_PLANE = {}; S.planes.forEach(function(p){ STAGE_PLANE[p.id] = p; }); }
 (function decor(){
   var sky = document.getElementById('decorSky'), room = document.getElementById('decorRoom'), rw = document.getElementById('decorRunway');
   var sil = '#C9D8E6';
@@ -712,13 +833,7 @@ var STAGE_PLANE = {}; S.planes.forEach(function(p){ STAGE_PLANE[p.id] = p; });
     '<path d="M241 50 L266 50 L262 58 L245 58 Z" fill="'+sil+'"/>' +
     '<rect x="244" y="45" width="19" height="5" rx="1" fill="'+sil+'"/>' +
     '<rect x="253" y="40" width="1.4" height="5" fill="'+sil+'"/>';
-  var win = '';
-  [[26, 64], [300, 64]].forEach(function(a){
-    var x = a[0], w = a[1], y = 192, h = 160;
-    win += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="6" fill="url(#winSky)" opacity=".8"/>';
-    for (var i = 1; i < 3; i++) win += '<rect x="'+(x + w * i / 3 - .5)+'" y="'+y+'" width="1" height="'+h+'" fill="#F7FAFC"/>';
-  });
-  room.innerHTML = '<defs><linearGradient id="winSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E3ECF5"/><stop offset="1" stop-color="#EDF3F8"/></linearGradient></defs>' + win;
+  room.innerHTML = '';
   var t = '<line x1="16" y1="'+TAXI_Y+'" x2="374" y2="'+TAXI_Y+'" stroke="var(--taxi)" stroke-width="1" opacity=".6"/>';
   for (var g = 0; g < R.gates.base; g++){ var cx = GATE_X(g) + GATE_W / 2; t += '<line x1="'+cx+'" y1="'+(GATE_Y + 77)+'" x2="'+cx+'" y2="'+RW.y+'" stroke="var(--taxi)" stroke-width="1" opacity=".6"/>'; }
   var cx0 = RW.x + RW.w / 2, y;
@@ -754,12 +869,19 @@ var fxSvg = document.getElementById('fx'), confEl = document.getElementById('con
 var fxd = document.createElement('div'); fxd.className = 'abs'; fxd.style.cssText = 'left:0;top:0;width:390px;height:844px;pointer-events:none;z-index:16';
 app.insertBefore(fxd, document.getElementById('scrim'));
 var gateEls = [], planeEls = {}, paxEls = [], seatEls = {}, seatsEl = document.getElementById('seats');
+var LOCK_SVG = '<svg class="lk" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2.2" fill="none" stroke="#6E7781" stroke-width="2"/><path d="M8.5 10.5V7.8a3.5 3.5 0 0 1 7 0v2.7" fill="none" stroke="#6E7781" stroke-width="2" stroke-linecap="round"/></svg>';
+function lockGateEl(d, g){
+  d.classList.add('locked'); d.setAttribute('role', 'button'); d.tabIndex = 0; d.setAttribute('aria-label', STR[LANG].unlock.lockAria(g));
+  d.onclick = function(){ if (state.locked[g] && !(TUT && TUT.on) && !HC_ON && pending === 0) openUnlock(g); };
+  d.onkeydown = function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); d.onclick(); } };
+}
 function build(){
   gatesEl.innerHTML = ''; planesEl.innerHTML = ''; seatsEl.innerHTML = ''; seatEls = {}; paxEl.innerHTML = ''; fxSvg.innerHTML = ''; fxd.innerHTML = ''; confEl.innerHTML = '';
   gateEls = []; planeEls = {}; paxEls = [];
-  for (var g = 0; g < R.gates.base; g++){
-    var d = document.createElement('div'); d.className = 'gate abs'; d.style.left = GATE_X(g) + 'px';
-    d.innerHTML = '<span class="no" aria-hidden="true">A'+(g+1)+'</span><span class="cnt" aria-hidden="true"></span><span class="empty" aria-hidden="true">' + STR[LANG].ui.gateOpen + '</span>'; d.setAttribute('role', 'img'); d.setAttribute('aria-label', L.gateAria(g, true, LANG));
+  for (var g = 0; g < state.gates.length; g++){
+    var d = document.createElement('div'), gr = gateRect(g); d.className = 'gate abs' + (g >= R.gates.base ? ' side' : ''); d.style.left = gr.x + 'px'; d.style.top = gr.y + 'px';
+    d.innerHTML = '<span class="no" aria-hidden="true">A'+(g+1)+'</span><span class="cnt" aria-hidden="true"></span><span class="empty" aria-hidden="true">' + STR[LANG].ui.gateOpen + '</span>' + LOCK_SVG; d.setAttribute('role', 'img'); d.setAttribute('aria-label', L.gateAria(g, true, LANG));
+    if (state.locked && state.locked[g]) lockGateEl(d, g);
     gatesEl.appendChild(d); gateEls.push(d);
   }
   S.planes.forEach(function(p){
@@ -902,7 +1024,7 @@ function updateCounts(){
   document.getElementById('nextLbl').style.visibility = inQ ? '' : 'hidden';
 }
 function showGate(g){
-  var el = gateEls[g], id = visGate[g], pv = id ? PV[id] : null;
+  var el = gateEls[g], id = visGate[g]; if (id === 'L') return; var pv = id ? PV[id] : null;
   el.querySelector('.cnt').textContent = pv && pv.arrived ? pv.filled + '/' + pv.seats : '';
   el.querySelector('.empty').style.display = pv ? 'none' : ''; el.setAttribute('aria-label', L.gateAria(g, !pv, LANG));
 }
@@ -998,7 +1120,7 @@ function boardGroup(id, items, sq, ep){
         return a.finished.then(function(){ el.style.opacity = 0; a.cancel(); paxWhere[it.pid] = 'gone'; onArrive(id, ep); });
       }));
     }
-    var dirX = g.x < 195 ? 1 : -1, lineY = GATE_Y + b.lineYOffsetFromGateTopPt, door = { x: g.x, y: g.y - 6 };
+    var dirX = g.x < 195 ? 1 : -1, lineY = gateRect(gate).y + b.lineYOffsetFromGateTopPt, door = { x: g.x, y: g.y - 6 };
     var spot = function(i){ return { x: g.x + dirX * (i + 1) * b.lineSpacingPt, y: lineY }; };
     var T0 = (n - 1) * b.gatherStaggerMs + b.gatherMs;
     return Promise.all(items.map(function(it, k){
@@ -1043,7 +1165,7 @@ function takeoff(id, ep){
     if (ep !== epoch) return;
     var gate = pv.gate, g = gateCenter(gate), e = planeEls[id], f = M.full, t = M.takeoff, gk = gateScale(id);
     var badge = document.createElement('div'); badge.className = 'badge'; badge.textContent = STR[LANG].board.full; badge.lang = LANG;
-    badge.style.left = g.x + 'px'; badge.style.top = (GATE_Y - 13) + 'px'; fxd.appendChild(badge);
+    badge.style.left = g.x + 'px'; badge.style.top = (gateRect(gate).y - 13) + 'px'; fxd.appendChild(badge);
     badge.animate(RM ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'translate(-50%,-50%) scale(.6)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1.1)', offset: .7 }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1)' }], { duration: f.badgeMs, easing: 'ease-out' });
     if (RM){
       var r = M.reducedMotion;
@@ -1104,7 +1226,11 @@ function maybeCelebrate(delay){
 }
 function celebrate(){
   var c = M.clear, card = document.getElementById('card'), scrim = document.getElementById('scrim');
-  CLEAR_TOTAL++; var back = heartRefund(); renderClear(pickClear(), back); RETRIED = false;
+  CLEAR_TOTAL++; var back = heartRefund();
+  var first = !CLEARED_SET[STAGE_N], stars = L.demoStars({ retried: RETRIED, unlocked: GATE_UNLOCKED }), got = L.clearReward(R, { first: first, stars: stars, hard: false }) + L.tutorialRewardCoins(R, { first: first, stage: STAGE_N, given: TUT_REWARD_GIVEN });
+  if (first && STAGE_N === 1) TUT_REWARD_GIVEN = true;
+  CLEARED_SET[STAGE_N] = true; CLEARED = Math.max(CLEARED, STAGE_N); WALLET = { paid: WALLET.paid, free: WALLET.free + got }; CLEAR_COINS = got; renderClearCoins(got);
+  renderClear(pickClear(), back); RETRIED = false;
   if (RM){ scrim.classList.add('on'); card.classList.add('on'); card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: M.reducedMotion.cardFadeMs }); return; }
   var rnd = L.mulberry32(20261103), cols = R.colors, origin = { x: 195, y: 330 };
   for (var i = 0; i < c.confettiCount; i++){
@@ -1188,25 +1314,60 @@ var STR = {
     shop: { tone: 'official', bonus: function(n){ return '+' + n; } },
     restore: { tone: 'official',
       button: '購入を復元', note: '復元できるのは、ハート無制限です。',
-      success: '購入を復元しました。ハート無制限が使えます。', successCoins: 'コインとハート全回復は、復元の対象外です。',
+      success: '購入を復元しました。ハート無制限が使えます。', successCoins: 'コインは、復元の対象外です。',
       active: 'ハート無制限は、すでに使えます。', none: '復元できる購入はありませんでした。購入したときと同じApple Accountでサインインしているか、ご確認ください。',
       failed: '購入を復元できませんでした。インターネットの接続を確認して、もう一度お試しください。',
       retry: 'もう一度試す', close: '閉じる',
       pending: [] },
+    unlock: { tone: 'guide',
+      head: function(g){ return 'ゲートA' + (g + 1) + 'を開ける'; },
+      lockAria: function(g){ return 'ゲートA' + (g + 1) + '、閉まっている枠。開け方を選ぶ'; },
+      guide: '広告を見ると、この枠を開けられるよ', guideBoth: '広告かコインで、この枠を開けられるよ',
+      adBtn: '広告を見て開ける',
+      short: function(d){ return 'あとコイン' + d + '枚で開けられるよ'; },
+      balAria: function(w){ return '買ったコイン' + w.paid + '枚、もらったコイン' + w.free + '枚'; },
+      confirmQ: function(n){ return 'コイン' + n + '枚で開ける？'; }, confirmBody: '開けた枠は、このプレイのあいだだけ使えるよ', confirmPaid: '買ったコインから先に使うよ', confirmGo: '開ける', confirmNo: 'やめる',
+      done: function(g){ return 'ゲートA' + (g + 1) + 'を開けたよ'; },
+      adEarly: '最後まで見ると開けられるよ。今回は閉じたままだよ' },
+    heartOut: { tone: 'guide',
+      head: 'ハートが0になったよ', regen: function(t){ return '30分ごとに1つ回復するよ。次の1つまで ' + t; },
+      wait: '回復を待つ', ad: '広告を見て1つもらう', shop: 'ショップ', optional: '見るかどうかは自由だよ。30秒以内',
+      got: 'ハートを1つ受け取ったよ', early: '最後まで見ると受け取れるよ。今回はなしだよ', full: 'ハートが満タンだよ' },
+    demo: { tone: 'official',
+      tag: 'デモ', banner: 'デモです。実際の購入は行われず、料金はかかりません。',
+      adTitle: 'デモの広告', adBody: 'これは実際の広告ではないよ。3秒で終わるよ', adLeft: function(n){ return 'あと' + n + '秒'; }, adDone: '見終わったよ', adCloseAria: '広告を閉じる',
+      buyNote: 'デモのため、実際の購入は行われません。料金はかかりません。', buy: '購入する', cancel: 'やめる' },
+    coins: { tone: 'guide', clear: function(n){ return 'もらったコイン +' + n; }, vo: function(n){ return 'もらったコイン' + n + '枚'; } },
+    shopScr: { tone: 'official',
+      lead: '必要なときに、必要なぶんだけ', minors: '未成年の方は、保護者の方の同意を得てから購入してください。',
+      have: '持ち物', coinsGrp: 'コイン', heartsGrp: 'ハート',
+      pack: function(n){ return 'コイン' + n + '枚'; }, packSub: function(c, b){ return c + '枚＋おまけ' + b + '枚'; },
+      unlimited: 'ハート無制限', unlimitedSub: 'ハートが減らなくなります。', owned: 'ハート無制限は、すでに使えます。',
+      refill: 'ハート全回復', refillSub: 'ハートが5つまで戻るよ', refillBtn: function(n){ return 'コイン' + n + '枚で回復する'; },
+      full: 'ハートは満タンだよ', short: function(d){ return 'あとコイン' + d + '枚で回復できるよ'; }, refillDone: 'ハートが満タンになったよ',
+      okCoins: function(n){ return '購入が完了しました。買ったコイン' + n + '枚を追加しました。'; },
+      okUnlimited: '購入が完了しました。ハート無制限が使えます。',
+      failed: '購入を完了できませんでした。料金は請求されていません。時間をおいて、もう一度お試しください。', pending: '購入の承認を待っています。承認されると自動で追加されます。',
+      offline: 'インターネットに接続されていません。接続を確認して、もう一度お試しください。',
+      links: ['コインと購入について', '特定商取引法に基づく表記', '利用規約', 'プライバシーポリシー'], linkSoon: 'デモにはありません' },
+    settingsScr: { tone: 'official',
+      music: '音楽', sfx: '効果音', haptics: '振動', replayTut: 'チュートリアルをもう一度見る', soonAria: function(k){ return k + '、オフ、準備中'; },
+      lang: '言語', langs: { ja: '日本語', en: 'English' }, restoreGrp: '購入', aboutGrp: 'このアプリについて',
+      links: ['プライバシーポリシー', '利用規約', '特定商取引法に基づく表記', 'お問い合わせ'], linkSoon: 'デモにはありません', madeBy: '制作', madeByVal: 'Reach High Studio', version: 'バージョン', versionVal: 'デモ v0.8（ステージ2まで）', noSave: 'このデモは、遊んだ記録を保存しないよ' },
     ui: {
-      titleAria: '扉絵', about: 'このアプリについて', settingsSoon: '設定（準備中）', start: 'スタート', credit: 'Reach High Studio　デモ v0.7',
+      titleAria: '扉絵', about: 'このアプリについて', settingsSoon: '設定（準備中）', settings: '設定', shopSub: 'コインとハート', jamOpen: '枠を開ける',   start: 'スタート', credit: 'Reach High Studio　デモ v0.8',
       home: 'ホーム', route: '飛行ルート', stamps: 'スタンプ', day3sample: '3日目（表示例）', profile: 'マイページ', logItems: '記録と持ち物', shop: 'ショップ', soon: '準備中', shopSoon: 'ショップ（準備中）',
       playStage1: 'ステージ1を遊ぶ', play: 'プレイ', back: '戻る', backHome: '戻る（ホームへ）', flightLog: '記録', stagesCleared: 'クリアしたステージ', nextStage: '次のステージ',
       myResults: 'このデモで遊んだ結果だよ', items: '持ち物', sample: '表示例', sampleDemo: '表示例（デモ）', paidCoins: '買ったコイン', freeCoins: 'もらったコイン', hearts: 'ハート',
       notInGame: 'コインとハートは、まだゲームに入っていないよ。数字は見た目の例だよ', stampCard: 'スタンプカード', stampHow: ['毎日最初に開いたとき、自動で押されるよ。', '休んだ日があっても、続きから押せるよ'],
       saving: '記録の保存', icloud: '記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。', noSave: 'このデモでは保存しません。ページを閉じると最初に戻ります。',
-      newCard: '7日目のあとは、新しいカードになるよ', close: '閉じる', madeBy: '制作：Reach High Studio', demoVer: 'デモ v0.7（ステージ1だけ遊べるよ）',
-      restart: 'やり直す', stuckHead: 'ここで渋滞みたい。作戦を立て直そうか', tryAgain: 'やり直す', waiting: '待っている人', next: '次', boardingArea: '搭乗口', gateOpen: '空き', jamClose: '閉じる',
+      newCard: '7日目のあとは、新しいカードになるよ', close: '閉じる', madeBy: '制作：Reach High Studio', demoVer: 'デモ v0.8（ステージ2まで遊べるよ）',
+      restart: 'やり直す', stuckHead: 'ここで渋滞みたい。作戦を立て直そうか', tryAgain: 'やり直す', tryAgainHeart: 'やり直す（ハートを1つ使うよ）', waiting: '待っている人', next: '次', boardingArea: '搭乗口', gateOpen: '空き', jamClose: '閉じる',
       waitN: function(n){ return n + '人'; }, routeN: function(n){ return n + 'ステージ クリア'; }, nextN: function(n){ return '次は ' + n; }, stageN: function(n){ return 'ステージ' + n; },
-      routeAria: function(c, n){ return '飛行ルート：' + c + 'ステージ クリア、次はステージ' + n; }, playAria: function(n){ return 'プレイ、ステージ' + n; }, stageSoonAria: function(n){ return 'ステージ' + n + '（準備中）'; },
-      stageSoon: function(n){ return 'ステージ' + n + 'は準備中だよ。このデモはステージ1だけだよ'; }, shopToast: 'ショップは準備中だよ（デモ）', settingsToast: '設定は準備中だよ（デモ）',
-      hudAria: function(w){ return L.ariaJoin(['表示例', 'ハート 5つ中4つ', '買ったコイン' + w.paid + '枚、もらったコイン' + w.free + '枚'], 'ja'); }, coinVal: function(n){ return n + '枚'; },
-      rowAria: function(k, v){ return k + '（表示例）：' + v; }, heartsVal: '5つ中4つ', stageUnit: 'ステージ',
+      routeAria: function(c, n){ return '飛行ルート：' + c + 'ステージ クリア、次はステージ' + n; }, playAria: function(n){ return 'プレイ、ステージ' + n; }, stageSoonAria: function(n){ return 'ステージ' + n + '、準備中'; },
+      stageSoon: function(n, last){ return 'ステージ' + n + 'は準備中だよ。このデモはステージ' + last + 'までだよ'; }, playStageN: function(n){ return 'ステージ' + n + 'を遊ぶ'; },   shopToast: 'ショップは準備中だよ（デモ）', settingsToast: '設定は準備中だよ（デモ）',
+      hudAria: function(w, h, u){ return L.ariaJoin([u ? 'ハート無制限' : 'ハート 5つ中' + h + 'つ', '買ったコイン' + w.paid + '枚、もらったコイン' + w.free + '枚'], 'ja'); }, coinVal: function(n){ return n + '枚'; },
+      rowAria: function(k, v){ return k + '：' + v; }, heartsVal: function(n){ return '5つ中' + n + 'つ'; }, itemsNote: 'このデモの中だけのコインとハートだよ。実際のお金は使わないよ',   stageUnit: 'ステージ',
       bp: { top: '搭乗券', f: ['便', 'ゲート', '特典', '日付'], coins: 'コイン', day: function(n){ return n + '日目'; }, today: '・今日', todayOnly: false, stamp: '出発', sum: function(n){ return '今日は' + n + '日目　もらったコイン +' + L.stampCoins(n); },
         aria: function(n){ return L.stampAria(n, 'ja'); } } },
   },
@@ -1252,7 +1413,7 @@ var STR = {
     ad: { tone: 'guide',
       before: 'An ad will play (30 seconds or less). Watch it to the end and you’ll get 1 heart.',
       remaining: function(n){ return n + ' left today'; },
-      heartCap: 'That’s all the heart ads for today. More at midnight.',
+      heartCap: 'That’s all the ads for today. Your hearts will refill over time.',
       unlockCap: 'That’s all the unlock ads for today. You can also unlock it with coins.', unlockCapShort: function(d){ return 'That’s all the unlock ads for today. ' + (d === 1 ? '1 more coin' : d + ' more coins') + ' to unlock it.'; }, earnByClearing: 'You earn coins by clearing stages.', coinUnlock: function(n){ return 'Unlock for ' + n + (n === 1 ? ' coin' : ' coins'); }, noFill: 'No ad is ready right now. Try again in a little while.', offline: 'Connect to the internet to watch an ad.' },
     home: { tone: 'guide', label: 'Home', q: 'Head home?', body: 'If you stop now, the heart you used won’t come back.', unlocked: 'Opened spots will reset too.', go: 'Go home', stay: 'Keep playing',
       retryQ: 'Restart?', retryBody: 'The heart you used won’t come back, and restarting uses 1 more.', retryGo: 'Restart',
@@ -1262,23 +1423,49 @@ var STR = {
       hud: function(n, u){ return 'Hearts: ' + n + ' of 5' + (u ? ', 1 in use' : ''); }, hudUnlimited: 'Unlimited Hearts' },
     shop: { tone: 'official', bonus: function(n){ return '+' + n + ' bonus'; } },
     restore: { tone: 'official', button: 'Restore purchases', note: 'Only Unlimited Hearts can be restored.',
-      success: 'Purchases restored. Unlimited Hearts is active.', successCoins: 'Coins and full heart refills can’t be restored.', active: 'Unlimited Hearts is already active.',
+      success: 'Purchases restored. Unlimited Hearts is active.', successCoins: 'Coins can’t be restored.', active: 'Unlimited Hearts is already active.',
       none: 'No purchases to restore. Make sure you’re signed in with the Apple Account you used to buy.', failed: 'We couldn’t restore your purchases. Check your internet connection and try again.', retry: 'Try Again', close: 'Close',
       pending: [] },
+    unlock: { tone: 'guide', head: function(g){ return 'Open gate A' + (g + 1); }, lockAria: function(g){ return 'Gate A' + (g + 1) + ', locked. Choose how to open it'; },
+      guide: 'Watch an ad to open this spot.', guideBoth: 'Open this spot with an ad or coins.', adBtn: 'Watch an ad to open', short: function(d){ return (d === 1 ? '1 more coin' : d + ' more coins') + ' to unlock it.'; },
+      balAria: function(w){ return (w.paid === 1 ? '1 purchased coin' : w.paid + ' purchased coins') + ', ' + (w.free === 1 ? '1 earned coin' : w.free + ' earned coins'); },
+      confirmQ: function(n){ return 'Unlock for ' + n + (n === 1 ? ' coin?' : ' coins?'); }, confirmBody: 'The spot stays open for this play only.', confirmPaid: 'Purchased coins are used first.', confirmGo: 'Unlock', confirmNo: 'Cancel',
+      done: function(g){ return 'Gate A' + (g + 1) + ' is open.'; }, adEarly: 'Ad closed early. The spot stays locked this time.' },
+    heartOut: { tone: 'guide', head: 'You’re out of hearts.', regen: function(t){ return 'You get 1 back every 30 minutes. Next one in ' + t + '.'; },
+      wait: 'Wait', ad: 'Watch an ad for 1 heart', shop: 'Shop', optional: 'Totally optional. 30 seconds or less.',
+      got: 'You got 1 heart.', early: 'The ad was closed early, so no heart this time.', full: 'Hearts are full.' },
+    demo: { tone: 'official', tag: 'Demo', banner: 'Demo. No real purchase is made and you won’t be charged.',
+      adTitle: 'Demo ad', adBody: 'This isn’t a real ad. It ends in 3 seconds.', adLeft: function(n){ return n === 1 ? '1 second left' : n + ' seconds left'; }, adDone: 'Ad finished.', adCloseAria: 'Close ad',
+      buyNote: 'This is a demo. No real purchase is made, and you won’t be charged.', buy: 'Buy', cancel: 'Cancel' },
+    coins: { tone: 'guide', clear: function(n){ return 'Earned coins +' + n; }, vo: function(n){ return n === 1 ? '1 earned coin.' : n + ' earned coins.'; } },
+    shopScr: { tone: 'official', lead: 'Only what you need, when you need it.', minors: 'If you are a minor, please get permission from a parent or guardian before making a purchase.',
+      have: 'Items', coinsGrp: 'Coins', heartsGrp: 'Hearts',
+      pack: function(n){ return n + ' coins'; }, packSub: function(c, b){ return c + ' + ' + b + ' bonus'; },
+      unlimited: 'Unlimited Hearts', unlimitedSub: 'Your hearts never run out.', owned: 'Unlimited Hearts is already active.',
+      refill: 'Full heart refill', refillSub: 'Refills your hearts to 5.', refillBtn: function(n){ return 'Refill for ' + n + (n === 1 ? ' coin' : ' coins'); },
+      full: 'Your hearts are full.', short: function(d){ return (d === 1 ? '1 more coin' : d + ' more coins') + ' to refill.'; }, refillDone: 'Your hearts are full.',
+      okCoins: function(n){ return 'Purchase complete. ' + n + ' purchased coins have been added.'; },
+      okUnlimited: 'Purchase complete. Unlimited Hearts is active.',
+      failed: 'The purchase couldn’t be completed. You haven’t been charged. Please try again later.', pending: 'Your purchase is waiting for approval. It’ll be added automatically once approved.',
+      offline: 'You’re not connected to the internet. Please check your connection and try again.',
+      links: ['About coins and purchases', 'Legal notice', 'Terms of use', 'Privacy policy'], linkSoon: 'Not in the demo' },
+    settingsScr: { tone: 'official', music: 'Music', sfx: 'Sound effects', haptics: 'Haptics', replayTut: 'Replay tutorial', soonAria: function(k){ return k + ', off, coming soon'; },
+      lang: 'Language', langs: { ja: '日本語', en: 'English' }, restoreGrp: 'Purchases', aboutGrp: 'About this app',
+      links: ['Privacy policy', 'Terms of use', 'Legal notice', 'Contact us'], linkSoon: 'Not in the demo', madeBy: 'Made by', madeByVal: 'Reach High Studio', version: 'Version', versionVal: 'Demo v0.8 (stages 1–2)', noSave: 'This demo doesn’t save your progress.' },
     ui: {
-      titleAria: 'Title screen', about: 'About this app', settingsSoon: 'Settings (coming soon)', start: 'Start', credit: 'Reach High Studio　Demo v0.7',
+      titleAria: 'Title screen', about: 'About this app', settingsSoon: 'Settings (coming soon)', settings: 'Settings', shopSub: 'Coins and hearts', jamOpen: 'Open a spot', start: 'Start', credit: 'Reach High Studio　Demo v0.8',
       home: 'Home', route: 'Flight route', stamps: 'Stamps', day3sample: 'Day 3 (sample)', profile: 'Profile', logItems: 'Log and items', shop: 'Shop', soon: 'Coming soon', shopSoon: 'Shop (coming soon)',
       playStage1: 'Play stage 1', play: 'Play', back: 'Back', backHome: 'Back to home', flightLog: 'Flight log', stagesCleared: 'Stages cleared', nextStage: 'Next stage',
       myResults: 'Your results from this demo.', items: 'Items', sample: 'Sample', sampleDemo: 'Sample (demo)', paidCoins: 'Purchased coins', freeCoins: 'Earned coins', hearts: 'Hearts',
       notInGame: 'Coins and hearts aren’t in the game yet. The numbers are just samples.', stampCard: 'Stamp card', stampHow: ['You get a stamp the first time you open the app each day.', 'Missed a day? Pick up where you left off.'],
       saving: 'Saving your progress', icloud: 'Your progress is saved to your iCloud automatically. No sign-in or sign-up is needed.', noSave: 'This demo doesn’t save. Closing the page starts it over.',
-      newCard: 'After day 7, you’ll get a new card.', close: 'Close', madeBy: 'Made by Reach High Studio', demoVer: 'Demo v0.7 (stage 1 only)',
-      restart: 'Restart', stuckHead: 'Looks like a traffic jam. Time for a new plan.', tryAgain: 'Try again', waiting: 'Waiting', next: 'Next', boardingArea: 'Boarding area', gateOpen: 'Open', jamClose: 'Close',
+      newCard: 'After day 7, you’ll get a new card.', close: 'Close', madeBy: 'Made by Reach High Studio', demoVer: 'Demo v0.8 (stages 1–2)',
+      restart: 'Restart', stuckHead: 'Looks like a traffic jam. Time for a new plan.', tryAgain: 'Try again', tryAgainHeart: 'Try again (uses 1 heart)', waiting: 'Waiting', next: 'Next', boardingArea: 'Boarding area', gateOpen: 'Open', jamClose: 'Close',
       waitN: function(n){ return String(n); }, routeN: function(n){ return n === 1 ? '1 stage cleared' : n + ' stages cleared'; }, nextN: function(n){ return 'Next: ' + n; }, stageN: function(n){ return 'Stage ' + n; },
-      routeAria: function(c, n){ return 'Flight route: ' + (c === 1 ? '1 stage cleared' : c + ' stages cleared') + '. Next: stage ' + n; }, playAria: function(n){ return 'Play, stage ' + n; }, stageSoonAria: function(n){ return 'Stage ' + n + ' (coming soon)'; },
-      stageSoon: function(n){ return 'Stage ' + n + ' is coming soon. This demo has stage 1 only.'; }, shopToast: 'The shop is coming soon (demo).', settingsToast: 'Settings are coming soon (demo).',
-      hudAria: function(w){ return L.ariaJoin(['Sample', 'Hearts: 4 of 5', 'Purchased coins: ' + w.paid + ', earned coins: ' + w.free], 'en'); }, coinVal: function(n){ return String(n); },
-      rowAria: function(k, v){ return k + ' (sample): ' + v; }, heartsVal: '4 of 5', stageUnit: '',
+      routeAria: function(c, n){ return 'Flight route: ' + (c === 1 ? '1 stage cleared' : c + ' stages cleared') + '. Next: stage ' + n; }, playAria: function(n){ return 'Play, stage ' + n; }, stageSoonAria: function(n){ return 'Stage ' + n + ', coming soon'; },
+      stageSoon: function(n, last){ return 'Stage ' + n + ' is coming soon. This demo goes up to stage ' + last + '.'; }, playStageN: function(n){ return 'Play stage ' + n; }, shopToast: 'The shop is coming soon (demo).', settingsToast: 'Settings are coming soon (demo).',
+      hudAria: function(w, h, u){ return L.ariaJoin([u ? 'Unlimited Hearts' : 'Hearts: ' + h + ' of 5', 'Purchased coins: ' + w.paid + ', earned coins: ' + w.free], 'en'); }, coinVal: function(n){ return String(n); },
+      rowAria: function(k, v){ return k + ': ' + v; }, heartsVal: function(n){ return n + ' of 5'; }, itemsNote: 'These coins and hearts exist only in this demo. No real money is used.', stageUnit: '',
       bp: { top: null, f: null, coins: 'coins', day: function(n){ return 'Day ' + n; }, today: 'Today', todayOnly: true, stamp: 'FLOWN', sum: function(n){ return 'Day ' + n + ' today · Earned coins +' + L.stampCoins(n); },
         aria: function(n){ return L.stampAria(n, 'en'); } } },
   }
@@ -1288,12 +1475,18 @@ var WHY = STR[LANG].why;
   document.querySelectorAll('[data-t]').forEach(function(e){ var v = U[e.getAttribute('data-t')]; v = Array.isArray(v) ? v.join(LANG === 'en' ? ' ' : '') : v; if (LANG === 'ja') e.innerHTML = L.jaNoBreakHtml(v); else e.textContent = v; });
   document.querySelectorAll('[data-ta]').forEach(function(e){ e.setAttribute('aria-label', U[e.getAttribute('data-ta')]); });
   queueFit();
-  document.getElementById('stagePill').textContent = U.stageN(1); document.getElementById('hPlayN').textContent = U.stageN(1);
+  document.getElementById('stagePill').textContent = U.stageN(STAGE_N); document.getElementById('hPlayN').textContent = U.stageN(STAGE_N);
   document.querySelectorAll('[data-tbr]').forEach(function(e){ e.innerHTML = U[e.getAttribute('data-tbr')].join('<br>'); });
 })();
-var SAMPLE_WALLET = /[?&]adpreview=unlock/.test(location.search) ? { paid: 0, free: +((/[?&]adcoins=(\d+)/.exec(location.search) || [])[1] || 120) } : { paid: 120, free: 340 };
-var UNLIMITED_HEARTS = /[?&]unlimited=1/.test(location.search);
+var QS = function(k){ var m = new RegExp('[?&]' + k + '=([^&]*)').exec(location.search); return m ? decodeURIComponent(m[1]) : null; };
+var WALLET = { paid: +(QS('paid') || 0), free: +(QS('free') || QS('adcoins') || 0) };
+var UNLIMITED_HEARTS = /[?&]unlimited=1/.test(location.search), UNLIMITED_OWNED = UNLIMITED_HEARTS || /[?&]owned=1/.test(location.search);
 var HEARTS = Math.min(5, +((/[?&]hearts=(\d+)/.exec(location.search) || [])[1] || 5)), HEART_IN_USE = false;
+var HEART_CARRY = QS('heartnext') ? Math.max(0, R.hearts.regenMinutes * 60 - +QS('heartnext')) * 1000 : 0, HEART_MONO = performance.now();
+function heartSync(){ var r = L.heartRegen({ hearts: HEARTS, carryMs: HEART_CARRY, wall: 0, mono: HEART_MONO, boot: 1 }, R, { wall: 0, mono: performance.now(), boot: 1 }); var ch = r.hearts !== HEARTS; HEARTS = r.hearts; HEART_CARRY = r.carryMs; HEART_MONO = r.mono; return ch; }
+function heartNextText(){ heartSync(); var ms = Math.max(0, R.hearts.regenMinutes * 60000 - HEART_CARRY), t = Math.ceil(ms / 1000); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); }
+function adNow(){ var hq = QS('hour'); return hq ? new Date().setHours(+hq, 0, 0, 0) : Date.now(); }
+var AD_STORE = { day: L.adDayKey(adNow(), R.ads.adResetHour), used: { heart: +(QS('adusedh') || 0), unlock: +(QS('adusedu') || 0) } };
 (function(){
   var H = STR[LANG].home, b = document.getElementById('homeBtn'), dlg = document.getElementById('homeConfirm');
   b.setAttribute('aria-label', H.label); b.title = H.label;
@@ -1301,7 +1494,7 @@ var HEARTS = Math.min(5, +((/[?&]hearts=(\d+)/.exec(location.search) || [])[1] |
   document.getElementById('hcGo').textContent = H.go; document.getElementById('hcStay').textContent = H.stay;
   dlg.lang = LANG;
 })();
-var HC_ON = false, MOVES = 0, GATE_UNLOCKED = /[?&]unlocked=1/.test(location.search);
+var HC_ON = false, MOVES = 0, UNLOCK_COIN = false, GATE_UNLOCKED = /[?&]unlocked=1/.test(location.search);
 var CLEAR_Q = (/[?&]clear=([a-z]+)/.exec(location.search) || [])[1], CLEAR_N_Q = +((/[?&]flights=(\d+)/.exec(location.search) || [])[1] || 10);
 var CLEAR_LAST = null, CLEAR_TOTAL = +((/[?&]flown=(\d+)/.exec(location.search) || [])[1] || 0),   FAILED_TAPS = 0, RETRIED = false, MIN_MOVES = null, MOVE_RANGE = null, CLEAR_MILESTONES = RULES.clear.milestones, CLEAR_SHOWN = null;
 function pickClear(){
@@ -1309,6 +1502,11 @@ function pickClear(){
   if (CLEAR_Q) return CLEAR_Q === 'milestone' ? { id: 'milestone', n: CLEAR_N_Q } : { id: CLEAR_Q };
   return L.pickClear({ clearedBefore: CLEARED, moves: MOVES, ref: MIN_MOVES, range: MOVE_RANGE, retried: RETRIED, flights: CLEAR_TOTAL, milestones: CLEAR_MILESTONES, regular: ids, last: CLEAR_LAST });
 }
+var CLEAR_COINS = 0, TUT_REWARD_GIVEN = false;
+function renderClearCoins(n){ var e = document.getElementById('cardCoins'), C = STR[LANG].coins; if (!n){ e.innerHTML = ''; return; }
+  e.innerHTML = ICON.gift(22) + '<span id="ccN">' + C.clear(RM ? n : 0) + '</span>'; if (RM) return;
+  var t0 = performance.now(), d = 700, step = function(t){ var k = Math.min(1, (t - t0) / d), el = document.getElementById('ccN'); if (!el) return; el.textContent = C.clear(Math.round(n * k)); if (k < 1) requestAnimationFrame(step); };
+  setTimeout(function(){ t0 = performance.now(); requestAnimationFrame(step); }, M.clear.cardDelayMs + 200); }
 function renderClear(v, heartBack){
   var C = STR[LANG].clear, r = C.regular.filter(function(x){ return x.id === v.id; })[0], sp = C.special[v.id], big, small;
   if (r){ big = r.big; small = r.small; } else if (sp){ big = typeof sp.big === 'function' ? sp.big(v.n) : sp.big; small = typeof sp.small === 'function' ? sp.small(v.n) : sp.small; } else return renderClear({ id: 'nice' });
@@ -1318,7 +1516,7 @@ function renderClear(v, heartBack){
   document.getElementById('cardSub').lang = LANG; document.getElementById('cardNext').textContent = C.next;
   if (r) CLEAR_LAST = v.id; CLEAR_SHOWN = v;
   var live = document.getElementById('live'); live.innerHTML = '';
-  setTimeout(function(){ if (C.head) live.appendChild(document.createTextNode(C.head + ' ')); var a = document.createElement('span'); a.lang = 'en'; a.textContent = big; live.appendChild(a); live.appendChild(document.createTextNode(' ' + small + (heartBack ? (LANG === 'en' ? ' ' : '。') + STR[LANG].heart.back : ''))); }, 30);
+  setTimeout(function(){ if (C.head) live.appendChild(document.createTextNode(C.head + ' ')); var a = document.createElement('span'); a.lang = 'en'; a.textContent = big; live.appendChild(a); live.appendChild(document.createTextNode(' ' + small + (heartBack ? (LANG === 'en' ? ' ' : '。') + STR[LANG].heart.back : '') + (CLEAR_COINS ? (LANG === 'en' ? ' ' : '。') + STR[LANG].coins.vo(CLEAR_COINS) : ''))); }, 30);
 }
 document.getElementById('scrim').addEventListener('click', function(){ if (HC_ON) homeConfirmClose(); });
 (function(){ var y0 = null, d = document.getElementById('homeConfirm');
@@ -1326,8 +1524,15 @@ document.getElementById('scrim').addEventListener('click', function(){ if (HC_ON
   d.addEventListener('pointerup', function(e){ if (y0 !== null && e.clientY - y0 > 40 && HC_ON) homeConfirmClose(); y0 = null; });
 })();
 var GFLASH = { inMs: 200, holdMs: 600, outMs: 300, rmHoldMs: 1600 };
+function flashGate(gi){
+  var g = gateEls[gi]; if (!g) return; var f = g.querySelector('.gflash'); if (!f){ f = document.createElement('div'); f.className = 'gflash'; g.appendChild(f); }
+  f.getAnimations().forEach(function(a){ a.cancel(); }); clearTimeout(f._t);
+  if (RM){ f.style.opacity = 1; f._t = setTimeout(function(){ f.style.opacity = 0; }, GFLASH.rmHoldMs); return; }
+  f.style.opacity = 0; var all = GFLASH.inMs + GFLASH.holdMs + GFLASH.outMs;
+  f.animate([{ opacity: 0, offset: 0 }, { opacity: 1, offset: GFLASH.inMs / all }, { opacity: 1, offset: (GFLASH.inMs + GFLASH.holdMs) / all }, { opacity: 0, offset: 1 }], { duration: all, easing: 'linear' });
+}
 function flashGates(){
-  gateEls.forEach(function(g){
+  gateEls.forEach(function(g, gi){ if (state.locked && state.locked[gi]) return;
     var f = g.querySelector('.gflash'); if (!f){ f = document.createElement('div'); f.className = 'gflash'; g.appendChild(f); }
     f.getAnimations().forEach(function(a){ a.cancel(); }); clearTimeout(f._t);
     if (RM){ f.style.opacity = 1; f._t = setTimeout(function(){ f.style.opacity = 0; }, GFLASH.rmHoldMs); return; }
@@ -1337,8 +1542,9 @@ function flashGates(){
 }
 function heartStageStart(){
   if (UNLIMITED_HEARTS){ renderHearts(false); return; }
-  HEART_IN_USE = false; if (HEARTS > 0){ HEARTS--; HEART_IN_USE = true; } renderHearts(false);
+  heartSync(); var r = L.heartSpend({ hearts: HEARTS, carryMs: HEART_CARRY }); HEARTS = r.hearts; HEART_IN_USE = r.inUse; HEART_CARRY = r.carryMs; HEART_MONO = performance.now(); renderHearts(false);
 }
+function canStartStage(){ heartSync(); return UNLIMITED_HEARTS || HEARTS > 0; }
 function heartRefund(){
   if (UNLIMITED_HEARTS || !HEART_IN_USE) return false;
   HEART_IN_USE = false; HEARTS = Math.min(5, HEARTS + 1); renderHearts(true); return true;
@@ -1371,7 +1577,7 @@ var HC_MODE = 'home';
 function homeConfirmOpen(mode){
   HC_MODE = mode === 'retry' ? 'retry' : 'home';
   if (TUT && TUT.on) return;
-  var stt = L.status(state); if (!L.quitNeedsConfirm({ status: stt, unlimited: UNLIMITED_HEARTS, unlocked: GATE_UNLOCKED, heartInUse: HEART_IN_USE })){ hcConfirm(); return; }
+  var stt = L.status(state); if (!L.quitNeedsConfirm({ status: stt, unlimited: UNLIMITED_HEARTS, unlocked: UNLIMITED_HEARTS ? (UNLOCK_COIN || GATE_UNLOCKED) : GATE_UNLOCKED, heartInUse: HEART_IN_USE })){ hcConfirm(); return; }
   var H = STR[LANG].home, rt = HC_MODE === 'retry';
   document.getElementById('hcQ').textContent = rt ? H.retryQ : H.q; document.getElementById('hcGo').textContent = rt ? H.retryGo : H.go; document.getElementById('hcStay').textContent = H.stay;
   document.getElementById('hcBody').textContent = UNLIMITED_HEARTS ? H.unlimited : rt ? H.retryBody : H.body;
@@ -1385,7 +1591,7 @@ function homeConfirmClose(){
   setInert(); document.getElementById(HC_MODE === 'retry' ? 'restart' : 'homeBtn').focus({ preventScroll: true });
 }
 function hcConfirm(){
-  if (HC_MODE === 'retry'){ HC_ON = false; ['homeConfirm', 'scrim'].forEach(function(k){ document.getElementById(k).classList.remove('on'); }); setInert(); start(); }
+  if (HC_MODE === 'retry'){ HC_ON = false; ['homeConfirm', 'scrim'].forEach(function(k){ document.getElementById(k).classList.remove('on'); }); setInert(); retryStage(); }
   else goHome();
 }
 function goHome(){
@@ -1420,13 +1626,14 @@ function shake(id){
   ks.push({ translate: '0 0' });
   b.animate(ks, { duration: TAG.shakeMs, easing: 'ease-in-out' });
 }
-function start(){
+function start(noHeart){
   if (state && MOVES > 0 && L.status(state) !== 'clear') RETRIED = true;
-  epoch++; pending = 0; seq = 0; celebrated = false; MOVES = 0; FAILED_TAPS = 0;
-  heartStageStart();
+  epoch++; pending = 0; seq = 0; celebrated = false; MOVES = 0; FAILED_TAPS = 0; GATE_UNLOCKED = /[?&]unlocked=1/.test(location.search); UNLOCK_COIN = false;
+  if (noHeart !== true) heartStageStart();
   state = L.createGame(R, S);
-  if (MIN_MOVES === null){ var rq = /[?&]ref=(\d+)/.exec(location.search); var V = STAGE.verify || {}; MOVE_RANGE = V.moveRange || null; MIN_MOVES = rq ? +rq[1] : MOVE_RANGE ? MOVE_RANGE.min : null; var mx = /[?&]maxmoves=(\d+)/.exec(location.search); if (mx && MOVE_RANGE) MOVE_RANGE = { min: MOVE_RANGE.min, max: +mx[1] }; }
-  visGate = state.gates.map(function(){ return null; }); gateWaiters = []; PV = {}; paxSeq = []; paxWhere = [];
+  document.getElementById('stagePill').textContent = STR[LANG].ui.stageN(STAGE_N);
+  if (MIN_MOVES === null){ var rq = /[?&]ref=(\d+)/.exec(location.search); var V = S.verify || {}; MOVE_RANGE = V.moveRange || null; MIN_MOVES = rq ? +rq[1] : MOVE_RANGE ? MOVE_RANGE.min : null; var mx = /[?&]maxmoves=(\d+)/.exec(location.search); if (mx && MOVE_RANGE) MOVE_RANGE = { min: MOVE_RANGE.min, max: +mx[1] }; }
+  visGate = state.gates.map(function(_, g){ return state.locked && state.locked[g] ? 'L' : null; }); gateWaiters = []; PV = {}; paxSeq = []; paxWhere = [];
   state.planes.forEach(function(p){ PV[p.id] = { seats: p.seats, filled: 0, gate: null, arrived: false, present: true, gateD: deferred(), arriveD: deferred(), fullD: deferred() }; });
   build();
   state.planes.forEach(function(p){ var c = cellCenter(p.col, p.row); setPlane(p.id, c.x, c.y, DIR_DEG[p.dir], 1, 1); });
@@ -1474,15 +1681,28 @@ function checkEnd(){
   if (pending > 0) return;
   var st = L.status(state);
   if (st === 'clear') maybeCelebrate(0);
-  else if (st === 'stuck'){ document.getElementById('scrim').classList.add('on'); document.getElementById('sheet').classList.add('on'); document.getElementById('live').textContent = STR[LANG].ui.stuckHead; }
+  else if (st === 'stuck') showJam();
 }
-document.querySelectorAll('[data-act="retry"]').forEach(function(b){ b.addEventListener('click', start); });
+function showJam(){
+  var jo = document.getElementById('jamOpen'); jo.hidden = !L.unlockHelps(state);
+  document.getElementById('jamRetry').textContent = L.jamRetryLabel(STR[LANG].ui, R, UNLIMITED_HEARTS);
+  document.getElementById('scrim').classList.add('on'); document.getElementById('sheet').classList.add('on'); document.getElementById('live').textContent = STR[LANG].ui.stuckHead;
+  (jo.hidden ? document.querySelector('#sheet [data-act="retry"]') : jo).focus({ preventScroll: true });
+}
+function hideJam(){ document.getElementById('scrim').classList.remove('on'); document.getElementById('sheet').classList.remove('on'); }
+function retryStage(){
+  if (!canStartStage()){ hideJam(); HEART_IN_USE = false; renderHearts(false); openHeartOut(); return; }
+  start();
+}
+document.querySelectorAll('[data-act="retry"]').forEach(function(b){ b.addEventListener('click', retryStage); });
+document.getElementById('jamOpen').addEventListener('click', function(){ var g = state.locked.indexOf(true); if (g < 0) return; hideJam(); openUnlock(g); });
 document.getElementById('jamClose').addEventListener('click', function(){ document.getElementById('scrim').classList.remove('on'); document.getElementById('sheet').classList.remove('on'); document.getElementById('restart').focus({ preventScroll: true }); });
-document.querySelectorAll('[data-act="next"]').forEach(function(b){ b.addEventListener('click', function(){ CLEARED = Math.max(CLEARED, 1); show('home'); }); });
+document.querySelectorAll('[data-act="next"]').forEach(function(b){ b.addEventListener('click', function(){ ['scrim', 'card'].forEach(function(k){ document.getElementById(k).classList.remove('on'); }); if (STAGE_N < STAGES.length) play(STAGE_N + 1); else show('home'); }); });
 document.getElementById('restart').addEventListener('click', function(){ homeConfirmOpen('retry'); });
-var SCREEN = 'title', CLEARED = 0, DEMO_LAST_STAGE = 1;
+var SCREEN = 'title', PREV_SCREEN = 'home', CLEARED = Math.min(STAGES.length, +(QS('cl') || 0)), DEMO_LAST_STAGE = STAGES.length, CLEARED_SET = {};
+for (var ci = 1; ci <= CLEARED; ci++) CLEARED_SET[ci] = true;
 var A = { skyT: '#D7E6F2', skyB: '#E6EFF6', sun: '#F3E4D8', ground: '#E9E4D8', term: '#DCD9D2', muted: '#77746E', low: '#EEF4F9' };
-var SCR = { title: document.getElementById('scrTitle'), home: document.getElementById('scrHome'), my: document.getElementById('scrMy') };
+var SCR = { title: document.getElementById('scrTitle'), home: document.getElementById('scrHome'), my: document.getElementById('scrMy'), shop: document.getElementById('scrShop'), settings: document.getElementById('scrSettings') };
 function stratus(cx, cy, w){
   var h = w * .18, x0 = cx - w / 2, off = 16, b;
   if (w >= 96) b = [[x0 + off, cy, w * .55, '#FFFFFF'], [x0, cy + h, w * .86, '#FFFFFF'], [x0 + off * 1.25, cy + 2 * h, w - off * 1.25, A.low]];
@@ -1640,11 +1860,7 @@ function buildHome(){
   var s = skyRect('hSky', gy) + stratus(315, 211, 64) + stratus(168, 403, 64) + routeSvg(next) + groundBand(gy, 40, gy + 20) +
     paxRow('blue', 40, gy - 14, 24, 20, 3) + taxiPlaneSvg('hTaxi', COLOR.blue.hex, 40);
   document.getElementById('hScene').innerHTML = s;
-  var hud = document.getElementById('hHud'), hs = '';
-  for (var i = 0; i < 5; i++) hs += ICON.heart(16, i < 4);
-  var U = STR[LANG].ui, W = SAMPLE_WALLET;
-  hud.innerHTML = '<span class="hearts" aria-hidden="true">' + hs + '</span><span class="cap" aria-hidden="true">' + ICON.cart(20) + '<span>' + W.paid + '</span><span class="dv"></span>' + ICON.gift(20) + '<span>' + W.free + '</span></span><span class="ex" aria-hidden="true">' + U.sample + '</span>';
-  hud.setAttribute('aria-label', U.hudAria(W));
+  var U = STR[LANG].ui; renderHud();
   document.getElementById('hGear').innerHTML = ICON.gear;
   document.getElementById('icStamp').innerHTML = ICON.boarding; document.getElementById('icMy').innerHTML = ICON.log; document.getElementById('icShop').innerHTML = ICON.bag;
   document.getElementById('hRouteN').textContent = U.routeN(CLEARED);
@@ -1654,28 +1870,41 @@ function buildHome(){
   play.setAttribute('aria-label', ready ? U.playAria(next) : U.stageSoonAria(next));
   if (ready) play.removeAttribute('aria-disabled'); else play.setAttribute('aria-disabled', 'true');
   document.getElementById('hNote').style.display = ready ? 'none' : 'block';
-  document.getElementById('hNoteT').textContent = U.stageSoon(next);
+  document.getElementById('hNoteT').textContent = U.stageSoon(next, STAGES.length);
+  var rp = document.getElementById('hReplays'); rp.innerHTML = '';
+  if (!ready) STAGES.forEach(function(_, i){ var b = document.createElement('button'); b.type = 'button'; b.textContent = U.playStageN(i + 1); b.addEventListener('click', function(){ play(i + 1); }); rp.appendChild(b); });
+}
+function coinCap(W, z){ return '<span class="cap" aria-hidden="true">' + ICON.cart(z) + '<span>' + W.paid + '</span><span class="dv"></span>' + ICON.gift(z) + '<span>' + W.free + '</span></span>'; }
+function renderHud(){
+  var hud = document.getElementById('hHud'), U = STR[LANG].ui, hs = '', W = WALLET; heartSync();
+  if (UNLIMITED_HEARTS) hs = ICON.heart(16, true) + '<span class="inf" style="font-size:15px;font-weight:700;margin-left:2px">∞</span>';
+  else for (var i = 0; i < 5; i++) hs += ICON.heart(16, i < HEARTS);
+  hud.innerHTML = '<span class="hearts" aria-hidden="true">' + hs + '</span>' + coinCap(W, 20);
+  hud.setAttribute('aria-label', U.hudAria(W, HEARTS, UNLIMITED_HEARTS));
 }
 function buildMy(){
-  var U = STR[LANG].ui, W = SAMPLE_WALLET;
+  var U = STR[LANG].ui, W = WALLET; heartSync();
   document.getElementById('myCleared').innerHTML = CLEARED + (U.stageUnit ? '<small>' + U.stageUnit + '</small>' : '');
   document.getElementById('myPaid').textContent = W.paid; document.getElementById('myFree').textContent = W.free;
-  document.getElementById('myRowPaid').setAttribute('aria-label', U.rowAria(U.paidCoins, U.coinVal(W.paid))); document.getElementById('myRowFree').setAttribute('aria-label', U.rowAria(U.freeCoins, U.coinVal(W.free))); document.getElementById('myRowHearts').setAttribute('aria-label', U.rowAria(U.hearts, U.heartsVal));
+  document.getElementById('myRowPaid').setAttribute('aria-label', U.rowAria(U.paidCoins, U.coinVal(W.paid))); document.getElementById('myRowFree').setAttribute('aria-label', U.rowAria(U.freeCoins, U.coinVal(W.free))); document.getElementById('myRowHearts').setAttribute('aria-label', U.rowAria(U.hearts, UNLIMITED_HEARTS ? STR[LANG].heart.hudUnlimited : U.heartsVal(HEARTS)));
   document.getElementById('myNext').textContent = CLEARED + 1;
   document.getElementById('myCart').innerHTML = ICON.cart(16); document.getElementById('myGift').innerHTML = ICON.gift(16);
-  var hs = ''; for (var i = 0; i < 5; i++) hs += ICON.heart(14, i < 4); document.getElementById('myHearts').innerHTML = hs;
+  var hs = ''; for (var i = 0; i < 5; i++) hs += ICON.heart(14, UNLIMITED_HEARTS || i < HEARTS); document.getElementById('myHearts').innerHTML = UNLIMITED_HEARTS ? ICON.heart(14, true) : hs;
+  document.getElementById('myHeartsN').textContent = UNLIMITED_HEARTS ? '∞' : HEARTS + ' / 5';
   document.getElementById('myBp').innerHTML = boardingPass(3);
 }
 var toastTimer = null;
 function toast(t){ var e = document.getElementById('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function(){ e.classList.remove('on'); }, 1800); }
 function setInert(){
-  var sheetOn = document.querySelector('.sheet2.on');
+  var sheetOn = document.querySelector('.sheet2.on'), adOn = document.getElementById('adScr').classList.contains('on');
   Array.prototype.forEach.call(app.children, function(c){
+    if (adOn){ c.inert = !(c.id === 'adScr' || c.id === 'live' || c.id === 'toast'); return; }
+    if (c.id === 'adScr'){ c.inert = true; return; }
     if (c.classList.contains('sheet2') || c.id === 'toast' || c.id === 'live' || c.classList.contains('scrim2')) { if (c.classList.contains('sheet2')) c.inert = !c.classList.contains('on'); return; }
     if (c.classList.contains('screen')) c.inert = !!sheetOn || SCR[SCREEN] !== c;
     else if (c.id === 'tut') c.inert = !(TUT && TUT.on);
     else if (c.id === 'homeConfirm') c.inert = !(typeof HC_ON !== 'undefined' && HC_ON);
-    else c.inert = SCREEN !== 'game' || !!(TUT && TUT.on) || (typeof HC_ON !== 'undefined' && HC_ON && c.id !== 'scrim');
+    else c.inert = SCREEN !== 'game' || !!sheetOn || !!(TUT && TUT.on) || (typeof HC_ON !== 'undefined' && HC_ON && c.id !== 'scrim');
   });
 }
 var GREET = (function(){
@@ -1688,6 +1917,7 @@ var GREET = (function(){
 })();
 function greetText(){ var G = STR[LANG].greet; return GREET.kind === 'back14' ? G.back14(CLEARED + 1) : GREET.kind ? G[GREET.kind] : ''; }
 function show(name){
+  if (name !== SCREEN && (name === 'shop' || name === 'settings') && SCREEN !== 'shop' && SCREEN !== 'settings') PREV_SCREEN = SCREEN;
   SCREEN = name;
   Object.keys(SCR).forEach(function(k){ SCR[k].classList.toggle('on', k === name); });
   Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); });
@@ -1699,10 +1929,18 @@ function show(name){
     if (!GREET.used && /^back/.test(GREET.kind || '')) homeLine = g.textContent;
     GREET.used = true; }
   if (name === 'my'){ buildMy(); document.getElementById('myScroll').scrollTop = 0; }
+  if (name === 'shop'){ buildShop(); document.getElementById('shopScroll').scrollTop = 0; }
+  if (name === 'settings'){ buildSettings(); document.getElementById('setScroll').scrollTop = 0; }
+  if (name === 'game') renderHearts(false);
   setInert();
-  var live = document.getElementById('live'); live.textContent = { title: GREET.firstLaunch ? STR[LANG].title.vo : 'Take to the sky', home: STR[LANG].home.label + (homeLine ? (LANG === 'en' ? '. ' : '。') + homeLine : ''), my: STR[LANG].ui.profile, game: STR[LANG].ui.stageN(1) }[name];
+  var live = document.getElementById('live'); live.textContent = { title: GREET.firstLaunch ? STR[LANG].title.vo : 'Take to the sky', home: STR[LANG].home.label + (homeLine ? (LANG === 'en' ? '. ' : '。') + homeLine : ''), my: STR[LANG].ui.profile, game: STR[LANG].ui.stageN(STAGE_N), shop: STR[LANG].ui.shop, settings: STR[LANG].ui.settings }[name];
 }
-function play(){ show('game'); start(); tutStart(); }
+function play(n){
+  n = n || Math.min(CLEARED + 1, STAGES.length);
+  if (!canStartStage()){ openHeartOut(); return; }
+  ['scrim', 'sheet', 'card', 'homeConfirm'].forEach(function(k){ document.getElementById(k).classList.remove('on'); });
+  setStage(n); show('game'); start(); if (STAGE_N === 1) tutStart();
+}
 var STAMP_DONE_SHOWN = false;
 function stampScene(){
   var st = document.querySelector('#sBp .d.today .s svg'), dn = document.getElementById('stampDone');
@@ -1720,26 +1958,31 @@ function stampScene(){
 }
 function stampDoneClose(){ var dn = document.getElementById('stampDone'); if (dn.hidden) return false; dn.hidden = true; document.querySelector('#sStamp [data-close]').focus({ preventScroll: true }); return true; }
 document.getElementById('stampDoneClose').addEventListener('click', function(e){ e.stopPropagation(); stampDoneClose(); });
-function openSheet(id){ Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); });
-  document.getElementById('sScrim').classList.add('on'); var s = document.getElementById(id); s.classList.add('on'); setInert(); s.querySelector('[data-close]').focus();
-  if (!RM) s.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 250, easing: 'ease-out' }); }
-function closeSheet(){ document.getElementById('stampDone').hidden = true; document.querySelectorAll('.sheet2.on').forEach(function(s){ s.classList.remove('on'); }); document.getElementById('sScrim').classList.remove('on'); setInert(); }
+var SHEET_AFTER = null;
+function openSheet(id, focusSel){ Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); });
+  var was = !!document.querySelector('.sheet2.on'); document.querySelectorAll('.sheet2.on').forEach(function(x){ x.classList.remove('on'); });
+  document.getElementById('sScrim').classList.add('on'); var s = document.getElementById(id); s.classList.add('on'); setInert(); (s.querySelector(focusSel || '[data-close]') || s.querySelector('button')).focus();
+  if (!RM && !was) s.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 250, easing: 'ease-out' }); }
+function closeSheet(){ document.getElementById('stampDone').hidden = true; document.querySelectorAll('.sheet2.on').forEach(function(s){ s.classList.remove('on'); }); document.getElementById('sScrim').classList.remove('on'); setInert();
+  var f = SHEET_AFTER; SHEET_AFTER = null; if (f) f(); }
 var STAMP_DAY = Math.min(7, Math.max(1, +((/[?&]stamps=(\d)/.exec(location.search) || [])[1] || 3)));
 document.getElementById('sBp').innerHTML = boardingPass(STAMP_DAY); document.getElementById('stampDay').innerHTML = stampDayLines().map(function(t){ return '<span>' + t + '</span>'; }).join('<br>'); document.getElementById('stampDay').lang = LANG;
 buildTitle();
 document.getElementById('tStart').addEventListener('click', function(){ show('home'); });
 document.getElementById('tInfo').addEventListener('click', function(){ openSheet('sAbout'); });
-document.getElementById('tGear').addEventListener('click', function(){ toast(STR[LANG].ui.settingsToast); });
-document.getElementById('hGear').addEventListener('click', function(){ toast(STR[LANG].ui.settingsToast); });
-document.getElementById('hShop').addEventListener('click', function(){ toast(STR[LANG].ui.shopToast); });
+document.getElementById('tGear').addEventListener('click', function(){ show('settings'); document.getElementById('setBack').focus(); });
+document.getElementById('hGear').addEventListener('click', function(){ show('settings'); document.getElementById('setBack').focus(); });
+document.getElementById('hShop').addEventListener('click', function(){ show('shop'); document.getElementById('shopBack').focus(); });
+document.getElementById('myShop').addEventListener('click', function(){ show('shop'); document.getElementById('shopBack').focus(); });
+document.getElementById('shopBack').addEventListener('click', function(){ show(PREV_SCREEN); });
+document.getElementById('setBack').addEventListener('click', function(){ show(PREV_SCREEN); });
 document.getElementById('hStamp').addEventListener('click', function(){ openSheet('sStamp'); stampScene(); });
 document.getElementById('hMy').addEventListener('click', function(){ show('my'); document.getElementById('myBack').focus(); });
 document.getElementById('myBack').addEventListener('click', function(){ show('home'); document.getElementById('hMy').focus(); });
-document.getElementById('hPlay').addEventListener('click', function(){ if (CLEARED + 1 <= DEMO_LAST_STAGE) play(); else toast(STR[LANG].ui.stageSoon(CLEARED + 1)); });
-document.getElementById('hReplay').addEventListener('click', play);
+document.getElementById('hPlay').addEventListener('click', function(){ if (CLEARED + 1 <= DEMO_LAST_STAGE) play(CLEARED + 1); else toast(STR[LANG].ui.stageSoon(CLEARED + 1, STAGES.length)); });
 document.getElementById('sScrim').addEventListener('click', closeSheet);
-document.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', closeSheet); });
-document.addEventListener('keydown', function(e){ if (e.key === 'Escape'){ if (!stampDoneClose()) closeSheet(); } });
+app.addEventListener('click', function(e){ var c = e.target.closest && e.target.closest('.sheet2 [data-close]'); if (c) closeSheet(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape'){ if (AD.on){ adClose(); return; } if (!stampDoneClose()) closeSheet(); } });
 var TUT_Q = (/[?&]tutorial=([01])/.exec(location.search) || [])[1];
 var TUT_DONE = false;
 var TUT = { on: false, step: 0, target: null, steps: null };
@@ -1766,7 +2009,7 @@ function tutArrow(from, gate){
 function tutFirstStep(){
   var id = (L.solve(state, 50000).moves || L.legalMoves(state))[0], pl = L.planeById(state, id);
   var slot = -1; state.slots.forEach(function(pid, i){ if (slot < 0 && pid !== null && state.passengers[pid].color === pl.color) slot = i; });
-  return { id: id, slot: slot, gate: state.gates.indexOf(null) };
+  return { id: id, slot: slot, gate: L.freeGate(state) };
 }
 function tutBlockPair(){
   var best = null;
@@ -1783,7 +2026,7 @@ function tutBlockPair(){
   return best;
 }
 function tutForwardPlane(){
-  var g = state.gates.indexOf(null);
+  var g = L.freeGate(state);
   var best = null, still = null;
   state.planes.forEach(function(p){
     if (p.status !== 'runway' || p.dir === 'up') return;
@@ -1816,7 +2059,7 @@ function tutStart(){
 function tutEnd(){
   TUT.on = false; TUT_DONE = true; document.getElementById('tut').classList.remove('on'); setInert();
   var g = document.getElementById('tutGhost'); if (g) g.remove();
-  document.getElementById('live').textContent = LANG === 'en' ? 'Stage 1' : 'ステージ1';
+  document.getElementById('live').textContent = STR[LANG].ui.stageN(STAGE_N);
   heartTip();
 }
 function tutSetText(el, t){
@@ -1848,7 +2091,7 @@ function tutDraw(animate){
   } else if (st === 3){
     var bp = tutBlockPair();
     if (bp){
-      var rb = tutPlaneRing(bp.blocked), rf = tutPlaneRing(bp.front), fg = state.gates.indexOf(null);
+      var rb = tutPlaneRing(bp.blocked), rf = tutPlaneRing(bp.front), fg = L.freeGate(state);
       holes.push(rf, rb, tutSeatHole(bp.front), tutSeatHole(bp.blocked)); marks += ring(rb, 'dash') + ring(rf, 'pulse') + (fg >= 0 && L.canMove(state, bp.front) === 'ok' ? tutArrow(rf, fg) : '');
     }
   } else if (st === 4){
@@ -1926,7 +2169,7 @@ document.getElementById('tut').addEventListener('click', function(e){
   if (Math.hypot(x - r.x, y - r.y) <= r.r) tutTapTarget();
 });
 function tutTapTarget(){ if (!TUT.on || !TUT.target || TUT.busy) return;
-  var route = TUT.step === 0 ? '' : tutRoute(TUT.target.id, state.gates.indexOf(null), !RM, true);
+  var route = TUT.step === 0 ? '' : tutRoute(TUT.target.id, L.freeGate(state), !RM, true);
   if (!onTap(TUT.target.id)) return;
   if (TUT.step === 0){ TUT.step = 1; tutDraw(true); }
   else { var cur = TUT.step, mk = document.getElementById('tutMarks'); TUT.target = null; mk.innerHTML = route; document.getElementById('tutCutG').innerHTML = '';
@@ -1941,19 +2184,171 @@ document.addEventListener('keydown', function(e){ if (e.key === 'Tab' || e.key.i
 document.addEventListener('pointerdown', function(){ document.documentElement.classList.remove('kbd'); }, true);
 document.getElementById('tutSkip').addEventListener('click', tutEnd);
 function fit(){ var k = Math.min(window.innerWidth / 390, window.innerHeight / 844); app.style.transform = 'scale(' + k + ')'; BOARD_K = k; layoutSeats(); if (TUT.on) tutLayout(); }
-window.addEventListener('resize', fit); fit();
-start();
-var Q0 = /[?&]screen=(title|home|my|game)/.exec(location.search); show(Q0 ? Q0[1] : 'title'); if (SCREEN === 'game') tutStart();
-var AD_Q = (/[?&]ad=(offline|nofill)/.exec(location.search) || [])[1], AD_HEARTS = +((/[?&]adhearts=(\d)/.exec(location.search) || [])[1] || 3), AD_COINS = +((/[?&]adcoins=(\d+)/.exec(location.search) || [])[1] || 120), AD_PRICE = +((/[?&]adprice=(\d+)/.exec(location.search) || [])[1] || 100);
-function adUi(store, kind, nowMs){
-  var c = L.adCounter(store, RULES, kind, nowMs), A = STR[LANG].ad, net = AD_Q === 'offline' ? false : navigator.onLine !== false;
-  var b = L.adButtonState(c, { online: net, noFill: AD_Q === 'nofill', heartsFull: kind === 'heart' && !L.heartAdOffered(AD_HEARTS, RULES) });
+var AD_Q = (/[?&]ad=(offline|nofill)/.exec(location.search) || [])[1];
+var jbr = function(t){ return LANG === 'ja' ? L.jaNoBreakHtml(t) : t; }, esc = function(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+function say(t){ var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = t; }, 60); }
+function walletTotal(){ return WALLET.paid + WALLET.free; }
+function refreshWalletViews(){ if (SCREEN === 'home') renderHud(); if (SCREEN === 'my') buildMy(); if (SCREEN === 'shop') buildShop(true); renderHearts(false); }
+function openGate(g, how){
+  state = L.unlockGate(state, g); if (!state) return; GATE_UNLOCKED = true; if (how === 'coin') UNLOCK_COIN = true;
+  var d = gateEls[g]; d.classList.remove('locked'); d.setAttribute('role', 'img'); d.removeAttribute('tabindex'); d.onclick = null; d.onkeydown = null;
+  var lk = d.querySelector('.lk'); if (lk) lk.remove();
+  d.animate([{ opacity: .35 }, { opacity: 1 }], { duration: RM ? 200 : 400, easing: 'ease-out' }); flashGate(g);
+  visGate[g] = null; showGate(g); if (gateWaiters.length) gateWaiters.shift()(g);
+  var t = STR[LANG].unlock.done(g); toast(t); say(t);
+}
+function adUi(store, kind, nowMs, g){
+  var c = L.adCounter(store, RULES, kind, nowMs), A = STR[LANG].ad, net = AD_Q === 'offline' ? false : navigator.onLine !== false; heartSync();
+  var b = L.adButtonState(c, { online: net, noFill: AD_Q === 'nofill', heartsFull: kind === 'heart' && !L.heartAdOffered(HEARTS, RULES) });
   if (b.note === 'full') return { button: false, note: null };
   if (b.note === 'cap'){ if (kind === 'heart') return { button: false, note: A.heartCap };
-    var u = L.unlockCapState(AD_COINS, AD_PRICE); if (!u.note) return { button: false, note: null };
-    return u.coinButton ? { button: false, note: A.unlockCap, coinButton: A.coinUnlock(u.price), state: 'enough' } : { button: false, note: A.unlockCapShort(u.short), small: A.earnByClearing, state: 'short' }; }
+    var u = L.unlockCapState(walletTotal(), L.unlockPrice(RULES, g == null ? R.gates.base : g)); if (!u.note) return { button: false, note: null };
+    return u.coinButton ? { button: false, cap: true, note: A.unlockCap, coinButton: A.coinUnlock(u.price), price: u.price, state: 'enough' } : { button: false, cap: true, note: A.unlockCapShort(u.short), small: A.earnByClearing, state: 'short' }; }
   return { button: true, enabled: b.enabled, label: A.remaining(b.remaining), note: b.note ? A[b.note] : null };
 }
+function balHtml(){ return '<div class="bal" aria-hidden="true">' + coinCap(WALLET, 18) + '</div>'; }
+function openUnlock(g){
+  var U = STR[LANG].unlock, A = STR[LANG].ad, s = document.getElementById('sUnlock'), price = L.unlockPrice(R, g), u = adUi(AD_STORE, 'unlock', adNow(), g), h = '<div class="grab"></div>';
+  h += '<h2 id="sUnlockH">' + esc(U.head(g)) + '</h2>' + balHtml() + '<p class="sr">' + esc(U.balAria(WALLET)) + '</p>';
+  if (u.button){
+    h += '<p class="desc">' + jbr(walletTotal() >= price ? U.guideBoth : U.guide) + '</p><button type="button" class="obtn" id="uAd"' + (u.enabled ? '' : ' disabled aria-disabled="true"') + '>' + esc(U.adBtn) + '</button><p class="sub2">' + esc(u.label) + '</p>' + (u.note ? '<p class="sub2">' + jbr(u.note) + '</p>' : '');
+    h += '<div class="sep"></div>';
+    if (walletTotal() >= price) h += '<button type="button" class="obtn" id="uCoin">' + esc(A.coinUnlock(price)) + '</button>';
+    else h += '<p class="desc">' + jbr(U.short(price - walletTotal())) + '</p><p class="foot">' + jbr(A.earnByClearing) + '</p>';
+  } else if (u.cap){
+    h += '<p class="desc">' + jbr(u.note) + '</p>' + (u.small ? '<p class="foot">' + jbr(u.small) + '</p>' : '') + (u.coinButton ? '<button type="button" class="obtn" id="uCoin">' + esc(u.coinButton) + '</button>' : '');
+  }
+  h += '<button type="button" class="obtn" data-close>' + esc(STR[LANG].ui.close) + '</button>';
+  s.innerHTML = h;
+  var ab = document.getElementById('uAd'); if (ab) ab.addEventListener('click', function(){ SHEET_AFTER = null; closeSheet(); adStart('unlock', g); });
+  var cb = document.getElementById('uCoin'); if (cb) cb.addEventListener('click', function(){ openConfirm(g); });
+  SHEET_AFTER = jamBack; openSheet('sUnlock', ab && !ab.disabled ? '#uAd' : cb ? '#uCoin' : '[data-close]'); flashGate(g);
+}
+function jamBack(){ if (SCREEN === 'game' && L.status(state) === 'stuck' && !AD.on) showJam(); }
+function openConfirm(g){
+  var U = STR[LANG].unlock, s = document.getElementById('sConfirm'), price = L.unlockPrice(R, g);
+  s.innerHTML = '<div class="grab"></div><h2 id="sConfirmH">' + esc(U.confirmQ(price)) + '</h2>' + balHtml() + '<p class="desc" id="sConfirmB">' + jbr(U.confirmBody) + '</p>' + (WALLET.paid > 0 ? '<p class="foot" id="sConfirmP">' + jbr(U.confirmPaid) + '</p>' : '') +
+    '<div class="row2"><button type="button" class="obtn" data-close>' + esc(U.confirmNo) + '</button><button type="button" class="pbtn" id="cGo">' + esc(U.confirmGo) + '</button></div>';
+  document.getElementById('cGo').addEventListener('click', function(){
+    var r = L.unlockWithCoins(state, WALLET, R, g); SHEET_AFTER = null; closeSheet(); if (!r) return;
+    WALLET = r.wallet; openGate(g, 'coin'); refreshWalletViews();
+  });
+  SHEET_AFTER = jamBack; openSheet('sConfirm');
+}
+var AD = { on: false, kind: null, g: null, n: 0, t: null, back: null, done: false };
+function adStart(kind, g){
+  var D = STR[LANG].demo; AD = { on: true, kind: kind, g: g, n: 3, t: null, back: document.activeElement, done: false };
+  document.getElementById('adTag').textContent = D.tag; document.getElementById('adT').textContent = D.adTitle;
+  document.getElementById('adPre').innerHTML = jbr(kind === 'heart' ? STR[LANG].ad.before : STR[LANG].unlock.guide); document.getElementById('adB').innerHTML = jbr(D.adBody);
+  var cl = document.getElementById('adClose'); cl.setAttribute('aria-label', D.adCloseAria);
+  var sc = document.getElementById('adScr'); sc.classList.add('on'); setInert(); cl.focus();
+  var nEl = document.getElementById('adN'); nEl.removeAttribute('aria-hidden');
+  var tick = function(){ if (AD.n <= 0){ AD.done = true; nEl.textContent = D.adDone; say(D.adDone); return; } nEl.textContent = D.adLeft(AD.n); AD.n--; AD.t = setTimeout(tick, 1000); };
+  nEl.setAttribute('aria-hidden', 'true');
+  tick();
+}
+function adEnd(){ clearTimeout(AD.t); AD.on = false; document.getElementById('adScr').classList.remove('on'); setInert(); }
+function adDone(completed){ var k = AD.kind, g = AD.g; adEnd();
+  if (!completed){ var t0 = k === 'heart' ? STR[LANG].heartOut.early : STR[LANG].unlock.adEarly; toast(t0); say(t0); if (k === 'unlock') jamBack(); else openHeartOut(); return; }
+  AD_STORE = L.adFinish(AD_STORE, R, k, { completed: true, rewardGranted: true }, adNow());
+  if (k === 'heart'){ heartSync(); var r = L.heartAdReward({ hearts: HEARTS, carryMs: HEART_CARRY }, R); HEARTS = r.hearts; HEART_CARRY = r.carryMs; refreshWalletViews(); var t = STR[LANG].heartOut.got; toast(t); say(t); }
+  else openGate(g, 'ad');
+}
+function adClose(){ if (AD.on) adDone(AD.done); }
+document.getElementById('adClose').addEventListener('click', adClose);
+var HO_TIMER = null;
+function openHeartOut(){
+  var O = STR[LANG].heartOut, s = document.getElementById('sHeartOut'), u = adUi(AD_STORE, 'heart', adNow()), h = '<div class="grab"></div>';
+  h += '<h2 id="sHeartOutH">' + esc(O.head) + '</h2><p class="desc" id="hoRegen">' + jbr(O.regen(heartNextText())) + '</p>';
+  h += '<button type="button" class="pbtn" data-close>' + esc(O.wait) + '</button>';
+  if (u.button) h += '<button type="button" class="obtn" id="hoAd"' + (u.enabled ? '' : ' disabled aria-disabled="true"') + '>' + esc(O.ad) + '</button><p class="sub2">' + jbr(O.optional) + '</p><p class="sub2">' + esc(u.label) + '</p>' + (u.note ? '<p class="sub2">' + jbr(u.note) + '</p>' : '');
+  else if (u.note) h += '<p class="foot">' + jbr(u.note) + '</p>';
+  h += '<button type="button" class="obtn" id="hoShop">' + esc(O.shop) + '</button>';
+  s.innerHTML = h;
+  var ab = document.getElementById('hoAd'); if (ab) ab.addEventListener('click', function(){ closeSheet(); adStart('heart'); });
+  document.getElementById('hoShop').addEventListener('click', function(){ closeSheet(); show('shop'); document.getElementById('shopBack').focus(); });
+  clearInterval(HO_TIMER); HO_TIMER = setInterval(function(){ if (!s.classList.contains('on')){ clearInterval(HO_TIMER); return; } var p = document.getElementById('hoRegen'); if (p) p.innerHTML = jbr(O.regen(heartNextText())); if (HEARTS > 0){ clearInterval(HO_TIMER); closeSheet(); refreshWalletViews(); } }, 1000);
+  SHEET_AFTER = function(){ if (SCREEN === 'game' && L.status(state) !== 'clear' && !HEART_IN_USE && !UNLIMITED_HEARTS && HEARTS === 0) show('home'); };
+  openSheet('sHeartOut');
+}
+setInterval(function(){ if (heartSync()) refreshWalletViews(); }, 1000);
+var SHOP_RES = { restore: null, last: null };
+function buildShop(keep){
+  var P = STR[LANG].shopScr, D = STR[LANG].demo, Rs = STR[LANG].restore, U = STR[LANG].ui, el = document.getElementById('shopScroll'), top = el.scrollTop, h = ''; heartSync();
+  h += '<div class="dbanner" role="note"><span>' + jbr(D.banner) + '</span></div><p class="shopLead">' + jbr(P.lead) + '</p>';
+  h += '<div class="grp"><div class="gl">' + esc(P.have) + '</div><div class="box">' +
+    '<div class="row" role="group" aria-label="' + esc(U.rowAria(U.paidCoins, U.coinVal(WALLET.paid))) + '"><span aria-hidden="true">' + esc(U.paidCoins) + '</span><span class="val" aria-hidden="true">' + ICON.cart(18) + WALLET.paid + '</span></div>' +
+    '<div class="row" role="group" aria-label="' + esc(U.rowAria(U.freeCoins, U.coinVal(WALLET.free))) + '"><span aria-hidden="true">' + esc(U.freeCoins) + '</span><span class="val" aria-hidden="true">' + ICON.gift(18) + WALLET.free + '</span></div>' +
+    '<div class="row" role="group" aria-label="' + esc(U.rowAria(U.hearts, UNLIMITED_HEARTS ? STR[LANG].heart.hudUnlimited : U.heartsVal(HEARTS))) + '"><span aria-hidden="true">' + esc(U.hearts) + '</span><span class="val" aria-hidden="true">' + ICON.heart(16, true) + (UNLIMITED_HEARTS ? '∞' : HEARTS + ' / ' + R.hearts.max) + '</span></div></div></div>';
+  h += '<div class="grp"><div class="gl">' + esc(P.coinsGrp) + '</div><div class="box">';
+  R.iap.products.filter(function(p){ return p.coins; }).forEach(function(p){
+    h += '<div class="row"><span class="nm"><span class="ln">' + ICON.cart(18) + esc(P.pack(p.coins + (p.bonus || 0))) + '</span>' + (p.bonus ? '<small>' + esc(P.packSub(p.coins, p.bonus)) + '</small>' : '') + '</span><button type="button" class="pr" data-buy="' + p.id + '" aria-label="' + esc(P.pack(p.coins + (p.bonus || 0)) + ' ¥' + p.priceJPY) + '">¥' + p.priceJPY + '</button></div>';
+  });
+  h += '</div><p class="rnote2">' + jbr(P.minors) + '</p></div>';
+  var un = R.iap.products.filter(function(p){ return p.type === 'nonConsumable'; })[0], rf = L.heartRefillOffer({ hearts: HEARTS, unlimited: UNLIMITED_HEARTS }, R, WALLET);
+  h += '<div class="grp"><div class="gl">' + esc(P.heartsGrp) + '</div><div class="box">';
+  h += '<div class="row"><span class="nm"><span class="ln">' + ICON.heart(16, true) + esc(P.unlimited) + '</span><small>' + jbr(UNLIMITED_HEARTS ? P.owned : P.unlimitedSub) + '</small></span>' + (UNLIMITED_HEARTS ? '' : '<button type="button" class="pr" data-buy="' + un.id + '" aria-label="' + esc(P.unlimited + ' ¥' + un.priceJPY) + '">¥' + un.priceJPY + '</button>') + '</div>';
+  if (rf.show) h += '<div class="row"><span class="nm"><span class="ln">' + ICON.heart(16, true) + esc(P.refill) + '</span><small>' + jbr(P.refillSub) + '</small></span><button type="button" class="pr" id="shRefill"' + (rf.enabled ? '' : ' disabled aria-disabled="true"') + '>' + esc(P.refillBtn(rf.price)) + '</button></div>' +
+    (rf.note ? '<span class="rowNote">' + jbr(rf.note === 'full' ? P.full : P.short(rf.short)) + '</span>' : '');
+  h += '</div></div>';
+  h += restoreHtml('sh');
+  h += '<div class="grp"><div class="box">' + P.links.map(function(t){ return '<div class="row" aria-disabled="true"><span>' + esc(t) + '</span><span class="muted">' + esc(P.linkSoon) + '</span></div>'; }).join('') + '</div></div><div style="height:40px"></div>';
+  el.innerHTML = h; if (keep) el.scrollTop = top;
+  el.querySelectorAll('[data-buy]').forEach(function(b){ b.addEventListener('click', function(){ openBuy(b.getAttribute('data-buy')); }); });
+  var rb = document.getElementById('shRefill'); if (rb) rb.addEventListener('click', function(){
+    var w = L.spendCoins(WALLET, rf.price); if (!w) return; WALLET = w; var r = L.heartShopRefill({ hearts: HEARTS, carryMs: HEART_CARRY }, R); HEARTS = r.hearts; HEART_CARRY = r.carryMs; buildShop(true); refreshWalletViews(); toast(P.refillDone); say(P.refillDone); var fb = document.getElementById('shRefill'); (fb && !fb.disabled ? fb : document.getElementById('shopBack')).focus(); });
+  wireRestore('sh');
+}
+function restoreHtml(p){ var Rs = STR[LANG].restore, r = SHOP_RES.restore;
+  return '<div class="grp"><div class="gl">' + esc(STR[LANG].settingsScr.restoreGrp) + '</div><button type="button" class="wbtn" id="' + p + 'Restore">' + esc(Rs.button) + '</button><p class="rnote2">' + jbr(Rs.note) + '</p>' +
+    '<div class="rres2" id="' + p + 'RRes" role="status">' + (r ? jbr(Rs[r]) + (r === 'success' ? '<small>' + jbr(Rs.successCoins) + '</small>' : '') + (r === 'failed' ? '<div class="rbtns"><button type="button" id="' + p + 'RClose">' + esc(Rs.close) + '</button><button type="button" id="' + p + 'RRetry">' + esc(Rs.retry) + '</button></div>' : '') : '') + '</div></div>'; }
+function wireRestore(p){
+  var go = function(){
+    var k = QS('restoreres') === 'failed' && SHOP_RES.restore !== 'failed' ? 'failed' : UNLIMITED_HEARTS ? 'active' : UNLIMITED_OWNED ? 'success' : 'none';
+    if (k === 'success') UNLIMITED_HEARTS = true;
+    SHOP_RES.restore = k; if (p === 'sh') buildShop(true); else buildSettings(true); refreshWalletViews();
+    var Rs = STR[LANG].restore; say(Rs[k] + (k === 'success' ? ' ' + Rs.successCoins : ''));
+  };
+  document.getElementById(p + 'Restore').addEventListener('click', go);
+  var rc = document.getElementById(p + 'RClose'); if (rc) rc.addEventListener('click', function(){ SHOP_RES.restore = null; if (p === 'sh') buildShop(true); else buildSettings(true); document.getElementById(p + 'Restore').focus(); });
+  var rr = document.getElementById(p + 'RRetry'); if (rr) rr.addEventListener('click', go);
+}
+function openBuy(id){
+  var P = STR[LANG].shopScr, D = STR[LANG].demo, p = R.iap.products.filter(function(x){ return x.id === id; })[0], nm = p.coins ? P.pack(p.coins + (p.bonus || 0)) : P.unlimited, s = document.getElementById('sBuy');
+  s.innerHTML = '<div class="grab"></div><div style="margin:16px 24px 0"><span class="dtag">' + esc(D.tag) + '</span></div><h2 id="sBuyH" style="margin-top:10px">' + esc(nm) + '　¥' + p.priceJPY + '</h2>' + (p.bonus ? '<p class="desc">' + esc(P.packSub(p.coins, p.bonus)) + '</p>' : '') +
+    '<p class="desc">' + jbr(D.buyNote) + '</p><div class="row2"><button type="button" class="obtn" data-close>' + esc(D.cancel) + '</button><button type="button" class="pbtn" id="bGo">' + esc(D.buy) + '</button></div>';
+  document.getElementById('bGo').addEventListener('click', function(){
+    var f = QS('buy'), msg;
+    if (f === 'fail') msg = P.failed; else if (f === 'pending') msg = P.pending;
+    else if (p.coins){ WALLET = L.grantPack(WALLET, p); msg = P.okCoins(p.coins + (p.bonus || 0)); }
+    else { UNLIMITED_HEARTS = true; UNLIMITED_OWNED = true; msg = P.okUnlimited; }
+    buildShop(true); refreshWalletViews(); showResult(msg);
+  });
+  openSheet('sBuy', '[data-close]');
+}
+function showResult(t){ var s = document.getElementById('sResult');
+  s.innerHTML = '<div class="grab"></div><div style="margin:16px 24px 0"><span class="dtag">' + esc(STR[LANG].demo.tag) + '</span></div><p class="desc" id="sResultT" style="font-size:15px;line-height:22px;color:var(--ink);margin-top:12px">' + jbr(t) + '</p><button type="button" class="obtn" data-close>' + esc(STR[LANG].ui.close) + '</button>';
+  openSheet('sResult'); say(t); }
+function buildSettings(keep){
+  var T = STR[LANG].settingsScr, U = STR[LANG].ui, el = document.getElementById('setScroll'), top = el.scrollTop, h = '';
+  h += '<div class="grp"><div class="box">' + [T.music, T.sfx, T.haptics].map(function(k){ return '<div class="row" role="group" aria-label="' + esc(T.soonAria(k)) + '"><span aria-hidden="true">' + esc(k) + '</span><span class="rt" aria-hidden="true"><span class="muted">' + esc(U.soon) + '</span><span class="tg"></span></span></div>'; }).join('') +
+    '<button type="button" class="row" id="stTut"><span>' + esc(T.replayTut) + '</span><span class="muted" aria-hidden="true">›</span></button></div></div>';
+  h += '<div class="grp"><div class="gl" id="stLangL">' + esc(T.lang) + '</div><div class="box"><div class="seg" role="group" aria-labelledby="stLangL">' + ['ja', 'en'].map(function(k){ return '<button type="button" data-lang="' + k + '" lang="' + k + '" aria-pressed="' + (LANG === k) + '">' + T.langs[k] + '</button>'; }).join('') + '</div></div></div>';
+  h += restoreHtml('st');
+  h += '<div class="grp"><div class="gl">' + esc(T.aboutGrp) + '</div><div class="box">' +
+    T.links.map(function(t){ return '<div class="row" aria-disabled="true"><span>' + esc(t) + '</span><span class="muted">' + esc(T.linkSoon) + '</span></div>'; }).join('') +
+    [[T.madeBy, T.madeByVal], [T.version, T.versionVal]].map(function(r){ return '<div class="row" role="group" aria-label="' + esc(U.rowAria(r[0], r[1])) + '"><span aria-hidden="true">' + esc(r[0]) + '</span><span class="muted" aria-hidden="true">' + esc(r[1]) + '</span></div>'; }).join('') +
+    '</div><p class="rnote2" id="stNoSave">' + jbr(T.noSave) + '</p></div><div style="height:40px"></div>';
+  el.innerHTML = h; if (keep) el.scrollTop = top;
+  document.getElementById('stTut').addEventListener('click', function(){ TUT_DONE = false; play(1); });
+  el.querySelectorAll('[data-lang]').forEach(function(b){ b.addEventListener('click', function(){ var k = b.getAttribute('data-lang'); if (k === LANG) return;
+    var q = ['screen=settings', 'lang=' + k, 'cl=' + CLEARED, 'paid=' + WALLET.paid, 'free=' + WALLET.free, 'hearts=' + HEARTS]; if (UNLIMITED_HEARTS) q.push('unlimited=1');
+    location.search = '?' + q.join('&'); }); });
+  wireRestore('st');
+}
+window.addEventListener('resize', fit); fit();
+setStage(Math.min(STAGES.length, +(QS('stage') || 1))); start(true);
+var Q0 = /[?&]screen=(title|home|my|game|shop|settings)/.exec(location.search); show(Q0 ? Q0[1] : 'title'); if (Q0 && (Q0[1] === 'shop' || Q0[1] === 'settings')) PREV_SCREEN = 'home';   if (SCREEN === 'game'){ heartStageStart(); if (STAGE_N === 1) tutStart(); }
 (function(){
   var m = /[?&]restorepreview=(before|success|active|none|failed)/.exec(location.search); if (!m) return;
   var k = m[1], T = STR[LANG].restore, box = document.createElement('div'); box.id = 'restorePreview'; box.className = 'abs'; box.lang = LANG; document.getElementById('app').appendChild(box);
@@ -1966,14 +2361,17 @@ function adUi(store, kind, nowMs){
   var m = /[?&]adpreview=(heart|unlock)/.exec(location.search); if (!m) return;
   var kind = m[1], used = +((/[?&]adused=(\d+)/.exec(location.search) || [])[1] || 0), hq = /[?&]hour=(\d+)/.exec(location.search), now = hq ? new Date().setHours(+hq[1], 0, 0, 0) : Date.now(),   st = { day: L.adDayKey(now, RULES.ads.adResetHour), used: {} }; st.used[kind] = used;
   var box = document.createElement('div'); box.id = 'adPreview'; box.className = 'abs'; box.lang = LANG; document.getElementById('app').appendChild(box);
-  function draw(){ var u = adUi(st, kind, now);
+  function draw(){ var u = adUi(st, kind, now, R.gates.base);
     box.innerHTML = (u.button ? '<button type="button" class="primary"' + (u.enabled ? '' : ' disabled aria-disabled="true"') + '>' + u.label + '</button>' : '') + (u.note ? '<p>' + (LANG === 'ja' ? L.jaNoBreakHtml(u.note) : u.note) + '</p>' : '') + (u.small ? '<p class="sm">' + (LANG === 'ja' ? L.jaNoBreakHtml(u.small) : u.small) + '</p>' : '') + (u.coinButton ? '<button type="button" class="coinBtn">' + u.coinButton + '</button>' : ''); }
   var lastState = null; function say(u){ if (u.state && u.state !== lastState){ lastState = u.state; var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = u.note + (u.small ? ' ' + u.small : ''); }, 300); } }
-  var draw0 = draw; draw = function(){ draw0(); say(adUi(st, kind, now)); };
-  window.TTS_setCoins = function(n){ AD_COINS = n; SAMPLE_WALLET = { paid: 0, free: n }; if (SCREEN === 'home') buildHome(); draw(); };
+  var draw0 = draw; draw = function(){ draw0(); say(adUi(st, kind, now, R.gates.base)); };
+  window.TTS_setCoins = function(n){ WALLET = { paid: 0, free: n }; if (SCREEN === 'home') buildHome(); draw(); };
   draw(); window.addEventListener('online', draw); window.addEventListener('offline', draw);
 })();
-window.TTS = { tap: onTap, adUi: adUi, state: function(){ return state; }, canMove: function(id){ return L.canMove(state, id); }, status: function(){ return L.status(state); },
+window.TTS = { tap: onTap, adUi: adUi, stage: function(){ return STAGE_N; }, play: play, wallet: function(){ return WALLET; }, hearts: function(){ heartSync(); return HEARTS; },
+  setWallet: function(p, f){ WALLET = { paid: p, free: f }; refreshWalletViews(); }, setHearts: function(n){ HEARTS = n; HEART_CARRY = 0; HEART_MONO = performance.now(); refreshWalletViews(); }, openUnlock: openUnlock, openConfirm: openConfirm, openHeartOut: openHeartOut,
+  openBuy: openBuy, adStart: adStart, adOn: function(){ return AD.on; }, gateEls: function(){ return gateEls; }, showJam: showJam, setCleared: function(n){ CLEARED = n; for (var i = 1; i <= n; i++) CLEARED_SET[i] = true; },
+  setStage: function(n){ setStage(n); start(true); }, adStore: function(){ return AD_STORE; }, setAdUsed: function(k, n){ AD_STORE.used[k] = n; }, state: function(){ return state; }, canMove: function(id){ return L.canMove(state, id); }, status: function(){ return L.status(state); },
   solution: function(){ return L.solve(state).moves; }, idle: function(){ return pending === 0; }, celebrated: function(){ return celebrated; }, restart: start, reducedMotion: RM, seatInfo: function(){ return SEAT_INFO; },
   screen: function(){ return SCREEN; }, go: function(n){ if (n === 'game') play(); else show(n); }, cleared: function(){ return CLEARED; }, homeConfirm: function(){ return HC_ON; }, setClear: function(id, n){ renderClear({ id: id, n: n || 10 }); }, clearShown: function(){ return CLEAR_SHOWN; }, tut: function(){ return { on: TUT.on, step: TUT.step, busy: !!TUT.busy, target: TUT.target && TUT.target.id }; },
   taxiDone: function(){ return Object.keys(taxiRun).every(function(k){ return taxiRun[k].done; }); } };
