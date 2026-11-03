@@ -14,9 +14,8 @@ body{display:flex;align-items:flex-start;justify-content:center;font-family:-app
 .abs{position:absolute}
 #band{left:0;top:0;width:390px;height:160px;background:linear-gradient(var(--band),var(--paper))}
 #stagePill{left:calc(12px + 44px*var(--seatInv,1));top:53px;height:32px;padding:0 14px;border-radius:16px;background:#fff;display:flex;align-items:center;font-size:15px;font-weight:700}
-/* t115u：ゲーム中のホームボタン（左上。控えめな墨色、当たり 44×44pt） */
 #homeBtn{left:8px;top:calc(69px - 22px*var(--seatInv,1));width:calc(44px*var(--seatInv,1));height:calc(44px*var(--seatInv,1));border:0;padding:0;background:none;color:var(--graphite);cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:22px;outline:0}
-#homeBtn svg{width:24px;height:24px} /* SE で盤面が縮んでも、当たりは実寸 44×44pt（--seatInv で戻す） */
+#homeBtn svg{width:24px;height:24px}
 .kbd #homeBtn:focus-visible,.kbd #hcBtns button:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
 #homeConfirm{left:40px;width:310px;top:300px;z-index:30;background:#FFFFFF;border-radius:20px;box-shadow:0 8px 24px rgba(31,31,29,.18);padding:20px 16px 14px;opacity:0;pointer-events:none;transition:opacity .2s}
 #homeConfirm.on{opacity:1;pointer-events:auto}
@@ -26,9 +25,8 @@ body{display:flex;align-items:flex-start;justify-content:center;font-family:-app
 #hcBody{margin:4px 0 0;font-size:15px;color:var(--graphite);line-height:1.45;word-break:auto-phrase}
 #hcBtns{display:flex;gap:10px;margin-top:16px}
 #hcBtns button{flex:1;min-width:96px;min-height:calc(44px*var(--seatInv,1));border-radius:22px;font:inherit;font-size:15px;font-weight:700;cursor:pointer;outline:0}
-#hcGo{background:#FFFFFF;color:var(--ink);border:1px solid #CFCBC3} /* 失う側：枠だけ・ふつうの文字色（赤にしない） */
+#hcGo{background:#FFFFFF;color:var(--ink);border:1px solid #CFCBC3}
 #hcStay{background:var(--sky);color:#FFFFFF;border:0}
-/* 空きゲートがないとき、A1〜A4 の枠を1回だけ白く（2pt） */
 .gflash{position:absolute;inset:-2px;border:2px solid #FFFFFF;border-radius:14px;pointer-events:none;opacity:0}
 #gHearts{left:calc(20px + 44px*var(--seatInv,1) + 92px);top:61px;display:flex;gap:2px;align-items:center}
 #gHearts .hs.use{opacity:.35}
@@ -42,7 +40,6 @@ body{display:flex;align-items:flex-start;justify-content:center;font-family:-app
 #waitLbl{right:16px;top:101px;font-size:12px;color:var(--graphite);text-align:right}
 #waitNum{right:16px;top:116px;font-size:17px;font-weight:700;text-align:right}
 #room{left:16px;top:147px;width:358px;height:320px;border-radius:16px;background:var(--room)}
-
 #roomCount{right:32px;top:159px;font-size:13px;font-weight:700;color:var(--graphite)}
 .gate{width:77.5px;height:77px;top:377px;border-radius:12px;background:var(--gate)}
 .gate .no{position:absolute;left:5px;top:5px;height:18px;padding:0 6px;border-radius:4px;background:var(--sign);color:#FFFFFF;font-size:12px;font-weight:700;line-height:18px;letter-spacing:.03em}
@@ -50,7 +47,6 @@ body{display:flex;align-items:flex-start;justify-content:center;font-family:-app
 .gate::before{content:'';position:absolute;left:calc(50% - .5px);top:50%;bottom:0;width:1px;background:var(--taxi);opacity:.6}
 .gate .empty{position:absolute;left:50%;top:42px;transform:translateX(-50%);padding:0 6px;border-radius:4px;background:var(--gate);text-align:center;font-size:13px;line-height:20px;color:var(--graphite)}
 #runway{left:16px;top:482px;width:358px;height:308px;border-radius:18px;background:var(--runway);border:1px solid var(--edge)}
-/* t111u：動けない理由の札（タップした機のすぐ上。上の縁に当たるときは下） */
 #whyTag{left:0;top:0;z-index:17;pointer-events:none;white-space:nowrap;background:#FFFFFF;border:1px solid #CFCBC3;border-radius:calc(10px*var(--tk,1));padding:calc(5px*var(--tk,1)) calc(10px*var(--tk,1));font-size:calc(15px*var(--tk,1));font-weight:600;line-height:1.3;color:#1F1F1D;opacity:0;box-shadow:0 2px 6px rgba(31,31,29,.10)}
 .pax{left:0;top:0;width:26px;height:32px;transition:transform .32s cubic-bezier(.3,.9,.4,1),opacity .28s ease;will-change:transform}
 .plane{left:0;top:0;cursor:pointer;will-change:transform}
@@ -71,7 +67,7 @@ body{display:flex;align-items:flex-start;justify-content:center;font-family:-app
 #scrim.on{opacity:1;pointer-events:auto}
 #sheet{left:0;width:390px;bottom:0;background:#fff;border-radius:24px 24px 0 0;padding:24px 16px 50px;transform:translateY(110%);transition:transform .25s ease}
 #sheet.on{transform:none}
-#sheet .tclose{display:block;margin:8px auto 0;min-width:96px;min-height:44px;padding:0 16px;border:0;background:none;color:var(--sky);font:inherit;font-size:16px;font-weight:700;cursor:pointer} /* m10 の「閉じる」（文字のボタン、当たり44pt以上。CD v0.6） */
+#sheet .tclose{display:block;margin:8px auto 0;min-width:96px;min-height:44px;padding:0 16px;border:0;background:none;color:var(--sky);font:inherit;font-size:16px;font-weight:700;cursor:pointer}
 #card{left:16px;width:358px;top:250px;background:#fff;border-radius:24px;padding:32px 16px 16px;text-align:center;opacity:0;pointer-events:none}
 #card.on{opacity:1;pointer-events:auto}
 h2{margin:0 0 8px;font-size:20px;font-weight:700}
@@ -80,7 +76,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #card .sub{font-size:17px;word-break:auto-phrase}
 #cardEn{margin:0 0 4px;font-size:20px;font-weight:700;color:var(--sky)}
 #cardEn:empty{display:none}
-/* スタンプカード完成：7日目が押されたときだけ、シートの上に1回だけ出す札（CD v0.6）。閉じるとカードと4時の行だけに戻る */
 #stampDone{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);border-radius:inherit}
 #stampDone[hidden]{display:none}
 #stampDone .dc{width:326px;background:#fff;border-radius:20px;border:1px solid var(--edge);box-shadow:0 8px 24px rgba(31,31,29,.16);padding:24px 0 16px;text-align:center}
@@ -101,20 +96,16 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #adPreview .primary[disabled]{background:#CFCBC3;color:#5B5A56;cursor:default}
 #adPreview .coinBtn{display:block;width:100%;height:48px;margin-top:10px;border-radius:14px;background:#fff;border:1px solid #CFCBC3;color:var(--ink);font:inherit;font-size:15px;font-weight:600}
 #adPreview p.sm{font-size:12px}
-.sent{display:inline-block} /* 日本語の改行は「。」のあとだけ（CD m09c） */
-.nb{white-space:nowrap} /* 「コイン{d}枚」は1つのかたまり */
+.sent{display:inline-block}
+.nb{white-space:nowrap}
 #adPreview p{margin:8px 0 0;font-size:13px;line-height:18px;color:var(--graphite);text-align:center}
 .primary{display:block;width:100%;height:56px;border:0;border-radius:16px;background:var(--sky);color:#fff;font:inherit;font-size:17px;font-weight:700;cursor:pointer}
 #card .primary{height:64px}
 .primary:active{transform:scale(.98)}
-#credit{left:0;right:0;top:822px;text-align:center;font-size:12px;line-height:16px;color:#5B5A56;letter-spacing:.02em} /* CD v0.3.12：#5B5A56・12px（コントラスト4.5:1以上） */
-/* ---- 空港の飾り（v0.3。静止・読み上げなし・タップを通す） ---- */
+#credit{left:0;right:0;top:822px;text-align:center;font-size:12px;line-height:16px;color:#5B5A56;letter-spacing:.02em}
 .decor{left:0;top:0;width:390px;height:844px;pointer-events:none;overflow:visible}
 #roomTitle{left:24px;top:155px;height:24px;padding:0 10px 0 8px;border-radius:5px;background:var(--sign);color:var(--signText);font-size:14px;line-height:24px;display:flex;align-items:center;gap:5px;letter-spacing:.04em}
 #roomTitle svg{flex:none}
-/* ---- 席数バッジ（v0.3.1・CDレビュー反映）。滑走路で止まっているあいだだけ表示。読み上げはしない（機のラベルに席数あり）。
-   札そのもの（.seat）は当たりなし。当たり（.seathit）は札と自分のマスの重なりだけ（隣の機のタップを取らない）。
-   札は盤面の縮小に合わせて縮めない（実寸）。位置だけ盤面に合わせる ---- */
 #seats{position:absolute;left:0;top:0;width:0;height:0}
 .seat{position:absolute;display:flex;align-items:center;gap:2px;height:16px;padding:0 5px;box-sizing:border-box;border-radius:8px;background:#FFFFFF;border:1px solid var(--edge);color:var(--ink);font-size:11px;font-weight:700;line-height:14px;font-variant-numeric:tabular-nums;white-space:nowrap;pointer-events:none;transform-origin:0 0;transform:scale(var(--seatInv,1));transition:opacity .15s ease}
 .seat svg{flex:none;display:block;width:7px;height:10px}
@@ -123,11 +114,9 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #app.dt-large .seat svg{width:9px;height:13px}
 #app.dt-large.dt-cap .seat{height:19px;font-size:13px;line-height:17px;border-radius:9.5px}
 #app.dt-large.dt-cap .seat svg{width:8.5px;height:12px}
-/* 札は破線・縁の灯火（#decorRunway）より上の層 */
 .seathit{position:absolute;pointer-events:auto;cursor:pointer}
 .seat.off{opacity:0}
 .seathit.off{pointer-events:none}
-/* ---- v0.3.2：扉絵・ホーム・マイページ（screens_v02 の採用案 A「朝の空港」） ---- */
 .screen{position:absolute;left:0;top:0;width:390px;height:844px;z-index:50;background:var(--paper);overflow:hidden;display:none}
 .screen.on{display:block}
 .screen svg.scene{position:absolute;left:0;top:0;width:390px;height:844px;pointer-events:none;overflow:visible}
@@ -140,10 +129,9 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #tStart{left:24px;top:730px;width:342px;height:56px}
 .fade0{opacity:0}
 .credit2{position:absolute;left:0;right:0;top:808px;text-align:center;font-size:12px;line-height:16px;color:#5B5A56;letter-spacing:.02em}
-/* ホーム */
 #hHud{position:absolute;left:16px;top:61px;height:28px;display:flex;align-items:center;gap:6px}
 .hearts{display:flex;gap:2px}
-.cap{display:flex;align-items:center;height:40px;box-sizing:border-box;padding:0 10px;border-radius:20px;background:#fff;border:1px solid var(--edge);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;margin-left:4px}
+.cap{display:flex;align-items:center;height:40px;box-sizing:border-box;padding:0 10px;border-radius:20px;background:#fff;border:1px solid var(--edge);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;margin-left:4px}
 .cap svg{flex:none;display:block}
 .cap .dv{width:1px;height:20px;background:var(--edge);margin:0 7px}
 .cap span{margin-left:3px}
@@ -161,7 +149,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #hPlay[aria-disabled="true"]{background:#E6E3DC;color:var(--graphite);cursor:default}
 #hNote{position:absolute;left:16px;right:16px;top:640px;text-align:center;font-size:13px;color:var(--graphite);line-height:18px;display:none}
 #hNote button{margin-top:8px;height:44px;padding:0 20px;border-radius:12px;border:1.5px solid var(--sky);background:#fff;color:var(--sky);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
-/* シート（スタンプカード・このアプリについて） */
 .scrim2{position:absolute;left:0;top:0;width:390px;height:844px;background:rgba(31,31,29,.35);z-index:60;display:none}
 .sheet2{position:absolute;left:0;bottom:0;width:390px;background:var(--paper);border-radius:24px 24px 0 0;z-index:61;display:none;padding:0 0 34px}
 .scrim2.on,.sheet2.on{display:block}
@@ -170,7 +157,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .sheet2 .desc{margin:6px 24px 0;font-size:13px;line-height:20px;color:var(--graphite)}
 .sheet2 .foot{margin:12px 24px 0;font-size:12px;line-height:20px;color:var(--graphite)}
 .obtn{display:block;width:342px;height:48px;margin:16px 24px 0;border-radius:12px;border:1.5px solid var(--sky);background:#fff;color:var(--sky);font:inherit;font-size:16px;font-weight:700;cursor:pointer}
-/* 搭乗券 */
 .bp{position:relative;width:358px;margin:14px 16px 0;background:#fff;border:1px solid var(--edge);border-radius:16px;overflow:hidden}
 .bp .top{height:52px;background:var(--sky);color:#fff;position:relative}
 .bp .top .en{position:absolute;left:16px;top:9px;font-family:"Inter",-apple-system,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,.8);line-height:14px}
@@ -190,14 +176,13 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .bp .d.today{background:#E6EFF6;border:2px solid var(--sky)}
 .bp .d.d7{grid-column:span 2}
 .bp .d .t{position:absolute;left:0;right:0;top:4px;font-size:12px;font-weight:700;color:var(--graphite);line-height:18px}
-.bp.en .d .t{white-space:nowrap;letter-spacing:-.2px} /* 英語の「Day 3 · Today」を1行に */
+.bp.en .d .t{white-space:nowrap;letter-spacing:-.2px}
 .bp .d.done .t{color:var(--ink)}
 .bp .d .s{position:absolute;left:50%;top:50px;transform:translate(-50%,-50%)}
 .bp .d .p{position:absolute;left:0;right:0;top:72px;font-size:15px;font-weight:700;color:var(--graphite);line-height:20px;font-variant-numeric:tabular-nums}
 .bp .d.done .p{color:var(--ink)}
 .bp .d.d7 .p{font-size:17px}
 .bp .sum{padding:14px 16px 14px;font-size:13px;font-weight:700;line-height:18px}
-/* マイページ（モックなし。設定のモックの作りに合わせた） */
 #scrMy{background:var(--paper)}
 .nav{position:absolute;left:0;top:47px;width:390px;height:44px;z-index:2;background:var(--paper)}
 .nav .back{position:absolute;left:4px;top:0;height:44px;padding:0 12px;border:0;background:none;color:var(--sky);font:inherit;font-size:17px;cursor:pointer;display:flex;align-items:center;gap:4px}
@@ -224,7 +209,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .mycredit{margin:28px 0 0;text-align:center;font-size:12px;line-height:18px;color:var(--graphite)}
 #toast{position:absolute;left:50%;top:668px;transform:translateX(-50%);z-index:80;max-width:340px;padding:10px 16px;border-radius:12px;background:rgba(31,31,29,.88);color:#fff;font-size:13px;line-height:18px;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap}
 #toast.on{opacity:1}
-/* t110u：ステージ1のチュートリアル（暗い幕・〇・矢印・説明の札） */
 #tut{left:0;top:0;width:390px;height:844px;z-index:26;display:none;--tk:1;--tf:1}
 #tut.on{display:block}
 #tutSvg{position:absolute;left:0;top:0;width:390px;height:844px;overflow:visible}
@@ -245,6 +229,8 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .tutRing.tutDash{stroke-width:2;stroke-dasharray:4 4;opacity:.7}
 .tutFlow{animation:tutFlow .9s linear infinite}
 @keyframes tutFlow{to{stroke-dashoffset:-11}}
+.tutGlow{opacity:0;animation:tutGlow .7s ease-out forwards}
+@keyframes tutGlow{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
 .tutPulse{animation:tutPulse 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 @keyframes tutPulse{0%,100%{opacity:1}50%{opacity:.55}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -293,7 +279,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     <p id="hcQ"></p><p id="hcBody"></p><p id="hcNote"></p>
     <div id="hcBtns"><button id="hcGo" type="button"></button><button id="hcStay" type="button"></button></div>
   </div>
-  <!-- t110u：チュートリアル（ステージ1の初回。?tutorial=1 でいつも出す、?tutorial=0 で出さない） -->
+  
   <div id="tut" class="abs" lang="ja" role="dialog" aria-modal="true" aria-labelledby="tutText">
     <svg id="tutSvg" viewBox="0 0 390 844" aria-hidden="true"></svg>
     <div id="tutCard" class="tcard">
@@ -303,7 +289,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
       <div id="tutBtns" class="tbtns"><button id="tutSkip" class="tskip" type="button"></button><button id="tutTap" type="button" class="sr"></button><button id="tutNext" class="tnext" type="button"></button></div>
     </div>
   </div>
-  <!-- v0.3.2：扉絵・ホーム・マイページ。見た目は screens_v02 の採用案 A。数値の例は「表示例」と示す -->
+  
   <section id="scrTitle" class="screen" aria-label="扉絵" data-ta="titleAria">
     <svg class="scene" id="tScene" viewBox="0 0 390 844" aria-hidden="true"></svg>
     <div class="ttl" id="tL1" style="top:99px">Take to</div>
@@ -381,8 +367,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   <div id="toast" role="status" aria-live="polite"></div>
   <div id="live" class="sr" aria-live="polite"></div>
 </div>
-<script>// Take to the sky — ゲームの中心ルール（DOM なし・純粋関数）。Swift 版へ移すときの手本。
-// 出典：設計書 v0.7.18 1章（体験の芯・手順・判定の流れ）、3-2（ゲート）、5章（座席の整合）。
+<script>
 (function (root, factory) {
   if (typeof module === 'object' && module.exports) module.exports = factory();
   else root.TTSLogic = factory();
@@ -390,7 +375,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   'use strict';
   var DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
-
   function createGame(rules, stage) {
     var cap = rules.boardingArea.capacity;
     var passengers = stage.passengers.map(function (c, i) { return { id: i, color: c, plane: null }; });
@@ -408,15 +392,12 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     checkSeats(s);
     return s;
   }
-
-  // 色＋記号ごとに「座席の合計＝乗客数」（#39）
   function checkSeats(s) {
     var need = {};
     s.passengers.forEach(function (p) { need[p.color] = (need[p.color] || 0) + 1; });
     s.planes.forEach(function (p) { need[p.color] = (need[p.color] || 0) - p.seats; });
     Object.keys(need).forEach(function (k) { if (need[k] !== 0) throw new Error('seat mismatch: ' + k + ' ' + need[k]); });
   }
-
   function planeById(s, id) { for (var i = 0; i < s.planes.length; i++) if (s.planes[i].id === id) return s.planes[i]; return null; }
   function planeAt(s, c, r) {
     for (var i = 0; i < s.planes.length; i++) { var p = s.planes[i]; if (p.status === 'runway' && p.col === c && p.row === r) return p; }
@@ -431,9 +412,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     return true;
   }
   function freeGate(s) { return s.gates.indexOf(null); }
-
-  // 動けるか。確認の順：前が端まで空き → 空きゲート。
-  // 搭乗口に同じ色の客がいなくても動ける（t109u）。ゲートで待ち、同じ色の客が搭乗口に来たら乗る（boardAll は毎回すべてのゲートの機を見る）。
   function canMove(s, id) {
     var p = planeById(s, id);
     if (!p || p.status !== 'runway') return 'not-on-runway';
@@ -448,8 +426,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   function isClear(s) { return s.planes.every(function (p) { return p.status === 'gone'; }); }
   function isStuck(s) { return !isClear(s) && legalMoves(s).length === 0; }
   function status(s) { return isClear(s) ? 'clear' : (isStuck(s) ? 'stuck' : 'playing'); }
-
-  // ゲートの機に、搭乗口の一致する客が全員（席の数まで）乗る。先にゲートに着いた機から埋める。
   function boardAll(s) {
     var out = [];
     var gatePlanes = s.gates.filter(function (id) { return id !== null; }).map(function (id) { return planeById(s, id); })
@@ -475,7 +451,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     }
     return out;
   }
-  // 空いた枠へ、外の待機列の先頭から見えている順に入る（#41）。枠は番号の小さい順。
   function refill(s) {
     var out = [];
     for (var i = 0; i < s.slots.length && s.queue.length; i++) {
@@ -483,8 +458,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     }
     return out;
   }
-
-  // 1回のタップ。phases は演出用の段階ごとの状態（UI はこれを順に描くだけ）。
   function tap(state, id, fast) {
     var why = canMove(state, id);
     if (why !== 'ok') return { ok: false, reason: why, state: state, phases: [] };
@@ -500,21 +473,18 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     }
     return { ok: true, reason: 'ok', state: s, phases: phases, status: status(s) };
   }
-
   function key(s) {
     var run = s.planes.filter(function (p) { return p.status === 'runway'; }).map(function (p) { return p.id; }).join(',');
     var gates = s.gates.map(function (id) { return id === null ? '-' : id + ':' + planeById(s, id).filled; }).join(',');
     var area = s.slots.filter(function (x) { return x !== null; }).map(function (pid) { return s.passengers[pid].color[0]; }).sort().join('');
     return run + '|' + gates + '|' + area + '|' + s.queue.length;
   }
-  // 解けるかの確認（深さ優先＋局面のメモ化、5章と同じ考え方）
   function solve(state, limit) {
     limit = limit || 200000; var seen = {}, count = 0;
     function dfs(s) {
       if (isClear(s)) return [];
       if (count++ > limit) return null;
       var k = key(s); if (seen[k]) return null; seen[k] = true;
-      // 探す順だけの工夫：今すぐ乗れる機を先に試す（答えの有無は変わらない。自動プレイが自然に見える）
       var all = legalMoves(s), now = function (id) { return hasMatch(s, planeById(s, id).color); };
       var ms = all.filter(now).concat(all.filter(function (id) { return !now(id); }));
       for (var i = 0; i < ms.length; i++) {
@@ -526,7 +496,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     var sol = dfs(state);
     return { solvable: !!sol, moves: sol, explored: count };
   }
-  // クリアまでの手数の幅 [最短, 最長]（全部の手順を見る。同じ盤面はまとめる）。上限を超えたら null（わからない）
   function moveRange(state, limit) {
     limit = limit || 200000; var memo = {}, count = 0, over = false;
     function dfs(s) {
@@ -542,13 +511,10 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     }
     var r = dfs(state); return over ? null : r ? { min: r[0], max: r[1], explored: count } : null;
   }
-  // 「最短の手数」（Perfect departure!）を出すか：手数 ≦ 基準手数、かつ 基準手数 < そのステージの最長の手数。
-  // どの手順でも手数が同じステージ（ステージ1は全部12手）では出さない。幅がわからない（null）ときも出さない
   function isPerfectClear(moves, ref, range) {
     if (!range || typeof ref !== 'number') return false;
     return ref < range.max && moves <= ref;
   }
-  // でたらめに遊んだときのクリア率（難しさの目安）
   function randomClearRate(state, trials, seed) {
     var rnd = mulberry32(seed || 1), win = 0;
     for (var t = 0; t < trials; t++) {
@@ -562,9 +528,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a);
       t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
   }
-
-  // クリアの言葉を選ぶ。特別（初めて → 最短の手数 → 立て直し → 節目）が優先。なければふだんの言葉から、直前と同じものを除いて選ぶ。
-  // c：{ clearedBefore: これまでのクリア数（このクリアの前）, moves, ref: 基準手数, range: {min,max}, retried, flights: このクリアを含む通算, milestones, regular: [id...], last: 直前のふだんの id }
   function pickClear(c, rnd) {
     if (c.clearedBefore === 0) return { id: 'first' };
     if (isPerfectClear(c.moves, c.ref, c.range)) return { id: 'perfect' };
@@ -573,26 +536,18 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     var pool = c.regular.filter(function (id) { return id !== c.last; });
     return { id: pool[Math.min(pool.length - 1, Math.floor((rnd || Math.random)() * pool.length))] };
   }
-
-  // やめる確認（ホームへ・途中の「最初から」）を出すか。クリアの画面・動かせない画面（そこからのやり直しは確認なし）では出さない。
-  // ステージ開始で使ったハートは戻らないので、まだタップしていなくても出す。ハート無制限は、コインで枠を開けたときだけ出す（失うものがない）
   function quitNeedsConfirm(c) {
     if (c.status === 'clear' || c.status === 'stuck') return false;
     if (c.unlimited) return !!c.unlocked;
     return !!c.heartInUse || !!c.unlocked;
   }
-
-  // ---- 続きから：手を打つたびに保存する。保存は「手の列」（盤面は手から決まる。乱数はない＝seed は null）。強制終了しても1手も戻らない
   function saveProgress(stageId, moves) { return { v: 1, stage: stageId, moves: moves.slice(), seed: null }; }
   function restoreProgress(rules, stage, saved) {
-    if (!saved || saved.v !== 1 || saved.stage !== stage.id || !Array.isArray(saved.moves)) return null; // 戻せない → ハートを1つ失う（ホームで1回知らせる）
+    if (!saved || saved.v !== 1 || saved.stage !== stage.id || !Array.isArray(saved.moves)) return null;
     var s = createGame(rules, stage);
     for (var i = 0; i < saved.moves.length; i++) { var r = tap(s, saved.moves[i], true); if (!r.ok) return null; s = r.state; }
     return s;
   }
-
-  // ---- ハートの回復（ずるは防ぐが罰はない）。同じ起動のあいだは単調な時計だけ数える。再起動をまたぐときは壁の時計で、1回のすき間で数える分に上限。
-  // 時計を戻しても、ハートは減らない（数えないだけ）。st：{ hearts, carryMs, wall, mono, boot }、now：{ wall, mono, boot }
   function heartRegen(st, rules, now) {
     var H = rules.hearts, per = H.regenMinutes * 60000, cap = typeof H.maxCreditPerGapMin === 'number' ? H.maxCreditPerGapMin * 60000 : Infinity;
     var gain = now.boot === st.boot ? now.mono - st.mono : Math.min(cap, now.wall - st.wall);
@@ -603,14 +558,11 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     if (hearts >= H.max) carry = 0;
     return { hearts: Math.max(st.hearts, hearts), carryMs: carry, wall: Math.max(st.wall, now.wall), mono: now.mono, boot: now.boot };
   }
-  // 「いま」の時刻（ずるは防ぐが罰はない。ハートと広告の回数で同じ）。同じ起動のあいだは、前に見た時刻＋単調な時計の経過だけ（端末の時計をいじっても動かない）。
-  // 再起動のあとは端末の時計・日付（広告は端末の時刻の夜0時で区切る）。サーバーの時刻は使わない。anchor：{ wall, mono, boot }
   function guardedNow(anchor, now) {
     var t = anchor && anchor.boot === now.boot ? anchor.wall + Math.max(0, now.mono - anchor.mono) : now.wall;
     return { now: t, anchor: { wall: t, mono: now.mono, boot: now.boot } };
   }
-  // ハートは上限5（rules.hearts.max）をどこでも超えない：クリアで戻す・時間で回復・広告で+1・ショップで満タン。満タンのあいだ回復の時計は止まる（carry 0）
-  function heartSpend(st) { // ステージ開始（スタートを押した瞬間）。ここから「やめる」はハートを失う
+  function heartSpend(st) {
     if (st.hearts <= 0) return { hearts: 0, inUse: false, carryMs: st.carryMs || 0 };
     return { hearts: st.hearts - 1, inUse: true, carryMs: st.hearts >= 5 ? 0 : (st.carryMs || 0) };
   }
@@ -618,65 +570,47 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     var max = rules.hearts.max, h = Math.min(max, st.hearts + n);
     return Object.assign({}, st, { hearts: h, carryMs: h >= max ? 0 : (st.carryMs || 0) });
   }
-  function heartClearRefund(st, rules) { // クリアで1回だけ（もう戻したら何もしない）
+  function heartClearRefund(st, rules) {
     if (!st.inUse) return st;
     return Object.assign(heartGain(st, rules, 1), { inUse: false });
   }
-  function heartAdOffered(hearts, rules) { return hearts < rules.hearts.max; } // 満タンなら広告ボタンを出さない
+  function heartAdOffered(hearts, rules) { return hearts < rules.hearts.max; }
   function heartAdReward(st, rules) { return heartAdOffered(st.hearts, rules) ? heartGain(st, rules, 1) : st; }
-  function heartShopRefill(st, rules) { return heartGain(st, rules, rules.hearts.max); } // 満タンまでだけ
-
-  // 解除の広告が上限のとき（CD 確定）：コインが足りれば上限の文＋「コインn枚で開ける」、足りなければ「あとコインd枚で開けられるよ」＋小さく「コインは、ステージをクリアするとたまるよ」（ボタンなし・ショップへは誘わない）
-  // d＝値段−持っているコイン。値段が決まっていないときは何も出さない（文もボタンもなし）
+  function heartShopRefill(st, rules) { return heartGain(st, rules, rules.hearts.max); }
   function unlockCapState(coins, price) {
     if (typeof price !== 'number') return { note: null, coinButton: false };
     return coins >= price ? { note: 'unlockCap', coinButton: true, price: price } : { note: 'unlockCapShort', coinButton: false, short: price - coins, small: 'earnByClearing' };
   }
-  // クリアのごほうび（コイン）。いつも1枚以上
   function clearReward(rules, c) {
     var R = rules.clearReward, n = c.first ? R.firstClearByStars[Math.max(0, Math.min(R.firstClearByStars.length - 1, (c.stars || 1) - 1))] + (c.hard ? R.hardBonus : 0) : R.reclear;
     return Math.max(R.minCoins, n);
   }
-
-  // 返金：StoreKit 2 の revocationDate を端末で見たときだけ。そのパックのコイン（ボーナス込み。ボーナスも買ったコイン扱い）を買ったコインから引き、0で止める。
-  // クリアしたステージ・開けた枠は取り上げない（wallet だけ変える）。同じ取引は二重に引かない（処理した取引 ID を記録）
   function applyRevocation(wallet, tx) {
     var done = wallet.processed || [];
     if (!tx || !tx.revocationDate || done.indexOf(tx.id) >= 0) return wallet;
     var take = (tx.coins || 0) + (tx.bonus || 0);
     return Object.assign({}, wallet, { paid: Math.max(0, wallet.paid - take), processed: done.concat([tx.id]) });
   }
-  // コインを使う：買ったコインから先に使い、足りない分をもらったコインから。足りなければ使わない（null）
   function spendCoins(wallet, n) {
     if (wallet.paid + wallet.free < n) return null;
     var p = Math.min(wallet.paid, n);
     return Object.assign({}, wallet, { paid: wallet.paid - p, free: wallet.free - (n - p) });
   }
-  // パックを買ったとき：コインとボーナスを、どちらも買ったコインに足す
   function grantPack(wallet, product) { return Object.assign({}, wallet, { paid: wallet.paid + (product.coins || 0) + (product.bonus || 0) }); }
-
-  // ハート無制限：使えるあいだは「満タンにする」とハートの広告を出さない。返金・取り消しで終わったら、ハートは上限（5）にして通常に戻る。いまのステージはふつうに最後まで
   function unlimitedOffers(active) { return { fullRefill: !active, heartAd: !active }; }
   function unlimitedEnd(st, rules) { return { unlimited: false, hearts: rules.hearts.max, inUse: false, carryMs: 0, stageContinues: true }; }
-
-  // 広告ボタンの状態。優先：(1) 上限（つぎにハートが満タンなら出さない） → ボタンを出さず上限の文（オフラインでも、つながったあとも）(2) オフライン → ボタンは出すがグレーで押せない＋下に一文。つながれば自動で戻る (3) 在庫なし（押したあと）→ 一文
-  // どれも回数は使わない（使うのは adFinish で最後まで見て報酬を渡せたときだけ）
   function adButtonState(counter, env) {
     if (!counter.showButton) return { button: false, note: 'cap', remaining: 0 };
-    if (env && env.heartsFull) return { button: false, note: 'full', remaining: counter.remaining }; // ハートが満タン：ハートの広告ボタンは出さない（文もなし）
+    if (env && env.heartsFull) return { button: false, note: 'full', remaining: counter.remaining };
     if (env && env.online === false) return { button: true, enabled: false, note: 'offline', remaining: counter.remaining };
     if (env && env.noFill) return { button: true, enabled: true, note: 'noFill', remaining: counter.remaining };
     return { button: true, enabled: true, note: null, remaining: counter.remaining };
   }
-
-  // ---- 報酬型広告の回数（利用規約 7条2項）：表示する残り回数と、実際の上限は、同じ rules.ads.adCaps の1つの値から出す。
-  // 回数を使うのは「最後まで見て、報酬を渡せた」ときだけ（開始・スキップ・エラー・途中で閉じたときは使わない）。
-  // 広告の「今日」は rules.ads.adResetHour（0＝端末の時刻の夜0時）で区切る。ログインボーナスの区切り（loginBonus.loginResetHour）とは別。
   function adDayKey(nowMs, resetHour) {
     var d = new Date(nowMs); d.setHours(d.getHours() - (resetHour || 0));
     return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
   }
-  function adToday(store, rules, nowMs) { // 日が変わっていたら、数えた回数を0にもどした新しい store を返す
+  function adToday(store, rules, nowMs) {
     var key = adDayKey(nowMs, rules.ads.adResetHour);
     if (store && store.day === key) return { day: key, used: Object.assign({}, store.used) };
     return { day: key, used: {} };
@@ -686,27 +620,23 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     if (typeof cap !== 'number') throw new Error('unknown ad kind: ' + kind);
     var used = A.adCapsShared ? Object.keys(st.used).reduce(function (n, k) { return n + st.used[k]; }, 0) : (st.used[kind] || 0);
     var remaining = Math.max(0, cap - used);
-    return { cap: cap, used: used, remaining: remaining, showButton: remaining > 0, store: st }; // 上限のあとはボタンを出さない（グレーにしない）
+    return { cap: cap, used: used, remaining: remaining, showButton: remaining > 0, store: st };
   }
-  function adFinish(store, rules, kind, outcome, nowMs) { // outcome：{ completed: 最後まで見た, rewardGranted: 報酬を渡せた }
+  function adFinish(store, rules, kind, outcome, nowMs) {
     var c = adCounter(store, rules, kind, nowMs), st = c.store;
     if (!(outcome && outcome.completed === true && outcome.rewardGranted === true) || c.remaining <= 0) return st;
     st.used[kind] = (st.used[kind] || 0) + 1; return st;
   }
-
-  // ---- ホームのあいさつ（CD v0.3.12）：朝 5:00〜10:59／昼 11:00〜15:59／夕 16:00〜18:59／夜 19:00〜4:59
   function greetBand(hour) {
     var h = ((hour % 24) + 24) % 24;
     return h >= 5 && h < 11 ? 'morning' : h >= 11 && h < 16 ? 'day' : h >= 16 && h < 19 ? 'evening' : 'night';
   }
-  // 前回開いてから4時間以上あいたときだけ（日付が変わっただけでは出さない）。3日以上は「おかえり」、14日以上は続きのステージつき。初めては出す
   function greetKind(lastMs, nowMs, hour) {
     var H = 3600000, gap = lastMs ? nowMs - lastMs : Infinity;
     if (lastMs && gap >= 14 * 24 * H) return 'back14';
     if (lastMs && gap >= 3 * 24 * H) return 'back';
     return !lastMs || gap >= 4 * H ? greetBand(hour) : null;
   }
-  // ---- 日本語の文の改行（CD m09c）：改行は「。」のあとだけ。「コイン{d}枚」は1つのかたまり（コインと数のあいだで切らない）
   function escHtml(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   function jaNoBreakHtml(text) {
     var parts = String(text).match(/[^。]+。?/g) || [];
@@ -715,35 +645,26 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
       return '<span class="sent">' + h + '</span>';
     }).join('');
   }
-  // ---- 読み上げのラベルをつなぐ：日本語は「。」、英語は「. 」
   function ariaJoin(parts, lang) {
     var list = parts.filter(function (x) { return x; });
     if (lang === 'en') return list.map(function (x) { return x.replace(/[.\s]+$/, ''); }).join('. ') + '.';
     return list.map(function (x) { return x.replace(/。$/, ''); }).join('。');
   }
-
-  // ---- 読み上げの文（CD v0.6 レビュー）。画面の文字とは別
   var SIZE_LBL = { ja: { S: '小さい', M: '中くらいの', L: '大きい' }, en: { S: 'small', M: 'medium', L: 'large' } };
   var DIR_LBL = { ja: { up: '上向き', down: '下向き', left: '左向き', right: '右向き' }, en: { up: 'up', down: 'down', left: 'left', right: 'right' } };
-  function capFirst(t) { return t.charAt(0).toUpperCase() + t.slice(1); } // 文頭の1文字だけ大文字
-  // 飛行機：日本語「赤の丸、小さい飛行機（4席）、上向き」／英語「Red circle, small plane (4 seats), facing up」
+  function capFirst(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
   function planeAria(color, size, dir, seats, lang) {
     if (lang === 'en') return capFirst(color.en) + ', ' + SIZE_LBL.en[size] + ' plane (' + seats + ' seats), facing ' + DIR_LBL.en[dir];
     return color.ja + '、' + SIZE_LBL.ja[size] + '飛行機（' + seats + '席）、' + DIR_LBL.ja[dir];
   }
-  // ゲート：日本語「A1、空き」／英語「A1, open」。機が入っているときは番号だけ（機の読み上げは機のほう）
   function gateAria(g, open, lang) { var no = 'A' + (g + 1); return open ? no + (lang === 'en' ? ', open' : '、空き') : no; }
-  // スタンプカード：n 日目までのコイン（7日目は +30、ほかは +10。カードの数字と同じ）
   function stampCoins(n) { return n === 7 ? 30 : 10; }
   function stampAria(n, lang) {
     if (lang === 'en') return ['Stamp card (sample): ' + n + ' of 7 days stamped', 'Today is day ' + n + ', ' + stampCoins(n) + ' earned coins'];
     return ['スタンプカード（表示例）：7日のうち' + n + '日分が押してあるよ', '今日は' + n + '日目、もらったコイン' + stampCoins(n) + '枚'];
   }
-  // 盤面の端（外側の1周）にいないマス。チュートリアル③の例の機に使う
   function isInnerCell(s, col, row) { return col > 0 && row > 0 && col < s.cols - 1 && row < s.rows - 1; }
-  // 完成の札（Frequent flyer!）は、7日目が押されたときだけ、1回だけ
   function stampDoneShown(day, alreadyShown) { return day === 7 && !alreadyShown; }
-
   return { greetBand: greetBand, greetKind: greetKind, jaNoBreakHtml: jaNoBreakHtml, ariaJoin: ariaJoin, planeAria: planeAria, gateAria: gateAria, stampCoins: stampCoins, stampAria: stampAria, stampDoneShown: stampDoneShown, isInnerCell: isInnerCell, createGame: createGame, canMove: canMove, legalMoves: legalMoves, tap: tap, isClear: isClear,
            isStuck: isStuck, status: status, solve: solve, randomClearRate: randomClearRate, mulberry32: mulberry32,
            planeById: planeById, hasMatch: hasMatch, DIRS: DIRS,
@@ -751,9 +672,9 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 });
 </script>
 <script>
-var RULES = {"schema":"tts.rules/1","source":"設計書 v0.7.18（1章・3-1・3-2・3-4）／オーナー決定 2026-11-03（hearts・ads・clear・gateUnlock）","gates":{"base":4,"max":8,"lockedInDemo":false},"boardingArea":{"capacity":20,"cols":5,"rows":4},"waitingLine":{"visible":8},"seats":{"S":4,"M":8,"L":12},"planeLengthPt":{"runway":{"S":48,"M":60,"L":76.8},"gate":{"S":48,"M":52.8,"L":57.6}},"directions":["up","down","left","right"],"colors":[{"id":"red","hex":"#E5484D","symbol":"circle","ja":"赤の丸","en":"red circle"},{"id":"blue","hex":"#2F6FED","symbol":"square","ja":"青の四角","en":"blue square"},{"id":"yellow","hex":"#AC7600","symbol":"triangle","ja":"黄色の三角","en":"yellow triangle"},{"id":"green","hex":"#289446","symbol":"star","ja":"緑の星","en":"green star"}],"tokens":{"paper":"#F6F5F1","ink":"#1F1F1D","graphite":"#5B5A56","sky":"#2B5C8A","skyBand":"#E6EFF6","room":"#EEF3F8","gate":"#E4ECF4","runway":"#E6E3DC","runwayEdge":"#CFCBC3","white":"#FFFFFF"},"resolution":{"gateChoice":"lowestFreeIndex","boardingPriority":"gateArrivalOrder","refillSlot":"lowestEmptyIndex","boardWhom":"allMatchingInBoardingArea","tapCheckOrder":["pathClear","freeGate"],"boardWhen":"afterEveryMoveBoardTakeoffRefillUntilStable","noMatchPlaneMayPark":true},"hearts":{"max":5,"regenMinutes":30,"regenClock":"sinceLastBackground","webBackgroundEvents":["visibilitychange","pagehide"],"spentAtStageStart":true,"refundOnClear":"onceIdempotent","quitMidStageCostsHeart":true,"retryMidStageCostsHeart":true,"lostOnlyIfStateUnrestorable":true,"unlimitedHidesHeartNote":true,"quitBeforeFirstMoveCostsHeart":true,"unlimitedConfirmOnlyIfUnlocked":true,"clock":"monotonicInSession_deviceClockAfterReboot_capped_neverPunish_noServerTime","maxCreditPerGapMin":150,"hardCap":"max_everywhere_clearRefund_regen_adReward_shopRefill","regenStopsWhenFull":true,"adOfferedOnlyBelowMax":true,"shopRefill":"toMaxOnly","spentWhen":"stageStartTapped_preStageScreenFree"},"ads":{"rewardedOnly":true,"playerInitiatedOnly":true,"maxSeconds":30,"adCaps":{"heart":5,"unlock":10},"adCapsShared":false,"adResetHour":0,"afterCap":"hideButton","att":false,"personalizedAds":false,"sdk":"AdMobOnlyNoMediation","npa":1,"clock":"sameAsHearts_monotonicInSession_deviceLocalMidnightAfterReboot_noServerTime","priority":["cap","offline","noFill"],"offline":"showButtonDisabled_autoReenable_noCount","noFill":"message_noCount","mediation":false},"clear":{"perfect":"movesLessOrEqualStageReference","comeback":"clearAfterRetry","flights":"cumulativeClears","milestones":[10,25,50,100],"specialPriority":["first","perfect","comeback","milestone"]},"gateUnlock":{"currency":"coins","homeConfirmAfterUnlock":true,"slots":[{"slot":5,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":6,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":7,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":8,"coins":true,"ad":true,"priceCoins":"TBD"}],"rule":"everyLockedSlotCoinsOrOneAd_noAdOnlySlots","afterAdCap":"coinsEnough_capText+unlockForNCoinsButton__coinsShort_capTextDMoreCoins+smallEarnByClearing_noButton_noShopLink"},"loginBonus":{"loginResetHour":4},"coins":{"purchasedExpire":false,"packBonus":[30,70],"packBonusCountsAsPaid":true,"refund":"storeKit2RevocationDateOnDevice_subtractPackInclBonus_clamp0_keepProgress_dedupeTransactionIds"},"resume":{"saveAfterEveryMove":true,"format":"moveList","seed":null},"release":{"excludeRegionsAtLaunch":["EEA (EU27 + NO, IS, LI)","UK","CH"],"ump":"later"},"support":{"contactUrl":"TBD","contact":"supportPageFormOnly_externalSafari_noWKWebView","prefill":"appVersionOnly","ledgerExport":"shareSheetOnly_noPresetRecipient"},"tutorialReward":{"coins":100,"coinKind":"free","items":[]},"unlimitedHearts":{"hidesFullRefill":true,"hidesHeartAd":true,"onRevocation":"hearts=max_normalRules_currentStageFinishesNormally","familySharing":false},"clearReward":{"firstClearByStars":[20,25,30],"hardBonus":10,"reclear":5,"minCoins":1,"status":"値は調整可"},"familySharing":{"allIAP":false,"status":"decided_owner","enableRequiresOwnerApproval":"irreversibleInAppStoreConnect"},"stamps":{"dayResetHourFrom":"loginBonus.loginResetHour","note":"スタンプの日の区切りはログインボーナスと同じ値（午前4時）を読む。別の数字を持たない"},"iap":{"products":[{"id":"studio.reachhigh.taketothesky.coins100","type":"consumable","coins":100,"bonus":0,"priceJPY":160},{"id":"studio.reachhigh.taketothesky.coins300","type":"consumable","coins":300,"bonus":30,"priceJPY":480},{"id":"studio.reachhigh.taketothesky.coins500","type":"consumable","coins":500,"bonus":70,"priceJPY":800},{"id":"studio.reachhigh.taketothesky.unlimitedhearts","type":"nonConsumable","priceJPY":800}],"heartRefill":{"currency":"coins","price":60,"paidSpentFirst":true,"isIAP":false,"status":"デモのあと調整可"},"bonusCopy":"factsOnly_noPercent_noStrikethrough","wallet":"paidAndFreeShownSeparately_paidSpentFirst"}};
-var STAGE = {"schema":"tts.stage/1","name":"ステージ1（デモ）","seed":"demo-v01-s73","note":"passengers は外の並びの順。先頭の20人が最初の搭乗口、残りが待機列。col/row は滑走路のマス（左上が0,0）、dir は機首の向き。","verify":{"solvable":true,"solution":["p02","p04","p05","p03","p06","p07","p11","p08","p09","p01","p12","p10"],"explored":12,"randomClearRate":0.5625,"moveRange":{"min":12,"max":12}},"id":1,"board":{"cols":4,"rows":3},"planes":[{"id":"p01","color":"red","size":"L","col":0,"row":0,"dir":"down"},{"id":"p02","color":"blue","size":"S","col":1,"row":0,"dir":"up"},{"id":"p03","color":"yellow","size":"M","col":2,"row":0,"dir":"up"},{"id":"p04","color":"green","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"blue","size":"M","col":0,"row":1,"dir":"left"},{"id":"p06","color":"green","size":"M","col":1,"row":1,"dir":"left"},{"id":"p07","color":"red","size":"S","col":2,"row":1,"dir":"up"},{"id":"p08","color":"yellow","size":"S","col":3,"row":1,"dir":"right"},{"id":"p09","color":"yellow","size":"S","col":0,"row":2,"dir":"left"},{"id":"p10","color":"green","size":"L","col":1,"row":2,"dir":"right"},{"id":"p11","color":"red","size":"M","col":2,"row":2,"dir":"up"},{"id":"p12","color":"blue","size":"S","col":3,"row":2,"dir":"right"}],"passengers":["green","green","green","green","red","red","red","red","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","green","green","green","green","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","red","red","red","red","yellow","yellow","yellow","yellow","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","yellow","yellow","yellow","yellow"]};
-var MOTION = {"schema":"tts.motion/1","source":"ユーザー t94u（搭乗と離陸は存在感のある動きに）。値はデモ v0.2 の初期値で、CD の調整前","units":"時間は ms、距離は pt（390×844 基準）","move":{"speedPtPerMs":0.8,"minMs":500,"maxMs":1200,"easing":"ease-in-out"},"boarding":{"gatherStaggerMs":40,"gatherMs":300,"lineSpacingPt":21,"lineYOffsetFromGateTopPt":-9,"lineScale":0.75,"staggerMs":100,"stepMs":85,"enterMs":170,"enterPopScale":1.15,"enterEndScale":0.2,"hopHeightPt":4,"hopPeriodMs":150,"planePopScale":1.08,"planePopMs":140,"counterBumpScale":1.25,"counterBumpMs":160},"refill":{"durationMs":320,"staggerMs":40,"easing":"cubic-bezier(.3,.9,.4,1)"},"full":{"badgeText":"満席","badgeMs":220,"pulseMs":380,"pulseScales":[1,1.14,1,1.07,1],"sparkleCount":10,"sparkleFromPt":22,"sparkleToPt":46,"sparkleMs":420},"takeoff":{"climbMs":1050,"accelPower":2,"controlRisePt":230,"exitDxPt":250,"exitMinXPt":450,"exitYPt":-90,"endScale":1.5,"contrailStartU":0.15,"contrailWidthPt":3,"contrailOpacity":0.32,"contrailFadeMs":600,"releaseGateAfterMs":250,"totalMsApprox":1430},"clear":{"startAfterLastLiftoffMs":350,"confettiCount":70,"confettiMs":[1500,2000],"confettiSizePt":[7,11],"confettiSpeedPtPerMs":[0.35,0.8],"confettiSpreadRad":1.1,"gravityPtPerMs2":0.0009,"cardDelayMs":450,"cardPopMs":340,"cardPopFromScale":0.92,"cardEasing":"cubic-bezier(.2,1.3,.4,1)"},"reducedMotion":{"moveCrossfadeMs":200,"boardStaggerMs":60,"boardHopPt":6,"boardHopMs":140,"boardFadeMs":160,"takeoffBadgeHoldMs":300,"takeoffSlidePt":90,"takeoffMs":450,"confetti":false,"cardFadeMs":200}};
+var RULES = {"schema":"tts.rules/1","gates":{"base":4,"max":8,"lockedInDemo":false},"boardingArea":{"capacity":20,"cols":5,"rows":4},"waitingLine":{"visible":8},"seats":{"S":4,"M":8,"L":12},"planeLengthPt":{"runway":{"S":48,"M":60,"L":76.8},"gate":{"S":48,"M":52.8,"L":57.6}},"directions":["up","down","left","right"],"colors":[{"id":"red","hex":"#E5484D","symbol":"circle","ja":"赤の丸","en":"red circle"},{"id":"blue","hex":"#2F6FED","symbol":"square","ja":"青の四角","en":"blue square"},{"id":"yellow","hex":"#AC7600","symbol":"triangle","ja":"黄色の三角","en":"yellow triangle"},{"id":"green","hex":"#289446","symbol":"star","ja":"緑の星","en":"green star"}],"tokens":{"paper":"#F6F5F1","ink":"#1F1F1D","graphite":"#5B5A56","sky":"#2B5C8A","skyBand":"#E6EFF6","room":"#EEF3F8","gate":"#E4ECF4","runway":"#E6E3DC","runwayEdge":"#CFCBC3","white":"#FFFFFF"},"resolution":{"gateChoice":"lowestFreeIndex","boardingPriority":"gateArrivalOrder","refillSlot":"lowestEmptyIndex","boardWhom":"allMatchingInBoardingArea","tapCheckOrder":["pathClear","freeGate"],"boardWhen":"afterEveryMoveBoardTakeoffRefillUntilStable","noMatchPlaneMayPark":true},"hearts":{"max":5,"regenMinutes":30,"regenClock":"sinceLastBackground","webBackgroundEvents":["visibilitychange","pagehide"],"spentAtStageStart":true,"refundOnClear":"onceIdempotent","quitMidStageCostsHeart":true,"retryMidStageCostsHeart":true,"lostOnlyIfStateUnrestorable":true,"unlimitedHidesHeartNote":true,"quitBeforeFirstMoveCostsHeart":true,"unlimitedConfirmOnlyIfUnlocked":true,"clock":"monotonicInSession_deviceClockAfterReboot_capped_neverPunish_noServerTime","maxCreditPerGapMin":150,"hardCap":"max_everywhere_clearRefund_regen_adReward_shopRefill","regenStopsWhenFull":true,"adOfferedOnlyBelowMax":true,"shopRefill":"toMaxOnly","spentWhen":"stageStartTapped_preStageScreenFree"},"ads":{"rewardedOnly":true,"playerInitiatedOnly":true,"maxSeconds":30,"adCaps":{"heart":5,"unlock":10},"adCapsShared":false,"adResetHour":0,"afterCap":"hideButton","att":false,"personalizedAds":false,"sdk":"AdMobOnlyNoMediation","npa":1,"clock":"sameAsHearts_monotonicInSession_deviceLocalMidnightAfterReboot_noServerTime","priority":["cap","offline","noFill"],"offline":"showButtonDisabled_autoReenable_noCount","noFill":"message_noCount","mediation":false},"clear":{"perfect":"movesLessOrEqualStageReference","comeback":"clearAfterRetry","flights":"cumulativeClears","milestones":[10,25,50,100],"specialPriority":["first","perfect","comeback","milestone"]},"gateUnlock":{"currency":"coins","homeConfirmAfterUnlock":true,"slots":[{"slot":5,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":6,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":7,"coins":true,"ad":true,"priceCoins":"TBD"},{"slot":8,"coins":true,"ad":true,"priceCoins":"TBD"}],"rule":"everyLockedSlotCoinsOrOneAd_noAdOnlySlots","afterAdCap":"coinsEnough_capText+unlockForNCoinsButton__coinsShort_capTextDMoreCoins+smallEarnByClearing_noButton_noShopLink"},"loginBonus":{"loginResetHour":4},"coins":{"purchasedExpire":false,"packBonus":[30,70],"packBonusCountsAsPaid":true,"refund":"storeKit2RevocationDateOnDevice_subtractPackInclBonus_clamp0_keepProgress_dedupeTransactionIds"},"resume":{"saveAfterEveryMove":true,"format":"moveList","seed":null},"release":{"excludeRegionsAtLaunch":["EEA (EU27 + NO, IS, LI)","UK","CH"],"ump":"later"},"support":{"contactUrl":"TBD","contact":"supportPageFormOnly_externalSafari_noWKWebView","prefill":"appVersionOnly","ledgerExport":"shareSheetOnly_noPresetRecipient"},"tutorialReward":{"coins":100,"coinKind":"free","items":[]},"unlimitedHearts":{"hidesFullRefill":true,"hidesHeartAd":true,"onRevocation":"hearts=max_normalRules_currentStageFinishesNormally","familySharing":false},"clearReward":{"firstClearByStars":[20,25,30],"hardBonus":10,"reclear":5,"minCoins":1},"familySharing":{"allIAP":false,"enableRequiresOwnerApproval":"irreversibleInAppStoreConnect"},"stamps":{"dayResetHourFrom":"loginBonus.loginResetHour"},"iap":{"products":[{"id":"studio.reachhigh.taketothesky.coins100","type":"consumable","coins":100,"bonus":0,"priceJPY":160},{"id":"studio.reachhigh.taketothesky.coins300","type":"consumable","coins":300,"bonus":30,"priceJPY":480},{"id":"studio.reachhigh.taketothesky.coins500","type":"consumable","coins":500,"bonus":70,"priceJPY":800},{"id":"studio.reachhigh.taketothesky.unlimitedhearts","type":"nonConsumable","priceJPY":800}],"heartRefill":{"currency":"coins","price":60,"paidSpentFirst":true,"isIAP":false},"bonusCopy":"factsOnly_noPercent_noStrikethrough","wallet":"paidAndFreeShownSeparately_paidSpentFirst"}};
+var STAGE = {"schema":"tts.stage/1","name":"ステージ1（デモ）","seed":"demo-v01-s73","verify":{"solvable":true,"solution":["p02","p04","p05","p03","p06","p07","p11","p08","p09","p01","p12","p10"],"explored":12,"randomClearRate":0.5625,"moveRange":{"min":12,"max":12}},"id":1,"board":{"cols":4,"rows":3},"planes":[{"id":"p01","color":"red","size":"L","col":0,"row":0,"dir":"down"},{"id":"p02","color":"blue","size":"S","col":1,"row":0,"dir":"up"},{"id":"p03","color":"yellow","size":"M","col":2,"row":0,"dir":"up"},{"id":"p04","color":"green","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"blue","size":"M","col":0,"row":1,"dir":"left"},{"id":"p06","color":"green","size":"M","col":1,"row":1,"dir":"left"},{"id":"p07","color":"red","size":"S","col":2,"row":1,"dir":"up"},{"id":"p08","color":"yellow","size":"S","col":3,"row":1,"dir":"right"},{"id":"p09","color":"yellow","size":"S","col":0,"row":2,"dir":"left"},{"id":"p10","color":"green","size":"L","col":1,"row":2,"dir":"right"},{"id":"p11","color":"red","size":"M","col":2,"row":2,"dir":"up"},{"id":"p12","color":"blue","size":"S","col":3,"row":2,"dir":"right"}],"passengers":["green","green","green","green","red","red","red","red","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","green","green","green","green","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","red","red","red","red","yellow","yellow","yellow","yellow","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","yellow","yellow","yellow","yellow"]};
+var MOTION = {"schema":"tts.motion/1","move":{"speedPtPerMs":0.8,"minMs":500,"maxMs":1200,"easing":"ease-in-out"},"boarding":{"gatherStaggerMs":40,"gatherMs":300,"lineSpacingPt":21,"lineYOffsetFromGateTopPt":-9,"lineScale":0.75,"staggerMs":100,"stepMs":85,"enterMs":170,"enterPopScale":1.15,"enterEndScale":0.2,"hopHeightPt":4,"hopPeriodMs":150,"planePopScale":1.08,"planePopMs":140,"counterBumpScale":1.25,"counterBumpMs":160},"refill":{"durationMs":320,"staggerMs":40,"easing":"cubic-bezier(.3,.9,.4,1)"},"full":{"badgeText":"満席","badgeMs":220,"pulseMs":380,"pulseScales":[1,1.14,1,1.07,1],"sparkleCount":10,"sparkleFromPt":22,"sparkleToPt":46,"sparkleMs":420},"takeoff":{"climbMs":1050,"accelPower":2,"controlRisePt":230,"exitDxPt":250,"exitMinXPt":450,"exitYPt":-90,"endScale":1.5,"contrailStartU":0.15,"contrailWidthPt":3,"contrailOpacity":0.32,"contrailFadeMs":600,"releaseGateAfterMs":250,"totalMsApprox":1430},"clear":{"startAfterLastLiftoffMs":350,"confettiCount":70,"confettiMs":[1500,2000],"confettiSizePt":[7,11],"confettiSpeedPtPerMs":[0.35,0.8],"confettiSpreadRad":1.1,"gravityPtPerMs2":0.0009,"cardDelayMs":450,"cardPopMs":340,"cardPopFromScale":0.92,"cardEasing":"cubic-bezier(.2,1.3,.4,1)"},"reducedMotion":{"moveCrossfadeMs":200,"boardStaggerMs":60,"boardHopPt":6,"boardHopMs":140,"boardFadeMs":160,"takeoffBadgeHoldMs":300,"takeoffSlidePt":90,"takeoffMs":450,"confetti":false,"cardFadeMs":200}};
 </script>
 <script>
 (function(){
@@ -763,17 +684,13 @@ var RM = (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').ma
 var COLOR = {}; R.colors.forEach(function(c){ COLOR[c.id] = c; });
 var SIZE_JA = { S: '小さい', M: '中くらいの', L: '大きい' };
 var DIR_JA = { up: '上向き', down: '下向き', left: '左向き', right: '右向き' };
-function planeAria(c, size, dir){ return L.planeAria(c, size, dir, R.seats[size], LANG); } // 飛行機の読み上げ（logic.js、テストつき）。英語は rules.json の en（CD v0.6 レビュー）
+function planeAria(c, size, dir){ return L.planeAria(c, size, dir, R.seats[size], LANG); }
 var DIR_DEG = { up: 0, right: 90, down: 180, left: -90 };
 var app = document.getElementById('app');
 var SVGNS = 'http://www.w3.org/2000/svg';
-// 席数バッジ。?dt=large で「文字を大きく」（Dynamic Type）を試す：数字14pt・高さ20pt（上限）
 var DT_LARGE = /[?&]dt=large/.test(location.search); if (DT_LARGE) app.classList.add('dt-large');
-// 人の印：頭と胴をつなげた1つの形（#5B5A56）
 var SEAT_GLYPH = '<svg viewBox="0 0 7 10" aria-hidden="true"><path fill="#5B5A56" d="M3.5 0.2a2.05 2.05 0 0 1 1.35 3.6C6 4.2 7 5.3 7 6.7V8.6A1.4 1.4 0 0 1 5.6 10H1.4A1.4 1.4 0 0 1 0 8.6V6.7C0 5.3 1 4.2 2.15 3.8A2.05 2.05 0 0 1 3.5 0.2Z"/></svg>';
-var BOARD_K = 1; // 盤面の倍率（fit() で決まる）
-
-// ---- 配置（pt。iPhone 12 Pro の 390×844 を基準） ----
+var BOARD_K = 1;
 var RW = { x: 16, y: 482, w: 358, h: 308 };
 var CELL = { w: RW.w / S.board.cols, h: RW.h / S.board.rows };
 var GATE_X = function(i){ return 28 + i * 85.5; }, GATE_Y = 377, GATE_W = 77.5;
@@ -781,35 +698,29 @@ var TAXI_Y = 474;
 function cellCenter(c, r){ return { x: RW.x + CELL.w * (c + .5), y: RW.y + CELL.h * (r + .5) }; }
 function gateCenter(g){ return { x: GATE_X(g) + GATE_W / 2, y: GATE_Y + 46 }; }
 function slotCenter(i){ var c = i % R.boardingArea.cols, r = Math.floor(i / R.boardingArea.cols); return { x: 115 + 40 * c, y: 211 + 44 * r }; }
-var QX0 = 46, QDX = 30; // 待ち列の1人目の中心と間隔。「次」／Next の札の幅だけ1人目を右へずらす（英語で Next が隠れないように。CD v0.6）
-function queueFit(){ var w = document.getElementById('nextLbl').offsetWidth || 0, x0 = Math.max(46, 16 + w + 4 + 11); QDX = Math.min(30, (265 - 11 - x0) / (R.waitingLine.visible - 1)); QX0 = x0; } // 右端（…の手前 265）に収める
+var QX0 = 46, QDX = 30;
+function queueFit(){ var w = document.getElementById('nextLbl').offsetWidth || 0, x0 = Math.max(46, 16 + w + 4 + 11); QDX = Math.min(30, (265 - 11 - x0) / (R.waitingLine.visible - 1)); QX0 = x0; }
 function queueCenter(q){ return { x: QX0 + QDX * Math.min(q, R.waitingLine.visible), y: 121 }; }
 var STAGE_PLANE = {}; S.planes.forEach(function(p){ STAGE_PLANE[p.id] = p; });
-
-// ---- 空港の飾り（v0.3）。動かない・意味を持たせない・読み上げない ----
 (function decor(){
   var sky = document.getElementById('decorSky'), room = document.getElementById('decorRoom'), rw = document.getElementById('decorRunway');
-  // 空の帯：ターミナルの屋根と管制塔の影（帯の色より少し濃いだけ）
   var sil = '#C9D8E6';
   sky.innerHTML =
-    '<path d="M132 98 L132 88 Q190 78 232 86 L232 98 Z" fill="'+sil+'"/>' +           // ターミナル（ゆるい弧の屋根）
-    '<rect x="232" y="89" width="58" height="9" fill="'+sil+'"/>' +                       // 低い棟
-    '<rect x="250" y="56" width="7" height="34" fill="'+sil+'"/>' +                       // 管制塔の軸
-    '<path d="M241 50 L266 50 L262 58 L245 58 Z" fill="'+sil+'"/>' +                       // 管制室
+    '<path d="M132 98 L132 88 Q190 78 232 86 L232 98 Z" fill="'+sil+'"/>' +
+    '<rect x="232" y="89" width="58" height="9" fill="'+sil+'"/>' +
+    '<rect x="250" y="56" width="7" height="34" fill="'+sil+'"/>' +
+    '<path d="M241 50 L266 50 L262 58 L245 58 Z" fill="'+sil+'"/>' +
     '<rect x="244" y="45" width="19" height="5" rx="1" fill="'+sil+'"/>' +
-    '<rect x="253" y="40" width="1.4" height="5" fill="'+sil+'"/>';                        // アンテナ
-  // 搭乗口：左右に大きな窓（外の空）。縦の桟2本
+    '<rect x="253" y="40" width="1.4" height="5" fill="'+sil+'"/>';
   var win = '';
-  [[26, 64], [300, 64]].forEach(function(a){ // 乗客の列（x 102–288）から12pt以上離す
+  [[26, 64], [300, 64]].forEach(function(a){
     var x = a[0], w = a[1], y = 192, h = 160;
     win += '<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="6" fill="url(#winSky)" opacity=".8"/>';
     for (var i = 1; i < 3; i++) win += '<rect x="'+(x + w * i / 3 - .5)+'" y="'+y+'" width="1" height="'+h+'" fill="#F7FAFC"/>';
   });
   room.innerHTML = '<defs><linearGradient id="winSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E3ECF5"/><stop offset="1" stop-color="#EDF3F8"/></linearGradient></defs>' + win;
-  // 誘導路：ゲートの前を通る黄色の中心線と、各ゲートへの引き込み線
   var t = '<line x1="16" y1="'+TAXI_Y+'" x2="374" y2="'+TAXI_Y+'" stroke="var(--taxi)" stroke-width="1" opacity=".6"/>';
-  for (var g = 0; g < R.gates.base; g++){ var cx = GATE_X(g) + GATE_W / 2; t += '<line x1="'+cx+'" y1="'+(GATE_Y + 77)+'" x2="'+cx+'" y2="'+RW.y+'" stroke="var(--taxi)" stroke-width="1" opacity=".6"/>'; } // ゲートの中の部分は .gate::before
-  // 滑走路：中心線の破線（列のあいだ・飛行機の層より下）、縁の灯火
+  for (var g = 0; g < R.gates.base; g++){ var cx = GATE_X(g) + GATE_W / 2; t += '<line x1="'+cx+'" y1="'+(GATE_Y + 77)+'" x2="'+cx+'" y2="'+RW.y+'" stroke="var(--taxi)" stroke-width="1" opacity=".6"/>'; }
   var cx0 = RW.x + RW.w / 2, y;
   for (y = RW.y + 14; y < RW.y + RW.h - 30; y += 28) t += '<rect class="dash" x="'+(cx0 - 1.5)+'" y="'+y+'" width="3" height="14" rx="1" fill="#fff" opacity=".85"/>';
   for (y = RW.y + 14; y < RW.y + RW.h - 6; y += 40){
@@ -817,8 +728,6 @@ var STAGE_PLANE = {}; S.planes.forEach(function(p){ STAGE_PLANE[p.id] = p; });
   }
   rw.innerHTML = t;
 })();
-
-// ---- 図形 ----
 function symbol(kind, cx, cy, u, fill){
   var h = u / 2; fill = fill || '#fff';
   if (kind === 'circle') return '<circle cx="'+cx+'" cy="'+cy+'" r="'+(h*.92)+'" fill="'+fill+'"/>';
@@ -840,8 +749,6 @@ function paxSvg(c){
   return '<svg viewBox="0 0 26 32" width="26" height="32" aria-hidden="true"><circle cx="13" cy="6.5" r="6" fill="'+c.hex+'"/>'+
     '<rect x="1" y="14" width="24" height="18" rx="7" fill="'+c.hex+'"/>'+symbol(c.symbol, 13, 23.2, 11.5)+'</svg>';
 }
-
-// ---- 部品 ----
 var gatesEl = document.getElementById('gates'), planesEl = document.getElementById('planes'), paxEl = document.getElementById('paxLayer');
 var fxSvg = document.getElementById('fx'), confEl = document.getElementById('confetti');
 var fxd = document.createElement('div'); fxd.className = 'abs'; fxd.style.cssText = 'left:0;top:0;width:390px;height:844px;pointer-events:none;z-index:16';
@@ -861,7 +768,6 @@ function build(){
     e.setAttribute('role', 'button');
     e.setAttribute('aria-label', planeAria(c, p.size, p.dir));
     e.innerHTML = '<div class="hit"></div><div class="pop"><div class="body">' + planeBody(c.hex) + '</div><div class="sym">' + planeSym(c.symbol) + '</div></div>';
-    // 席数バッジ：飛行機より上の別の層。見た目（.seat）と当たり（.seathit）を分ける。位置は layoutSeats() で決める
     var sb = document.createElement('div'); sb.className = 'seat'; sb.setAttribute('aria-hidden', 'true');
     sb.innerHTML = SEAT_GLYPH + '<span class="n">' + R.seats[p.size] + '</span>';
     var sh = document.createElement('div'); sh.className = 'seathit'; sh.setAttribute('aria-hidden', 'true');
@@ -875,19 +781,17 @@ function build(){
     paxEl.appendChild(e); paxEls.push(e);
   });
 }
-// ---- 席数バッジの配置（CDレビュー反映） ----
-// 機の外形（planeBody と同じ形。100×100 の座標、線の太さ4・角は丸）
 var PLANE_PATH = (function(){ var q = new Path2D(); q.roundRect(42, 3, 16, 91, 8); q.moveTo(50,36); q.lineTo(95,58); q.lineTo(95,66); q.lineTo(50,59); q.lineTo(5,66); q.lineTo(5,58); q.closePath();
   q.moveTo(50,80); q.lineTo(72,90); q.lineTo(72,95); q.lineTo(50,92); q.lineTo(28,95); q.lineTo(28,90); q.closePath(); q.arc(50, 50, 21, 0, Math.PI * 2); q.closePath(); return q; })();
 var HIT_CTX = document.createElement('canvas').getContext('2d'); HIT_CTX.lineWidth = 4; HIT_CTX.lineJoin = 'round';
-function inPlane(pl, x, y){ // 盤面の点 (x,y) が機 pl の外形の中か
+function inPlane(pl, x, y){
   var c = cellCenter(pl.col, pl.row), l = R.planeLengthPt.runway[pl.size], t = DIR_DEG[pl.dir] * Math.PI / 180;
   var dx = x - c.x, dy = y - c.y, lx = dx * Math.cos(t) + dy * Math.sin(t), ly = -dx * Math.sin(t) + dy * Math.cos(t);
   var ux = lx / l * 100 + 50, uy = ly / l * 100 + 50;
   if (ux < -3 || ux > 103 || uy < -3 || uy > 103) return false;
   return HIT_CTX.isPointInPath(PLANE_PATH, ux, uy) || HIT_CTX.isPointInStroke(PLANE_PATH, ux, uy);
 }
-function gapToPlane(pl, r, maxGap){ // 札の四角 r と機の外形のすき間（maxGap まで、0.5pt 刻み）。重なれば 0
+function gapToPlane(pl, r, maxGap){
   for (var g = 0; g <= maxGap; g += 0.5){
     var x0 = r.x - g, y0 = r.y - g, x1 = r.x + r.w + g, y1 = r.y + r.h + g, x, y;
     for (x = x0; x <= x1 + 1e-6; x += 0.5) if (inPlane(pl, x, y0) || inPlane(pl, x, y1)) return g;
@@ -895,13 +799,11 @@ function gapToPlane(pl, r, maxGap){ // 札の四角 r と機の外形のすき�
   }
   return Infinity;
 }
-var SEAT_INFO = {}; // 確認用：各機の札の配置結果
-// 札の配置（CDの最終判断）。条件：となりの機と画面上で4pt以上・滑走路の縁から画面上で4pt以上内側・自分の機と盤面で1pt以上・当たりは自分のマスの中だけ。
-// 満たせないときの順番：(a) 盤面のすべての札を数字だけにする（1枚でも必要なら全部）→ (b) その札だけ機の右下から左下へ → (c) 文字を大きくする設定をこの端末では13ptで止める
+var SEAT_INFO = {};
 var SEAT_NUM_ONLY = false, SEAT_DT_CAP = false;
 function seatCandidate(pl, corner, ke, inv){
   var se = seatEls[pl.id], len = R.planeLengthPt.runway[pl.size], c = cellCenter(pl.col, pl.row), off = Math.round(len * 0.24 + 1);
-  var br = se.pill.getBoundingClientRect(), w = br.width / BOARD_K, h = br.height / BOARD_K; // 小数まで正確な幅（盤面の座標）
+  var br = se.pill.getBoundingClientRect(), w = br.width / BOARD_K, h = br.height / BOARD_K;
   var r = { x: corner === 'R' ? c.x + off : c.x - off - w, y: c.y + off, w: w, h: h }, nb = Infinity, edge = 4 / ke;
   state.planes.forEach(function(o){ if (o !== pl && o.status === 'runway' && Math.abs(o.col - pl.col) <= 1 && Math.abs(o.row - pl.row) <= 1) nb = Math.min(nb, gapToPlane(o, r, 12)); });
   var own = gapToPlane(pl, r, 9);
@@ -910,7 +812,7 @@ function seatCandidate(pl, corner, ke, inv){
 }
 function layoutSeats(){
   if (!state) return;
-  var ke = Math.min(BOARD_K, 1), inv = 1 / ke; // 盤面が縮むときだけ、札を逆に拡大して実寸に保つ
+  var ke = Math.min(BOARD_K, 1), inv = 1 / ke;
   app.style.setProperty('--seatInv', inv);
   var pls = state.planes.filter(function(pl){ var se = seatEls[pl.id]; return se && !se.pill.classList.contains('off'); });
   function setMode(numOnly, cap){ app.classList.toggle('seat-numonly', numOnly); app.classList.toggle('dt-cap', cap); }
@@ -924,7 +826,6 @@ function layoutSeats(){
     });
     return { picks: picks, ok: allOk, numOnly: numOnly, cap: cap };
   }
-  // いったん決めた「数字だけ」「13ptで止める」は、その盤面（ページを開いているあいだ）では戻さない（札が増えたり減ったりして見えないように）
   var steps = [[false, false, false], [true, false, false], [true, false, true], [true, true, true]].filter(function(st){
     return (st[0] || !SEAT_NUM_ONLY) && (st[1] || !SEAT_DT_CAP) && (!st[1] || DT_LARGE);
   });
@@ -942,7 +843,6 @@ function layoutSeats(){
     var se = seatEls[pl.id], q = res.picks[pl.id];
     var cell = { x: RW.x + CELL.w * pl.col, y: RW.y + CELL.h * pl.row, w: CELL.w, h: CELL.h };
     se.pill.style.left = q.r.x + 'px'; se.pill.style.top = q.r.y + 'px';
-    // 当たり：札と自分のマスの重なりだけ（マスの境目から0.5pt内側まで）
     var hx0 = Math.max(q.r.x, cell.x + 0.5), hy0 = Math.max(q.r.y, cell.y + 0.5), hx1 = Math.min(q.r.x + q.r.w, cell.x + cell.w - 0.5), hy1 = Math.min(q.r.y + q.r.h, cell.y + cell.h - 0.5);
     se.hit.style.left = hx0 + 'px'; se.hit.style.top = hy0 + 'px'; se.hit.style.width = Math.max(0, hx1 - hx0) + 'px'; se.hit.style.height = Math.max(0, hy1 - hy0) + 'px';
     SEAT_INFO[pl.id] = { corner: q.corner, rect: q.r, ok: q.ok, widthPt: +(q.r.w * ke).toFixed(1), heightPt: +(q.r.h * ke).toFixed(1),
@@ -950,7 +850,6 @@ function layoutSeats(){
   });
   updateDashes();
 }
-// 中心線の破線：札に一部でもかかる破線は、その1本だけ描かない（札が消えたら戻す）
 function updateDashes(){
   var rects = []; Object.keys(seatEls).forEach(function(id){ var se = seatEls[id], q = SEAT_INFO[id]; if (q && q.rect && !se.pill.classList.contains('off')) rects.push(q.rect); });
   document.querySelectorAll('#decorRunway .dash').forEach(function(d){
@@ -959,7 +858,6 @@ function updateDashes(){
     d.style.display = hit ? 'none' : '';
   });
 }
-// t111u：SE だけの「数字は乗れる人数です」は消した（チュートリアル②の札に、すべての端末で入れた）
 function maybeSeatHint(){}
 function planeLen(id){ return R.planeLengthPt.runway[STAGE_PLANE[id].size]; }
 function gateScale(id){ return R.planeLengthPt.gate[STAGE_PLANE[id].size] / planeLen(id); }
@@ -969,17 +867,14 @@ function setPlane(id, x, y, deg, k, op){
   e.querySelector('.body').style.transform = 'rotate(' + deg + 'deg)'; e.style.opacity = op;
 }
 function paxTf(x, y, k){ return 'translate(' + (x - 13) + 'px,' + (y - 16) + 'px) scale(' + k + ')'; }
-function paxNow(i){ // 今見えている位置（動きの途中でも）
+function paxNow(i){
   var m = new DOMMatrix(getComputedStyle(paxEls[i]).transform);
   return { x: m.m41 + 13, y: m.m42 + 16, k: Math.hypot(m.a, m.b) || 1 };
 }
-
-// ---- 見た目の状態（ロジックの状態とは別。動きが追いつくまでの表示） ----
 var state, epoch = 0, pending = 0, seq = 0, celebrated = false;
 var visGate, gateWaiters, PV, paxSeq, paxWhere;
 function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 function deferred(){ var d = {}; d.p = new Promise(function(r){ d.r = r; }); return d; }
-
 function placePaxFromSnapshot(snap, sq, delayStep){
   var n = 0;
   snap.slots.forEach(function(pid, i){
@@ -1017,8 +912,6 @@ function allocGate(id){
   return new Promise(function(r){ gateWaiters.push(function(g2){ visGate[g2] = id; PV[id].gate = g2; PV[id].gateD.r(g2); showGate(g2); r(g2); }); });
 }
 function releaseGate(g){ visGate[g] = null; showGate(g); if (gateWaiters.length) gateWaiters.shift()(g); }
-
-// ---- 移動（滑走路 → ゲート） ----
 function unwrap(prev, a){ while (a - prev > 180) a -= 360; while (a - prev < -180) a += 360; return a; }
 function movePath(p, gate){
   var a = cellCenter(p.col, p.row), pts = [a], d = p.dir, left = a.x < RW.x + RW.w / 2;
@@ -1029,10 +922,11 @@ function movePath(p, gate){
   var g = gateCenter(gate); pts.push({ x: g.x, y: TAXI_Y - 2 }, g);
   return pts;
 }
+var MOVE_END_HOOK = null;
 function animateMove(id, gate){
   var p = STAGE_PLANE[id], e = planeEls[id], body = e.querySelector('.body'), pts = movePath(p, gate), gk = gateScale(id), g = gateCenter(gate);
   e.style.pointerEvents = 'none';
-  var sb = seatEls[id]; if (sb){ if (RM) sb.pill.style.transition = 'none'; sb.pill.classList.add('off'); sb.hit.classList.add('off'); updateDashes(); } // 動き出したら隠す（ゲートでは n/席数 の表示に引き継ぐ）
+  var sb = seatEls[id]; if (sb){ if (RM) sb.pill.style.transition = 'none'; sb.pill.classList.add('off'); sb.hit.classList.add('off'); updateDashes(); }
   if (RM){
     var mf = M.reducedMotion.moveCrossfadeMs / 2;
     return e.animate([{ opacity: 1 }, { opacity: 0 }], { duration: mf, fill: 'forwards' }).finished.then(function(a){
@@ -1061,10 +955,7 @@ function animateMove(id, gate){
   var a1 = e.animate(kf, o), a2 = body.animate(kb, o);
   return a1.finished.then(function(){ setPlane(id, g.x, g.y, 0, gk, 1); a1.cancel(); a2.cancel(); });
 }
-
-// ---- 搭乗：一列に並んで、1人ずつ機に入る ----
 function hopFrames(frames, t0, t1, a, b, k, hop){
-  // a→b を、跳ねながら進む（hop 回）。frames は {t,x,y,k,o}
   var n = Math.max(1, Math.round((t1 - t0) / M.boarding.hopPeriodMs));
   for (var i = 1; i <= n; i++){
     var tm = t0 + (t1 - t0) * (i - .5) / n, te = t0 + (t1 - t0) * i / n, um = (i - .5) / n, ue = i / n;
@@ -1115,19 +1006,16 @@ function boardGroup(id, items, sq, ep){
       el.style.transition = 'none'; el.style.transform = paxTf(s0.x, s0.y, s0.k);
       var tg0 = k * b.gatherStaggerMs, tg1 = tg0 + b.gatherMs;
       fr.push({ t: 0, x: s0.x, y: s0.y, k: s0.k, o: 1 }, { t: tg0, x: s0.x, y: s0.y, k: s0.k, o: 1 });
-      // 列に並ぶ（列の k 番目へ）
       var nH = Math.max(1, Math.round(b.gatherMs / b.hopPeriodMs)), A = s0, B = spot(k);
       for (var i = 1; i <= nH; i++){
         var um = (i - .5) / nH, ue = i / nH;
         fr.push({ t: tg0 + b.gatherMs * um, x: A.x + (B.x - A.x) * um, y: A.y + (B.y - A.y) * um - b.hopHeightPt * 1.5, k: s0.k + (ls - s0.k) * um, o: 1, e: 'ease-in' });
         fr.push({ t: tg0 + b.gatherMs * ue, x: A.x + (B.x - A.x) * ue, y: A.y + (B.y - A.y) * ue, k: s0.k + (ls - s0.k) * ue, o: 1, e: 'ease-out' });
       }
-      // 前の人が入るたびに1つずつ前へ
       for (var j = 0; j < k; j++){
         var ts = T0 + j * b.staggerMs; fr.push({ t: ts, x: spot(k - j).x, y: lineY, k: ls, o: 1 });
         hopFrames(fr, ts, ts + b.stepMs, spot(k - j), spot(k - j - 1), ls, b.hopHeightPt);
       }
-      // 自分の番：ドアへ入る（少しふくらんで、小さくなって消える）
       var te = T0 + k * b.staggerMs, sp = spot(0);
       fr.push({ t: te, x: sp.x, y: lineY, k: ls, o: 1 });
       fr.push({ t: te + b.enterMs * .4, x: (sp.x + door.x) / 2, y: lineY - b.hopHeightPt * 1.5, k: ls * b.enterPopScale, o: 1, e: 'ease-in' });
@@ -1137,8 +1025,6 @@ function boardGroup(id, items, sq, ep){
     }));
   });
 }
-
-// ---- 満席の合図と離陸 ----
 function sparkle(id, c){
   var f = M.full, hex = COLOR[STAGE_PLANE[id].color].hex;
   for (var i = 0; i < f.sparkleCount; i++){
@@ -1156,7 +1042,7 @@ function takeoff(id, ep){
   return pv.arriveD.p.then(function(){ return pv.fullD.p; }).then(function(){
     if (ep !== epoch) return;
     var gate = pv.gate, g = gateCenter(gate), e = planeEls[id], f = M.full, t = M.takeoff, gk = gateScale(id);
-    var badge = document.createElement('div'); badge.className = 'badge'; badge.textContent = STR[LANG].board.full; badge.lang = LANG; // 満席になった瞬間
+    var badge = document.createElement('div'); badge.className = 'badge'; badge.textContent = STR[LANG].board.full; badge.lang = LANG;
     badge.style.left = g.x + 'px'; badge.style.top = (GATE_Y - 13) + 'px'; fxd.appendChild(badge);
     badge.animate(RM ? [{ opacity: 0 }, { opacity: 1 }] : [{ opacity: 0, transform: 'translate(-50%,-50%) scale(.6)' }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1.1)', offset: .7 }, { opacity: 1, transform: 'translate(-50%,-50%) scale(1)' }], { duration: f.badgeMs, easing: 'ease-out' });
     if (RM){
@@ -1174,7 +1060,6 @@ function takeoff(id, ep){
     sparkle(id, g);
     return wait(f.pulseMs).then(function(){
       if (ep !== epoch) return;
-      // 上昇：だんだん速く、弧を描いて右上の空へ。飛行機雲を残す
       var S0 = { x: g.x, y: g.y }, C = { x: g.x, y: g.y - t.controlRisePt }, E = { x: Math.max(g.x + t.exitDxPt, t.exitMinXPt), y: t.exitYPt };
       var N = 28, kf = [], kb = [], pts = [], lens = [0], i, prevA = 0;
       for (i = 0; i <= 80; i++){ var uu = i / 80; pts.push(bez(S0, C, E, uu)); if (i) lens.push(lens[i-1] + Math.hypot(pts[i].x - pts[i-1].x, pts[i].y - pts[i-1].y)); }
@@ -1207,12 +1092,10 @@ function takeoff(id, ep){
     });
   });
 }
-
-function boardTakeoffTag(badge){ // 離陸：札を「離陸どうぞ」に。読み上げはここで1回だけ
+function boardTakeoffTag(badge){
   badge.textContent = STR[LANG].board.takeoff;
   var lv = document.getElementById('live'); if (!celebrated){ lv.textContent = ''; setTimeout(function(){ if (!celebrated) lv.textContent = STR[LANG].board.vo; }, 30); }
 }
-// ---- クリアのお祝い ----
 function maybeCelebrate(delay){
   if (celebrated || L.status(state) !== 'clear') return;
   for (var id in PV) if (PV[id].present) return;
@@ -1243,14 +1126,6 @@ function celebrate(){
     card.animate([{ opacity: 0, transform: 'scale(' + c.cardPopFromScale + ')' }, { opacity: 1, transform: 'scale(1)' }], { duration: c.cardPopMs, easing: c.cardEasing });
   }, c.cardDelayMs);
 }
-
-// ---- 進行 ----
-// t111u：滑走路の下の案内の場所には、もう何も出さない。動けない理由は、タップした機のすぐ上の小さな札で知らせる
-// ==== 文言の表（チュートリアルと、動けない理由の札。日本語・英語）。?lang=en で英語 ====
-// 口調はオーナーの決定（2026-11-03 JST）：親しみやすい「〜できるよ」。英語も同じやさしさで
-// 文と文は「。」で区切り、最後の文のあとには「。」も「！」も付けない（英語は本文・注記だけピリオド、「!」なし）
-// tone（t115u、オーナー→CD の決まり）：'guide' ＝アプリの中の案内（くだけた口調）／ 'official' ＝公式の知らせ（プライバシー・利用規約・購入と復元・広告の同意/ATT・課金のエラー。ていねい語）
-// provisional: true ＝ CD レビュー前の仮の文言
 var LANG = /[?&]lang=en/.test(location.search) ? 'en' : 'ja';
 var STR = {
   ja: {
@@ -1259,19 +1134,19 @@ var STR = {
       steps: [
         '乗客と同じ色の飛行機をタップできるよ',
         'ゲートに入ると乗客が乗り込むよ。数字は乗れる人数だよ',
-        '飛行機は前にだけ進むよ。横や下を向いていても、前が空いていれば外を回ってゲートへ行けるよ', // CD v0.6 の文（確定）。動きは movePath のとおり
+        '飛行機は前にだけ進むよ。横や下を向いていても、前が空いていれば外を回ってゲートへ行けるよ',
         '前がふさがった飛行機は動かせないよ。先に別の飛行機を動かして道をあけられるよ',
         '満席になると離陸するよ。待っている乗客がみんな乗ればクリア'
       ],
-      note1: '〇の飛行機をタップすると次に進むよ', // ①だけ、本文の下の行に
-      note3: '〇の飛行機をタップしてみてね', // ③（タップできる機があるときだけ）
+      note1: '〇の飛行機をタップすると次に進むよ',
+      note3: '〇の飛行機をタップしてみてね',
       next: '次へ', start: 'はじめる', skip: 'スキップ', sep: '。',
       stepLabel: function(n, all){ return n + ' / ' + all; },
       stepAria: function(n, all){ return 'ステップ ' + n + '/' + all; },
-      tapLabel: function(c, size){ return c.ja + '、' + SIZE_JA[size] + '飛行機をタップする'; } // 読み上げ用の隠しボタン
+      tapLabel: function(c, size){ return c.ja + '、' + SIZE_JA[size] + '飛行機をタップする'; }
     },
     why: { tone: 'guide', 'blocked': '前がふさがってるよ', 'no-gate': '空いてるゲートがないよ' },
-    clear: { tone: 'guide', next: '次のステージへ', head: '全員搭乗！', // オーナー決定：「！/!」はクリアの画面に1つだけ。日本語：見出し「全員搭乗！」→ 英語の一行（「!」なし・「.」で終わる）→ 小文（「！」「。」なし）
+    clear: { tone: 'guide', next: '次のステージへ', head: '全員搭乗！',
       regular: [
         { id: 'nice', big: 'Nice flight.', small: 'いい飛び立ちだったね' },
         { id: 'wheels', big: 'Wheels up.', small: 'みんな笑顔で、空の上へ' },
@@ -1285,63 +1160,63 @@ var STR = {
         comeback: { big: 'Back on course.', small: '工夫したぶん、いい飛び立ちになったね' },
         milestone: { big: function(n){ return n + ' flights flown.'; }, small: function(n){ return n + '便目も、いい空だったね'; } }
       } },
-    board: { tone: 'guide', full: 'みんな乗ったよ', takeoff: '離陸どうぞ', vo: '満席、離陸どうぞ' }, // 札は「!」なし。読み上げは離陸のとき1回だけ
-    stamp: { tone: 'guide', head: 'Have a nice trip.', sub: '良い旅を。スタンプが1つ増えたよ', // m16。CD v0.3.12 でスタンプのシートからは外した（今は画面に出ない）。カード完成の Frequent flyer! だけ「!」
-      dayChange: 'スタンプは、朝4時に新しい日になるよ', tonight: '今夜の分も、今日のスタンプに入っているよ', // CD 確定。カードの下に小さく（読み上げはカードの一部）。tonight は 0:00〜3:59 に今日のスタンプがもう押してあるときだけ。広告のことは書かない
-      doneHead: 'Frequent flyer!', doneSub: '搭乗券がいっぱいに。いい旅の記録だね' }, // スタンプカード完成（オーナー決定 v0.3）
-    title: { tone: 'guide', welcome: 'ようこそ、空の玄関口へ', vo: 'Take to the sky。ようこそ、空の玄関口へ' }, // 扉絵のひとこと。初回だけ
-    greet: { tone: 'guide', // ホームのあいさつ（CD v0.3.12）。朝5:00〜10:59／昼11:00〜15:59／夕16:00〜18:59／夜19:00〜4:59。前回から4時間以上あいたときだけ（日付が変わっただけでは出さない）。L.greetKind
+    board: { tone: 'guide', full: 'みんな乗ったよ', takeoff: '離陸どうぞ', vo: '満席、離陸どうぞ' },
+    stamp: { tone: 'guide', head: 'Have a nice trip.', sub: '良い旅を。スタンプが1つ増えたよ',
+      dayChange: 'スタンプは、朝4時に新しい日になるよ', tonight: '今夜の分も、今日のスタンプに入っているよ',
+      doneHead: 'Frequent flyer!', doneSub: '搭乗券がいっぱいに。いい旅の記録だね' },
+    title: { tone: 'guide', welcome: 'ようこそ、空の玄関口へ', vo: 'Take to the sky。ようこそ、空の玄関口へ' },
+    greet: { tone: 'guide',
       morning: 'おはよう。ゲートはもう開いてるよ', day: 'こんにちは。ひと便、飛ばしていく？', evening: 'おつかれさま。夕方の便も出せるよ', night: '夜の便も出ているよ。のんびりどうぞ',
-      back: 'おかえり。滑走路は整えてあるよ', // 3日以上あいたとき。あいさつより優先。日数や連続記録には触れない
-      back14: function(n){ return 'おかえり。続きはステージ' + n + 'からだよ'; } }, // 14日以上
-    ad: { tone: 'guide', // オーナー決定（2026-11-03）。上限は rules.json ads.adCaps（1日にハート5・解除10、別々に数える）。広告の「今日」は ads.adResetHour（夜0時、端末の時刻。オーナー決定）。スタンプ・ログインボーナスの区切り（午前4時）とは別
-      before: '広告が流れるよ（30秒以内）。最後まで見ると、ハートが1つ増えるよ', // 報酬型広告の再生前（本人が選んだときだけ。デモに画面なし）
-      remaining: function(n){ return '今日はあと' + n + '回'; }, // ハートの広告ボタンに残りの回数
-      heartCap: '今日のハートの広告はここまでだよ。夜0時にまた見られるよ', // 広告の回数は夜0時にもどる（オーナー決定。rules.json ads.adResetHour=0）。上限のあと。広告ボタンはグレーにせず出さない
+      back: 'おかえり。滑走路は整えてあるよ',
+      back14: function(n){ return 'おかえり。続きはステージ' + n + 'からだよ'; } },
+    ad: { tone: 'guide',
+      before: '広告が流れるよ（30秒以内）。最後まで見ると、ハートが1つ増えるよ',
+      remaining: function(n){ return '今日はあと' + n + '回'; },
+      heartCap: '今日のハートの広告はここまでだよ。夜0時にまた見られるよ',
       unlockCap: '今日はこの広告での解除はここまでだよ。コインでも開けられるよ',
-      unlockCapShort: function(d){ return '今日はこの広告での解除はここまでだよ。あとコイン' + d + '枚で開けられるよ'; }, earnByClearing: 'コインは、ステージをクリアするとたまるよ', // CD 確定。コインが足りないとき（d＝値段−持っているコイン）。ボタンなし、ショップへは誘わない
-      coinUnlock: function(n){ return 'コイン' + n + '枚で開ける'; }, // コインが足りるとき、上限の文の下に
-      noFill: '今は広告を用意できなかったよ。少したってから試してみてね', offline: 'インターネットにつながると、広告を見られるよ' /* オフライン：ボタンはグレーで押せない、下にこの一文。つながれば自動で戻る */ }, // ゲート解除の広告の上限のあと（ATT は求めないので説明の文もなし）
-    home: { tone: 'guide', label: 'ホーム', // やめる確認（CD 確定）。右「続ける」が主ボタン・最初のフォーカス、左は失う側（枠だけ・ふつうの文字色、赤にしない）。外をタップ／下へスワイプ＝続ける
+      unlockCapShort: function(d){ return '今日はこの広告での解除はここまでだよ。あとコイン' + d + '枚で開けられるよ'; }, earnByClearing: 'コインは、ステージをクリアするとたまるよ',
+      coinUnlock: function(n){ return 'コイン' + n + '枚で開ける'; },
+      noFill: '今は広告を用意できなかったよ。少したってから試してみてね', offline: 'インターネットにつながると、広告を見られるよ'   },
+    home: { tone: 'guide', label: 'ホーム',
       q: 'ホームに戻る？', body: 'ここでやめると、使ったハート1つは戻らないよ', unlocked: '開けた枠も元に戻るよ', go: 'ホームに戻る', stay: '続ける',
       retryQ: 'やり直す？', retryBody: '使ったハートは戻らず、新しくハートを1つ使うよ', retryGo: 'やり直す',
-      unlimited: 'ハートは無制限だから減らないよ。開けた枠も元に戻るよ' }, // m18/m18b（CD 確定）。ハート無制限：枠を開けたときだけ確認を出す
-    heart: { tone: 'guide', tip: 'ステージを始めるとハートを1つ使うよ。クリアすると戻ってくるよ', // チュートリアルのあと1回だけ、ハートの下にふきだし（約5秒かタップで閉じる）。ヘルプにも同じ一文。無制限の人には出さない
-      back: 'ハートが戻ったよ', inUse: '使用中', // back はクリアの読み上げの中で1回だけ
-      resume: '続きから遊べるよ', restoreFail: '前回の続きを戻せなかったので、ハートが1つ減ったよ', // restoreFail は戻せなかったときだけ、ホームで1回
+      unlimited: 'ハートは無制限だから減らないよ。開けた枠も元に戻るよ' },
+    heart: { tone: 'guide', tip: 'ステージを始めるとハートを1つ使うよ。クリアすると戻ってくるよ',
+      back: 'ハートが戻ったよ', inUse: '使用中',
+      resume: '続きから遊べるよ', restoreFail: '前回の続きを戻せなかったので、ハートが1つ減ったよ',
       hud: function(n, u){ return 'ハート 5つ中' + n + 'つ' + (u ? '、1つ使用中' : ''); }, hudUnlimited: 'ハート無制限' },
-    shop: { tone: 'official', bonus: function(n){ return '+' + n; } }, // ボーナスは事実だけ（「+30」）。「％お得」や取り消し線の値段は使わない。ショップの画面はデモにない
-    restore: { tone: 'official', // 購入の復元（CD 確定 v1.7 前の分）。商品名は「ハート無制限」／"Unlimited Hearts"（英語は文中でも頭文字を大文字）。結果は画面に出して VoiceOver で1回読む。赤や警告のアイコンは使わない。ショップの画面はデモにない
-      button: '購入を復元', note: '復元できるのは、ハート無制限です。', // m20（CD 確定 v0.3.12、です・ます）
+    shop: { tone: 'official', bonus: function(n){ return '+' + n; } },
+    restore: { tone: 'official',
+      button: '購入を復元', note: '復元できるのは、ハート無制限です。',
       success: '購入を復元しました。ハート無制限が使えます。', successCoins: 'コインとハート全回復は、復元の対象外です。',
       active: 'ハート無制限は、すでに使えます。', none: '復元できる購入はありませんでした。購入したときと同じApple Accountでサインインしているか、ご確認ください。',
       failed: '購入を復元できませんでした。インターネットの接続を確認して、もう一度お試しください。',
       retry: 'もう一度試す', close: '閉じる',
       pending: [] },
-    ui: { // 画面に固定の文字と読み上げのラベル（CD v0.3.12）。HTML の data-t／data-ta から入れる
+    ui: {
       titleAria: '扉絵', about: 'このアプリについて', settingsSoon: '設定（準備中）', start: 'スタート', credit: 'Reach High Studio　デモ v0.7',
       home: 'ホーム', route: '飛行ルート', stamps: 'スタンプ', day3sample: '3日目（表示例）', profile: 'マイページ', logItems: '記録と持ち物', shop: 'ショップ', soon: '準備中', shopSoon: 'ショップ（準備中）',
       playStage1: 'ステージ1を遊ぶ', play: 'プレイ', back: '戻る', backHome: '戻る（ホームへ）', flightLog: '記録', stagesCleared: 'クリアしたステージ', nextStage: '次のステージ',
       myResults: 'このデモで遊んだ結果だよ', items: '持ち物', sample: '表示例', sampleDemo: '表示例（デモ）', paidCoins: '買ったコイン', freeCoins: 'もらったコイン', hearts: 'ハート',
       notInGame: 'コインとハートは、まだゲームに入っていないよ。数字は見た目の例だよ', stampCard: 'スタンプカード', stampHow: ['毎日最初に開いたとき、自動で押されるよ。', '休んだ日があっても、続きから押せるよ'],
-      saving: '記録の保存', icloud: '記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。', noSave: 'このデモでは保存しません。ページを閉じると最初に戻ります。', // 保存の説明だけ です・ます（CD）
+      saving: '記録の保存', icloud: '記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。', noSave: 'このデモでは保存しません。ページを閉じると最初に戻ります。',
       newCard: '7日目のあとは、新しいカードになるよ', close: '閉じる', madeBy: '制作：Reach High Studio', demoVer: 'デモ v0.7（ステージ1だけ遊べるよ）',
-      restart: 'やり直す', stuckHead: 'ここで渋滞みたい。作戦を立て直そうか', tryAgain: 'やり直す', waiting: '待っている人', next: '次', boardingArea: '搭乗口', gateOpen: '空き', jamClose: '閉じる', // 「搭乗口」は待合の札だけ。A1〜A4 は「ゲート」
+      restart: 'やり直す', stuckHead: 'ここで渋滞みたい。作戦を立て直そうか', tryAgain: 'やり直す', waiting: '待っている人', next: '次', boardingArea: '搭乗口', gateOpen: '空き', jamClose: '閉じる',
       waitN: function(n){ return n + '人'; }, routeN: function(n){ return n + 'ステージ クリア'; }, nextN: function(n){ return '次は ' + n; }, stageN: function(n){ return 'ステージ' + n; },
       routeAria: function(c, n){ return '飛行ルート：' + c + 'ステージ クリア、次はステージ' + n; }, playAria: function(n){ return 'プレイ、ステージ' + n; }, stageSoonAria: function(n){ return 'ステージ' + n + '（準備中）'; },
       stageSoon: function(n){ return 'ステージ' + n + 'は準備中だよ。このデモはステージ1だけだよ'; }, shopToast: 'ショップは準備中だよ（デモ）', settingsToast: '設定は準備中だよ（デモ）',
       hudAria: function(w){ return L.ariaJoin(['表示例', 'ハート 5つ中4つ', '買ったコイン' + w.paid + '枚、もらったコイン' + w.free + '枚'], 'ja'); }, coinVal: function(n){ return n + '枚'; },
       rowAria: function(k, v){ return k + '（表示例）：' + v; }, heartsVal: '5つ中4つ', stageUnit: 'ステージ',
       bp: { top: '搭乗券', f: ['便', 'ゲート', '特典', '日付'], coins: 'コイン', day: function(n){ return n + '日目'; }, today: '・今日', todayOnly: false, stamp: '出発', sum: function(n){ return '今日は' + n + '日目　もらったコイン +' + L.stampCoins(n); },
-        aria: function(n){ return L.stampAria(n, 'ja'); } } }, // 読み上げの文は logic.js（CD v0.6 レビュー、テストつき）
+        aria: function(n){ return L.stampAria(n, 'ja'); } } },
   },
-  en: { // 英語は CD の最終版（オーナーが CD に一任）。アポストロフィは U+2019。文頭だけ大文字、ピリオドは本文と注記だけ、「!」なし
+  en: {
     tut: {
       tone: 'guide',
       steps: [
         'Tap a plane that matches a passenger’s color.',
         'When a plane pulls into a gate, passengers hop on. The number shows how many seats it has.',
-        'Planes only move forward. Facing sideways or down? With a clear path, they taxi around to a gate.', // CD v0.6 (final)
+        'Planes only move forward. Facing sideways or down? With a clear path, they taxi around to a gate.',
         'A plane can’t move if something’s in its way. Move another plane first to clear the path.',
         'Full planes take off. Board everyone who’s waiting to clear the stage.'
       ],
@@ -1353,7 +1228,7 @@ var STR = {
       tapLabel: function(c, size){ return 'Tap the ' + { S: 'small', M: 'medium', L: 'large' }[size] + ' ' + c.en + ' plane'; }
     },
     why: { tone: 'guide', 'blocked': 'Something’s in the way', 'no-gate': 'No open gates right now' },
-    clear: { tone: 'guide', next: 'Next stage', head: null, // 英語：大きな英語の見出し（「!」はここだけ）＋英語の小文
+    clear: { tone: 'guide', next: 'Next stage', head: null,
       regular: [
         { id: 'nice', big: 'Nice flight!', small: 'Every plane took off smoothly' },
         { id: 'wheels', big: 'Wheels up!', small: 'Everyone’s on their way' },
@@ -1374,19 +1249,19 @@ var STR = {
       morning: 'Good morning. The gates are open.', day: 'Hi there. Time for a quick flight?', evening: 'Long day? The evening flights are ready.', night: 'Night flights are running. Take it easy.',
       back: 'Welcome back. The runway’s all set.',
       back14: function(n){ return 'Welcome back. You’re on stage ' + n + '.'; } },
-    ad: { tone: 'guide', // 英語は CD の最終版（2026-11-03）
+    ad: { tone: 'guide',
       before: 'An ad will play (30 seconds or less). Watch it to the end and you’ll get 1 heart.',
       remaining: function(n){ return n + ' left today'; },
       heartCap: 'That’s all the heart ads for today. More at midnight.',
       unlockCap: 'That’s all the unlock ads for today. You can also unlock it with coins.', unlockCapShort: function(d){ return 'That’s all the unlock ads for today. ' + (d === 1 ? '1 more coin' : d + ' more coins') + ' to unlock it.'; }, earnByClearing: 'You earn coins by clearing stages.', coinUnlock: function(n){ return 'Unlock for ' + n + (n === 1 ? ' coin' : ' coins'); }, noFill: 'No ad is ready right now. Try again in a little while.', offline: 'Connect to the internet to watch an ad.' },
     home: { tone: 'guide', label: 'Home', q: 'Head home?', body: 'If you stop now, the heart you used won’t come back.', unlocked: 'Opened spots will reset too.', go: 'Go home', stay: 'Keep playing',
       retryQ: 'Restart?', retryBody: 'The heart you used won’t come back, and restarting uses 1 more.', retryGo: 'Restart',
-      unlimited: 'Your hearts are unlimited, so none are used. Opened spots will reset too.' }, // CD 確定（m18/m18b v0.3.12）
+      unlimited: 'Your hearts are unlimited, so none are used. Opened spots will reset too.' },
     heart: { tone: 'guide', tip: 'Starting a stage uses 1 heart. Clear it and you’ll get it back.', back: 'Your heart is back.', inUse: 'in use',
       resume: 'Pick up where you left off.', restoreFail: 'We couldn’t restore your last stage, so 1 heart was used.',
-      hud: function(n, u){ return 'Hearts: ' + n + ' of 5' + (u ? ', 1 in use' : ''); }, hudUnlimited: 'Unlimited Hearts' }, // CD 確定 v0.3.12
+      hud: function(n, u){ return 'Hearts: ' + n + ' of 5' + (u ? ', 1 in use' : ''); }, hudUnlimited: 'Unlimited Hearts' },
     shop: { tone: 'official', bonus: function(n){ return '+' + n + ' bonus'; } },
-    restore: { tone: 'official', button: 'Restore purchases', note: 'Only Unlimited Hearts can be restored.', // m20（CD 確定 v0.3.12）
+    restore: { tone: 'official', button: 'Restore purchases', note: 'Only Unlimited Hearts can be restored.',
       success: 'Purchases restored. Unlimited Hearts is active.', successCoins: 'Coins and full heart refills can’t be restored.', active: 'Unlimited Hearts is already active.',
       none: 'No purchases to restore. Make sure you’re signed in with the Apple Account you used to buy.', failed: 'We couldn’t restore your purchases. Check your internet connection and try again.', retry: 'Try Again', close: 'Close',
       pending: [] },
@@ -1404,22 +1279,21 @@ var STR = {
       stageSoon: function(n){ return 'Stage ' + n + ' is coming soon. This demo has stage 1 only.'; }, shopToast: 'The shop is coming soon (demo).', settingsToast: 'Settings are coming soon (demo).',
       hudAria: function(w){ return L.ariaJoin(['Sample', 'Hearts: 4 of 5', 'Purchased coins: ' + w.paid + ', earned coins: ' + w.free], 'en'); }, coinVal: function(n){ return String(n); },
       rowAria: function(k, v){ return k + ' (sample): ' + v; }, heartsVal: '4 of 5', stageUnit: '',
-      bp: { top: null, f: null, coins: 'coins', day: function(n){ return 'Day ' + n; }, today: 'Today', todayOnly: true, stamp: 'FLOWN', sum: function(n){ return 'Day ' + n + ' today · Earned coins +' + L.stampCoins(n); }, // 英語の今日の枠は「Today」だけ（CD v0.6）
+      bp: { top: null, f: null, coins: 'coins', day: function(n){ return 'Day ' + n; }, today: 'Today', todayOnly: true, stamp: 'FLOWN', sum: function(n){ return 'Day ' + n + ' today · Earned coins +' + L.stampCoins(n); },
         aria: function(n){ return L.stampAria(n, 'en'); } } },
   }
 };
 var WHY = STR[LANG].why;
 (function(){ var U = STR[LANG].ui; document.documentElement.lang = LANG;
-  document.querySelectorAll('[data-t]').forEach(function(e){ var v = U[e.getAttribute('data-t')]; v = Array.isArray(v) ? v.join(LANG === 'en' ? ' ' : '') : v; if (LANG === 'ja') e.innerHTML = L.jaNoBreakHtml(v); else e.textContent = v; }); // 日本語は「。」のあとだけで改行
+  document.querySelectorAll('[data-t]').forEach(function(e){ var v = U[e.getAttribute('data-t')]; v = Array.isArray(v) ? v.join(LANG === 'en' ? ' ' : '') : v; if (LANG === 'ja') e.innerHTML = L.jaNoBreakHtml(v); else e.textContent = v; });
   document.querySelectorAll('[data-ta]').forEach(function(e){ e.setAttribute('aria-label', U[e.getAttribute('data-ta')]); });
   queueFit();
   document.getElementById('stagePill').textContent = U.stageN(1); document.getElementById('hPlayN').textContent = U.stageN(1);
   document.querySelectorAll('[data-tbr]').forEach(function(e){ e.innerHTML = U[e.getAttribute('data-tbr')].join('<br>'); });
 })();
-// ---- t115u：ゲーム中のホームボタンと、もどる前の確認 ----
-var SAMPLE_WALLET = /[?&]adpreview=unlock/.test(location.search) ? { paid: 0, free: +((/[?&]adcoins=(\d+)/.exec(location.search) || [])[1] || 120) } : { paid: 120, free: 340 }; // 表示例のコイン。解除の広告の見本では adcoins と同じ数（d＝値段−この数）
-var UNLIMITED_HEARTS = /[?&]unlimited=1/.test(location.search); // ハート無制限を持っている人（?unlimited=1）
-var HEARTS = Math.min(5, +((/[?&]hearts=(\d+)/.exec(location.search) || [])[1] || 5)), HEART_IN_USE = false; // ?hearts=N。ステージ開始で1つ「使用中」、クリアで戻る、途中でやめると戻らない（デモの中だけ）
+var SAMPLE_WALLET = /[?&]adpreview=unlock/.test(location.search) ? { paid: 0, free: +((/[?&]adcoins=(\d+)/.exec(location.search) || [])[1] || 120) } : { paid: 120, free: 340 };
+var UNLIMITED_HEARTS = /[?&]unlimited=1/.test(location.search);
+var HEARTS = Math.min(5, +((/[?&]hearts=(\d+)/.exec(location.search) || [])[1] || 5)), HEART_IN_USE = false;
 (function(){
   var H = STR[LANG].home, b = document.getElementById('homeBtn'), dlg = document.getElementById('homeConfirm');
   b.setAttribute('aria-label', H.label); b.title = H.label;
@@ -1427,10 +1301,9 @@ var HEARTS = Math.min(5, +((/[?&]hearts=(\d+)/.exec(location.search) || [])[1] |
   document.getElementById('hcGo').textContent = H.go; document.getElementById('hcStay').textContent = H.stay;
   dlg.lang = LANG;
 })();
-var HC_ON = false, MOVES = 0, GATE_UNLOCKED = /[?&]unlocked=1/.test(location.search); /* ?unlocked=1：コインで枠を開けたことにする（確認の「開けた枠も元に戻るよ」） */ // GATE_UNLOCKED：このステージでコインを使ってゲートを開けた（デモにゲート解放はまだない。本番で立てる）
-// ---- v1.5：クリアの言葉。特別（初回 → 最少手数 → 立て直し → 節目）が優先、なければ5本を順不同で（直前と同じものは出さない）----
+var HC_ON = false, MOVES = 0, GATE_UNLOCKED = /[?&]unlocked=1/.test(location.search);
 var CLEAR_Q = (/[?&]clear=([a-z]+)/.exec(location.search) || [])[1], CLEAR_N_Q = +((/[?&]flights=(\d+)/.exec(location.search) || [])[1] || 10);
-var CLEAR_LAST = null, CLEAR_TOTAL = +((/[?&]flown=(\d+)/.exec(location.search) || [])[1] || 0), /* 便数＝クリアの通算。?flown=K でこれまでK便 */ FAILED_TAPS = 0, RETRIED = false, MIN_MOVES = null, MOVE_RANGE = null, CLEAR_MILESTONES = RULES.clear.milestones, CLEAR_SHOWN = null;
+var CLEAR_LAST = null, CLEAR_TOTAL = +((/[?&]flown=(\d+)/.exec(location.search) || [])[1] || 0),   FAILED_TAPS = 0, RETRIED = false, MIN_MOVES = null, MOVE_RANGE = null, CLEAR_MILESTONES = RULES.clear.milestones, CLEAR_SHOWN = null;
 function pickClear(){
   var C = STR[LANG].clear, ids = C.regular.map(function(r){ return r.id; });
   if (CLEAR_Q) return CLEAR_Q === 'milestone' ? { id: 'milestone', n: CLEAR_N_Q } : { id: CLEAR_Q };
@@ -1444,11 +1317,11 @@ function renderClear(v, heartBack){
   document.getElementById('cardSub').textContent = small;
   document.getElementById('cardSub').lang = LANG; document.getElementById('cardNext').textContent = C.next;
   if (r) CLEAR_LAST = v.id; CLEAR_SHOWN = v;
-  var live = document.getElementById('live'); live.innerHTML = ''; // 見出しと小文を1つにして読む（見出しは英語として）
-  setTimeout(function(){ if (C.head) live.appendChild(document.createTextNode(C.head + ' ')); var a = document.createElement('span'); a.lang = 'en'; a.textContent = big; live.appendChild(a); live.appendChild(document.createTextNode(' ' + small + (heartBack ? (LANG === 'en' ? ' ' : '。') + STR[LANG].heart.back : ''))); }, 30); // ハートが戻ったときだけ、クリアの読み上げに1回足す
+  var live = document.getElementById('live'); live.innerHTML = '';
+  setTimeout(function(){ if (C.head) live.appendChild(document.createTextNode(C.head + ' ')); var a = document.createElement('span'); a.lang = 'en'; a.textContent = big; live.appendChild(a); live.appendChild(document.createTextNode(' ' + small + (heartBack ? (LANG === 'en' ? ' ' : '。') + STR[LANG].heart.back : ''))); }, 30);
 }
-document.getElementById('scrim').addEventListener('click', function(){ if (HC_ON) homeConfirmClose(); }); // 暗いところをタップ＝つづける
-(function(){ var y0 = null, d = document.getElementById('homeConfirm'); // 下へスワイプ＝つづける
+document.getElementById('scrim').addEventListener('click', function(){ if (HC_ON) homeConfirmClose(); });
+(function(){ var y0 = null, d = document.getElementById('homeConfirm');
   d.addEventListener('pointerdown', function(e){ y0 = e.clientY; });
   d.addEventListener('pointerup', function(e){ if (y0 !== null && e.clientY - y0 > 40 && HC_ON) homeConfirmClose(); y0 = null; });
 })();
@@ -1457,20 +1330,20 @@ function flashGates(){
   gateEls.forEach(function(g){
     var f = g.querySelector('.gflash'); if (!f){ f = document.createElement('div'); f.className = 'gflash'; g.appendChild(f); }
     f.getAnimations().forEach(function(a){ a.cancel(); }); clearTimeout(f._t);
-    if (RM){ f.style.opacity = 1; f._t = setTimeout(function(){ f.style.opacity = 0; }, GFLASH.rmHoldMs); return; } // 動きを減らす：出して 1.6s 後に消す（動きなし）
+    if (RM){ f.style.opacity = 1; f._t = setTimeout(function(){ f.style.opacity = 0; }, GFLASH.rmHoldMs); return; }
     f.style.opacity = 0; var all = GFLASH.inMs + GFLASH.holdMs + GFLASH.outMs;
     f.animate([{ opacity: 0, offset: 0 }, { opacity: 1, offset: GFLASH.inMs / all }, { opacity: 1, offset: (GFLASH.inMs + GFLASH.holdMs) / all }, { opacity: 0, offset: 1 }], { duration: all, easing: 'linear' });
   });
 }
-function heartStageStart(){ // ステージ開始（最初・やり直し）でハートを1つ使う。前のが使用中のままなら戻らない
+function heartStageStart(){
   if (UNLIMITED_HEARTS){ renderHearts(false); return; }
   HEART_IN_USE = false; if (HEARTS > 0){ HEARTS--; HEART_IN_USE = true; } renderHearts(false);
 }
-function heartRefund(){ // クリアで1回だけ戻す（もう戻したなら何もしない）
+function heartRefund(){
   if (UNLIMITED_HEARTS || !HEART_IN_USE) return false;
   HEART_IN_USE = false; HEARTS = Math.min(5, HEARTS + 1); renderHearts(true); return true;
 }
-function renderHearts(anim){ // 使用中は薄く。戻るときは色が戻るアニメ（動きを減らす：色が変わるだけ）
+function renderHearts(anim){
   var el = document.getElementById('gHearts'), Hs = STR[LANG].heart; if (!el) return;
   if (UNLIMITED_HEARTS){ el.innerHTML = ICON.heart(16, true) + '<span class="inf">∞</span>'; el.setAttribute('aria-label', Hs.hudUnlimited); return; }
   var h = ''; for (var i = 0; i < 5; i++) h += '<span class="hs' + (i === HEARTS - (anim ? 1 : 0) && anim ? ' back' : i === HEARTS && HEART_IN_USE ? ' use' : '') + '">' + ICON.heart(16, i < HEARTS || (i === HEARTS && HEART_IN_USE)) + '</span>';
@@ -1479,7 +1352,7 @@ function renderHearts(anim){ // 使用中は薄く。戻るときは色が戻る
   if (b){ if (RM){ b.style.opacity = 1; } else b.animate([{ opacity: .35, transform: 'scale(1)' }, { opacity: 1, transform: 'scale(1.25)', offset: .6 }, { opacity: 1, transform: 'scale(1)' }], { duration: 600, easing: 'ease-out' }); }
 }
 var HEART_TIP_Q = (/[?&]hearttip=(\d)/.exec(location.search) || [])[1], HEART_TIP_SHOWN = false;
-function heartTip(){ // チュートリアルのあと1回だけ。約5秒かタップで閉じる。無制限の人には出さない
+function heartTip(){
   if (UNLIMITED_HEARTS || HEART_TIP_Q === '0' || HEART_TIP_SHOWN) return;
   try { if (HEART_TIP_Q !== '1' && localStorage.getItem('tts_heart_tip')) return; localStorage.setItem('tts_heart_tip', '1'); } catch (e) {}
   HEART_TIP_SHOWN = true; var t = document.getElementById('heartTip'); t.textContent = STR[LANG].heart.tip; t.lang = LANG; t.classList.add('on');
@@ -1488,18 +1361,16 @@ function heartTip(){ // チュートリアルのあと1回だけ。約5秒かタ
 }
 function heartTipClose(){ document.getElementById('heartTip').classList.remove('on'); }
 var RESTORE_Q = (/[?&]restore=(fail)/.exec(location.search) || [])[1], RESUME_Q = /[?&]resume=1/.test(location.search), RESTORE_TOLD = false;
-function resumeLine(){ // 本番：続きを戻せたら「続きから遊べるよ」。戻せなかったときだけ、ホームで1回知らせる（ハートを1つ失う）
+function resumeLine(){
   var Hs = STR[LANG].heart;
   if (RESTORE_Q && !RESTORE_TOLD){ RESTORE_TOLD = true; if (!UNLIMITED_HEARTS) HEARTS = Math.max(0, HEARTS - 1); return Hs.restoreFail; }
   if (RESUME_Q && SCREEN === 'home' && !celebrated) return Hs.resume;
   return '';
 }
-var HC_MODE = 'home'; // 'home'＝ホームへ／'retry'＝ステージの途中で最初から。どちらもステージ開始で使ったハートを失う（rules.json hearts）
+var HC_MODE = 'home';
 function homeConfirmOpen(mode){
   HC_MODE = mode === 'retry' ? 'retry' : 'home';
-  if (TUT && TUT.on) return; // チュートリアル中は使えない（スキップがある）
-  // 確認を出すか（logic.js quitNeedsConfirm）：クリアの画面・動かせない画面は出さない。まだタップしていなくても、ステージ開始で使ったハートは戻らないので出す（オーナー決定）。
-  // ハート無制限は、コインで枠を開けたときだけ出す（失うものがないときは出さない）
+  if (TUT && TUT.on) return;
   var stt = L.status(state); if (!L.quitNeedsConfirm({ status: stt, unlimited: UNLIMITED_HEARTS, unlocked: GATE_UNLOCKED, heartInUse: HEART_IN_USE })){ hcConfirm(); return; }
   var H = STR[LANG].home, rt = HC_MODE === 'retry';
   document.getElementById('hcQ').textContent = rt ? H.retryQ : H.q; document.getElementById('hcGo').textContent = rt ? H.retryGo : H.go; document.getElementById('hcStay').textContent = H.stay;
@@ -1513,14 +1384,14 @@ function homeConfirmClose(){
   if (!document.getElementById('sheet').classList.contains('on')) document.getElementById('scrim').classList.remove('on');
   setInert(); document.getElementById(HC_MODE === 'retry' ? 'restart' : 'homeBtn').focus({ preventScroll: true });
 }
-function hcConfirm(){ // 確認で「ホームへ／やりなおす」。ハートの増減はデモにない（本番：ステージ開始で使ったハートは返さない）
+function hcConfirm(){
   if (HC_MODE === 'retry'){ HC_ON = false; ['homeConfirm', 'scrim'].forEach(function(k){ document.getElementById(k).classList.remove('on'); }); setInert(); start(); }
   else goHome();
 }
 function goHome(){
   if (MOVES > 0 && L.status(state) !== 'clear') RETRIED = true;
-  HC_ON = false; epoch++; pending = 0; // 進行中の動きは捨てる（次に遊ぶときは最初から）
-  if (L.status(state) !== 'clear') HEART_IN_USE = false; // 途中でやめた：使ったハートは戻らない
+  HC_ON = false; epoch++; pending = 0;
+  if (L.status(state) !== 'clear') HEART_IN_USE = false;
   renderHearts(false);
   ['homeConfirm', 'scrim', 'sheet', 'card'].forEach(function(k){ document.getElementById(k).classList.remove('on'); });
   show('home');
@@ -1536,13 +1407,13 @@ function showWhy(id, text){
   t.style.setProperty('--tk', 1 / ke); t.textContent = text;
   if (tagAnim) tagAnim.cancel();
   var w = t.offsetWidth, h = t.offsetHeight, x = Math.max(RW.x + 4, Math.min(RW.x + RW.w - 4 - w, c.x - w / 2)), y = c.y - half - TAG.gapPt - h;
-  if (y < RW.y + 4) y = c.y + half + TAG.gapPt; // 滑走路の上の縁に当たるときは、機の下へ
+  if (y < RW.y + 4) y = c.y + half + TAG.gapPt;
   t.style.left = x + 'px'; t.style.top = y + 'px';
-  var all = TAG.fadeMs * 2 + TAG.showMs, a = TAG.fadeMs / all, b = 1 - a; // 0.2s で出て、1.6s 見せて、0.2s で消える（動きを減らす設定でもフェードは残す）
+  var all = TAG.fadeMs * 2 + TAG.showMs, a = TAG.fadeMs / all, b = 1 - a;
   tagAnim = t.animate([{ opacity: 0, offset: 0 }, { opacity: 1, offset: a }, { opacity: 1, offset: b }, { opacity: 0, offset: 1 }], { duration: all, easing: 'linear', fill: 'forwards' });
-  var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = text; }, 30); // VoiceOver に読ませる
+  var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = text; }, 30);
 }
-function shake(id){ // 横に 3pt、2往復、0.3s。動きを減らす設定では揺らさない
+function shake(id){
   if (RM) return;
   var b = planeEls[id].querySelector('.body'), d = TAG.shakePt + 'px', ks = [{ translate: '0 0' }];
   for (var i = 0; i < TAG.shakeCycles; i++) ks.push({ translate: '-' + d + ' 0' }, { translate: d + ' 0' });
@@ -1550,11 +1421,11 @@ function shake(id){ // 横に 3pt、2往復、0.3s。動きを減らす設定で
   b.animate(ks, { duration: TAG.shakeMs, easing: 'ease-in-out' });
 }
 function start(){
-  if (state && MOVES > 0 && L.status(state) !== 'clear') RETRIED = true; // やり直し（もう一度・最初から・ホームへ）のあとのクリアは「立て直し」
+  if (state && MOVES > 0 && L.status(state) !== 'clear') RETRIED = true;
   epoch++; pending = 0; seq = 0; celebrated = false; MOVES = 0; FAILED_TAPS = 0;
   heartStageStart();
   state = L.createGame(R, S);
-  if (MIN_MOVES === null){ var rq = /[?&]ref=(\d+)/.exec(location.search); var V = STAGE.verify || {}; MOVE_RANGE = V.moveRange || null; MIN_MOVES = rq ? +rq[1] : MOVE_RANGE ? MOVE_RANGE.min : null; var mx = /[?&]maxmoves=(\d+)/.exec(location.search); if (mx && MOVE_RANGE) MOVE_RANGE = { min: MOVE_RANGE.min, max: +mx[1] }; } // 基準手数＝ステージの最短（verify.moveRange。?ref=N・?maxmoves=N で上書き）
+  if (MIN_MOVES === null){ var rq = /[?&]ref=(\d+)/.exec(location.search); var V = STAGE.verify || {}; MOVE_RANGE = V.moveRange || null; MIN_MOVES = rq ? +rq[1] : MOVE_RANGE ? MOVE_RANGE.min : null; var mx = /[?&]maxmoves=(\d+)/.exec(location.search); if (mx && MOVE_RANGE) MOVE_RANGE = { min: MOVE_RANGE.min, max: +mx[1] }; }
   visGate = state.gates.map(function(){ return null; }); gateWaiters = []; PV = {}; paxSeq = []; paxWhere = [];
   state.planes.forEach(function(p){ PV[p.id] = { seats: p.seats, filled: 0, gate: null, arrived: false, present: true, gateD: deferred(), arriveD: deferred(), fullD: deferred() }; });
   build();
@@ -1569,8 +1440,7 @@ function start(){
 }
 function runPhases(phases, ep){
   var chain = Promise.resolve(), id0 = phases[0].planeId;
-  // 移動
-  chain = allocGate(id0).then(function(g){ if (ep !== epoch) return; return animateMove(id0, g); })
+  chain = allocGate(id0).then(function(g){ if (ep !== epoch) return; return animateMove(id0, g).then(function(){ if (MOVE_END_HOOK){ var f = MOVE_END_HOOK; MOVE_END_HOOK = null; f(id0, g); } }); })
     .then(function(){ if (ep !== epoch) return; PV[id0].arrived = true; PV[id0].arriveD.r(); showGate(PV[id0].gate); });
   phases.slice(1).forEach(function(ph){
     chain = chain.then(function(){
@@ -1580,7 +1450,6 @@ function runPhases(phases, ep){
         return Promise.all(Object.keys(groups).map(function(pid){ return boardGroup(pid, groups[pid], ph.seq, ep); }));
       }
       if (ph.type === 'takeoff'){
-        // 満席の合図までは待ち、上昇は裏で続ける（その間も他の機はタップできる）
         ph.items.forEach(function(it){ pending++; takeoff(it.planeId, ep).then(function(){ if (ep === epoch){ pending--; checkEnd(); } }); });
         return wait(RM ? M.reducedMotion.takeoffBadgeHoldMs : M.full.pulseMs);
       }
@@ -1608,29 +1477,26 @@ function checkEnd(){
   else if (st === 'stuck'){ document.getElementById('scrim').classList.add('on'); document.getElementById('sheet').classList.add('on'); document.getElementById('live').textContent = STR[LANG].ui.stuckHead; }
 }
 document.querySelectorAll('[data-act="retry"]').forEach(function(b){ b.addEventListener('click', start); });
-document.getElementById('jamClose').addEventListener('click', function(){ document.getElementById('scrim').classList.remove('on'); document.getElementById('sheet').classList.remove('on'); document.getElementById('restart').focus({ preventScroll: true }); }); // 閉じると盤面に戻る（「最初から」でやり直せる）
-// デモはステージ1のみ。「次のステージへ」はホームへ戻り、飛行ルートを1つ進める（本番では次のステージを読み込む）
+document.getElementById('jamClose').addEventListener('click', function(){ document.getElementById('scrim').classList.remove('on'); document.getElementById('sheet').classList.remove('on'); document.getElementById('restart').focus({ preventScroll: true }); });
 document.querySelectorAll('[data-act="next"]').forEach(function(b){ b.addEventListener('click', function(){ CLEARED = Math.max(CLEARED, 1); show('home'); }); });
-document.getElementById('restart').addEventListener('click', function(){ homeConfirmOpen('retry'); }); // ステージの途中の「最初から」も同じ確認
-// ======== v0.3.2：扉絵・ホーム・マイページ（screens_v02 の採用案 A「朝の空港」。動きは CD 動きの仕様 v1.4） ========
-var SCREEN = 'title', CLEARED = 0, DEMO_LAST_STAGE = 1;   // 記録はこのページを開いているあいだだけ（デモでは保存しない）
+document.getElementById('restart').addEventListener('click', function(){ homeConfirmOpen('retry'); });
+var SCREEN = 'title', CLEARED = 0, DEMO_LAST_STAGE = 1;
 var A = { skyT: '#D7E6F2', skyB: '#E6EFF6', sun: '#F3E4D8', ground: '#E9E4D8', term: '#DCD9D2', muted: '#77746E', low: '#EEF4F9' };
 var SCR = { title: document.getElementById('scrTitle'), home: document.getElementById('scrHome'), my: document.getElementById('scrMy') };
-// --- 絵の部品（SVG の文字列）
-function stratus(cx, cy, w){ // 層雲（#140）：横長の角丸の帯を2〜3段ずらす。上の段 #FFFFFF・下の段 #EEF4F9
+function stratus(cx, cy, w){
   var h = w * .18, x0 = cx - w / 2, off = 16, b;
   if (w >= 96) b = [[x0 + off, cy, w * .55, '#FFFFFF'], [x0, cy + h, w * .86, '#FFFFFF'], [x0 + off * 1.25, cy + 2 * h, w - off * 1.25, A.low]];
   else b = [[x0 + off, cy, w - off, '#FFFFFF'], [x0, cy + h, w - off, A.low]];
   return b.reverse().map(function(q){ return '<rect x="' + q[0] + '" y="' + q[1] + '" width="' + q[2] + '" height="' + h + '" rx="' + h / 2 + '" fill="' + q[3] + '"/>'; }).join('');
 }
-function sceneryD(Lp){ // SceneryPlane（#141）：胴 8:1・後退翼の1色シルエット。機首は +x
+function sceneryD(Lp){
   var h = Lp / 16, P = [[.5*Lp,0],[.44*Lp,-h*.75],[.36*Lp,-h],[.08*Lp,-h],[-.12*Lp,-.46*Lp],[-.21*Lp,-.46*Lp],[-.07*Lp,-h],[-.36*Lp,-h],[-.45*Lp,-.17*Lp],[-.5*Lp,-.17*Lp],[-.47*Lp,-h*.6],[-.5*Lp,0]];
   var low = P.slice(1, -1).reverse().map(function(p){ return [p[0], -p[1]]; });
   return 'M' + P.concat(low).map(function(p){ return p[0].toFixed(2) + ' ' + p[1].toFixed(2); }).join(' L') + ' Z';
 }
 function sceneryPlane(cx, cy, size, ang, col){ return '<path d="' + sceneryD(size) + '" fill="' + col + '" stroke="' + col + '" stroke-width="1" stroke-linejoin="round" transform="translate(' + cx + ' ' + cy + ') rotate(' + ang + ')"/>'; }
 var HOP = [[0,-3],[1,0],[-1,-2],[0,0],[2,-1],[-2,0]];
-function paxRow(colorId, x0, y, step, size, n){ // 乗客は1人ずつ少しずらす（跳ねている途中の1コマ。t62u）
+function paxRow(colorId, x0, y, step, size, n){
   var c = COLOR[colorId], s = '', w = size * 26 / 32;
   for (var i = 0; i < n; i++){ var cx = x0 + i * step + HOP[i % 6][0], cy = y + HOP[i % 6][1];
     s += '<svg x="' + (cx - w / 2) + '" y="' + (cy - size / 2) + '" width="' + w + '" height="' + size + '" viewBox="0 0 26 32">' + paxSvg(c).replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '') + '</svg>'; }
@@ -1642,9 +1508,6 @@ function groundBand(y, h, dashY){
   for (var x = 20; x < 370; x += 24) s += '<rect x="' + x + '" y="' + (dashY - 1.5) + '" width="' + Math.min(14, 370 - x) + '" height="3" fill="#FFFFFF"/>';
   return s;
 }
-// 動きの線（t76u で残す。CD 動きの仕様 v1.4）：40pt の機が基準。上下 5pt、尾の先から 6pt 後ろ、上 24pt・下 16pt、幅 1.5pt、端は丸、
-// 色は機の色、不透明度 0.45×v、機の側 1.0 → 遠い端 0 のグラデーション、破線 10/6（下の線は位相 8pt ずらす）、速さ×0.6 で後ろへ流れる。
-// Reduce Motion：長さ 60%（14・10pt）、不透明度 0.35、実線。v＜0.08 では描かない。読み上げなし
 var TAXI_SEQ = 0;
 function taxiPlaneSvg(id, col, size){
   var k = size / 40, xs = -size / 2 - 6 * k, g = '';
@@ -1667,20 +1530,19 @@ function setLines(id, size, v, phase, rm){
     else { ln.setAttribute('stroke-dasharray', (10 * k) + ' ' + (6 * k)); ln.setAttribute('stroke-dashoffset', (-(phase + q[3])).toFixed(2)); }
   });
 }
-// 滑走：2.4s、timingCurve(0.45, 0, 0.25, 1)。v＝その時点の速さ（最大を1に正規化）
 var TC = [0.45, 0, 0.25, 1];
 function bz(a, b, s){ return 3 * (1 - s) * (1 - s) * s * a + 3 * (1 - s) * s * s * b + s * s * s; }
 function dbz(a, b, s){ return 3 * (1 - s) * (1 - s) * a + 6 * (1 - s) * s * (b - a) + 3 * s * s * (1 - b); }
 function tcAt(t){ var lo = 0, hi = 1, s = t; for (var i = 0; i < 30; i++){ s = (lo + hi) / 2; if (bz(TC[0], TC[2], s) < t) lo = s; else hi = s; }
   return { p: bz(TC[1], TC[3], s), d: dbz(TC[1], TC[3], s) / Math.max(1e-6, dbz(TC[0], TC[2], s)) }; }
 var TC_MAX = (function(){ var m = 0; for (var i = 0; i <= 400; i++) m = Math.max(m, tcAt(i / 400).d); return m; })();
-var taxiRun = {}; // id → { stop() }
+var taxiRun = {};
 function taxi(id, size, x0, x1, cy, delay){
   var g = document.getElementById(id), T = 2400, seq = ++TAXI_SEQ, phase = 0, last = null, t0 = null;
   if (taxiRun[id]) taxiRun[id].stop();
   var st = { done: false, stop: function(){ st.done = true; g.setAttribute('transform', 'translate(' + x1 + ' ' + cy + ')'); setLines(id, size, 0, 0, false); } };
   taxiRun[id] = st;
-  if (RM){ // 滑走せず、止まる位置に 0.2s のクロスフェードで出る
+  if (RM){
     g.setAttribute('transform', 'translate(' + x1 + ' ' + cy + ')'); setLines(id, size, 0, 0, true);
     g.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: delay, fill: 'backwards' }); st.done = true; return st;
   }
@@ -1689,7 +1551,7 @@ function taxi(id, size, x0, x1, cy, delay){
     if (st.done) return;
     if (t0 === null) t0 = now + delay;
     var t = Math.max(0, Math.min(1, (now - t0) / T)), q = tcAt(t), v = t >= 1 ? 0 : q.d / TC_MAX;
-    var speed = q.d * (x1 - x0) / T * 1000; // pt/s
+    var speed = q.d * (x1 - x0) / T * 1000;
     if (last !== null && now > t0) phase += speed * .6 * (now - last) / 1000;
     last = now;
     g.setAttribute('transform', 'translate(' + (x0 + (x1 - x0) * q.p).toFixed(2) + ' ' + cy + ')'); setLines(id, size, v, phase, false);
@@ -1697,8 +1559,6 @@ function taxi(id, size, x0, x1, cy, delay){
   }
   requestAnimationFrame(f); return st;
 }
-// --- 印（アイコン）
-// コインのアイコン（オーナー決定 ②：2色 Deep Gold＋Light Gold。CD の仕様＝design_review/coins_v2/coin_v2_{cart,gift}.svg、リポジトリでは shared/icons/coin_{cart,gift}.svg。円 #8A6614 ふちなし r=12、マーク #FAEDC4、形はそのまま。カート＝買ったコイン、プレゼント＝もらったコイン。読み上げなし。大きさ 16/20/24pt、HUD のカプセル（高さ40）は 20pt）
 var COIN = { disc: '#8A6614', mark: '#FAEDC4' };
 var ICON = {
   gear: '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#5B5A56"><g stroke-width="3.2" stroke-linecap="butt">' + [0,45,90,135,180,225,270,315].map(function(a){ var r = a * Math.PI / 180; return '<line x1="' + (12 + Math.cos(r) * 7.2) + '" y1="' + (12 + Math.sin(r) * 7.2) + '" x2="' + (12 + Math.cos(r) * 11) + '" y2="' + (12 + Math.sin(r) * 11) + '"/>'; }).join('') + '</g><circle cx="12" cy="12" r="8.2" stroke-width="2.2"/><circle cx="12" cy="12" r="3" stroke-width="1.8"/></g></svg>',
@@ -1711,20 +1571,20 @@ var ICON = {
   log: '<svg width="26" height="24" viewBox="0 0 26 24" aria-hidden="true"><rect x="3" y="1" width="20" height="22" rx="3" fill="none" stroke="#5B5A56" stroke-width="2"/><path d="' + sceneryD(11) + '" fill="#2B5C8A" transform="translate(13 7.5) rotate(-12)"/><g stroke="#5B5A56" stroke-width="2" stroke-linecap="round"><line x1="8" y1="14" x2="18" y2="14"/><line x1="8" y1="18.5" x2="15" y2="18.5"/></g></svg>',
   bag: '<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="8" width="20" height="15" rx="3" fill="none" stroke="#5B5A56" stroke-width="2"/><path d="M7 8 A5 6 0 0 1 17 8" fill="none" stroke="#5B5A56" stroke-width="2"/></svg>'
 };
-function depStamp(ang){ // 出発のスタンプ（Sky の二重の輪・細身の機・「出発」／英語は FLOWN）。aria-hidden のまま
+function depStamp(ang){
   return '<svg width="56" height="56" viewBox="-28 -28 56 56" aria-hidden="true"><g transform="rotate(' + ang + ')"><circle r="25" fill="none" stroke="#2B5C8A" stroke-width="2"/><circle r="20" fill="none" stroke="#2B5C8A" stroke-width="1"/>' +
-    '<path d="' + sceneryD(14) + '" fill="#2B5C8A" transform="translate(0 -9)"/>' + (LANG === 'en' ? '<text x="0" y="11" text-anchor="middle" font-size="10" font-weight="700" fill="#2B5C8A" textLength="29" lengthAdjust="spacingAndGlyphs">FLOWN</text>' : '<text x="0" y="11" text-anchor="middle" font-size="12" font-weight="700" fill="#2B5C8A">出発</text>') + '</g></svg>'; // 英語は FLOWN（10pt 太字、内側の輪に収める。CD v0.6）
+    '<path d="' + sceneryD(14) + '" fill="#2B5C8A" transform="translate(0 -9)"/>' + (LANG === 'en' ? '<text x="0" y="11" text-anchor="middle" font-size="10" font-weight="700" fill="#2B5C8A" textLength="29" lengthAdjust="spacingAndGlyphs">FLOWN</text>' : '<text x="0" y="11" text-anchor="middle" font-size="12" font-weight="700" fill="#2B5C8A">出発</text>') + '</g></svg>';
 }
-function stampDayLines(){ // カードの下の小さな行（CD 確定）。0:00〜3:59 で今日のスタンプが押してあるときは「今夜の分も…」を足す（?hour=H で試せる）
+function stampDayLines(){
   var S = STR[LANG].stamp, hq = /[?&]hour=(\d+)/.exec(location.search), h = hq ? (+hq[1]) % 24 : new Date().getHours(), out = [S.dayChange];
   if (h < stampResetHour() && STAMP_TODAY_TAKEN) out.push(S.tonight);
   return out;
 }
-function stampResetHour(){ return RULES.loginBonus.loginResetHour; } // rules.json stamps.dayResetHourFrom＝loginBonus.loginResetHour（同じ値を読む）
-var STAMP_TODAY_TAKEN = true; // デモ：スタンプの画面を開いた時点で今日の分は押してある
-function boardingPass(today){ // 搭乗券（#145・#146）。値はすべて表示例
-  var B = STR[LANG].ui.bp, jf = B.f || [], f = [[16, jf[0], 'FLIGHT', 'TTS 007'], [116, jf[1], 'GATE', 'A1'], [184, jf[2], 'BONUS', '90<small>' + B.coins + '</small>'], [275, jf[3], 'DATE', '11/03']]; // 英語では日本語の行を出さない（CD v0.3.12）
-  var h = '<div class="bp' + (B.top ? '' : ' en') + '" role="img" aria-label="' + L.ariaJoin(B.aria(today).concat(stampDayLines()), LANG) + '"><div class="top"><span class="en">BOARDING PASS</span>' + (B.top ? '<span class="ja">' + B.top + '</span>' : '') + '<span class="r">TAKE TO THE SKY</span></div><div class="flds">'; // 読み上げは日本語「。」、英語「. 」でつなぐ
+function stampResetHour(){ return RULES.loginBonus.loginResetHour; }
+var STAMP_TODAY_TAKEN = true;
+function boardingPass(today){
+  var B = STR[LANG].ui.bp, jf = B.f || [], f = [[16, jf[0], 'FLIGHT', 'TTS 007'], [116, jf[1], 'GATE', 'A1'], [184, jf[2], 'BONUS', '90<small>' + B.coins + '</small>'], [275, jf[3], 'DATE', '11/03']];
+  var h = '<div class="bp' + (B.top ? '' : ' en') + '" role="img" aria-label="' + L.ariaJoin(B.aria(today).concat(stampDayLines()), LANG) + '"><div class="top"><span class="en">BOARDING PASS</span>' + (B.top ? '<span class="ja">' + B.top + '</span>' : '') + '<span class="r">TAKE TO THE SKY</span></div><div class="flds">';
   f.forEach(function(q){ h += '<div class="f" style="left:' + q[0] + 'px">' + (q[1] ? '<div class="l1">' + q[1] + '</div>' : '') + '<div class="l2">' + q[2] + '</div><div class="v">' + q[3] + '</div></div>'; });
   h += '</div><div class="perf"></div><span class="notch" style="left:-10px"></span><span class="notch" style="right:-10px"></span><div class="grid">';
   for (var n = 1; n <= 7; n++){
@@ -1733,9 +1593,8 @@ function boardingPass(today){ // 搭乗券（#145・#146）。値はすべて表
   }
   return h + '</div><div class="sum">' + B.sum(today) + '</div></div>';
 }
-// --- 扉絵
 function buildTitle(){
-  var ts = document.getElementById('tSub'); ts.lang = LANG; ts.textContent = GREET.firstLaunch ? STR[LANG].title.welcome : ''; // 初回だけ（2回目からはホームのあいさつに任せる。?first=1 でいつも）
+  var ts = document.getElementById('tSub'); ts.lang = LANG; ts.textContent = GREET.firstLaunch ? STR[LANG].title.welcome : '';
   var hz = 573, s = skyRect('tSky', hz) + '<circle cx="305" cy="423" r="50" fill="' + A.sun + '"/>' + stratus(74, 377, 104) + stratus(328, 495, 80) + stratus(180, 461, 64) +
     '<rect x="24" y="527" width="126" height="46" fill="' + A.term + '"/><rect x="36" y="539" width="102" height="12" fill="' + A.skyB + '"/><rect x="120" y="495" width="12" height="32" fill="' + A.term + '"/><rect x="110" y="481" width="32" height="14" fill="' + A.term + '"/>' +
     groundBand(581, 48, 605);
@@ -1750,20 +1609,17 @@ function playTitle(){
   var fadeEls = SCR.title.querySelectorAll('.tfade'), P = document.getElementById('tFlyP'), tr = document.getElementById('tTrail');
   var end = { x: 285, y: 421 }, dir = buildTitle.dir, D = 150;
   function flyAt(u){ var x = end.x - (1 - u) * D * dir.x, y = end.y - (1 - u) * D * dir.y; P.setAttribute('transform', 'translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ')'); tr.setAttribute('x2', (x - 19.8 * dir.x).toFixed(2)); tr.setAttribute('y2', (y - 19.8 * dir.y + 4.4 * 0).toFixed(2)); }
-  if (RM){ // 動きを減らす：すべて止まった形で 0.2s のクロスフェード
+  if (RM){
     flyAt(1); SCR.title.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 }); taxi('tTaxi', 40, -30, 305, 605, 0); return;
   }
   ['tL1', 'tL2'].forEach(function(id, i){ document.getElementById(id).animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: i * 60, easing: 'cubic-bezier(.34,1.32,.64,1)', fill: 'backwards' }); });
   document.getElementById('tSub').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: 210, fill: 'backwards' });
   fadeEls.forEach(function(e){ e.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: 300, fill: 'backwards' }); });
-  // 空の機：飛行機雲を引いて1回だけ上昇（1.6s easeInOut）
   var t0 = null; flyAt(0); P.style.opacity = 0;
   (function f(now){ if (SCREEN !== 'title') return; if (t0 === null) t0 = now; var u = Math.min(1, (now - t0) / 1600), e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
     flyAt(e); P.style.opacity = Math.min(1, u * 6); tr.style.opacity = Math.min(1, u * 6); if (u < 1) requestAnimationFrame(f); })(performance.now());
-  // 地上の機：ロゴが出てから 0.4s 後に1回だけ滑走（くり返さない）
   taxi('tTaxi', 40, -30, 305, 605, 580 + 400);
 }
-// --- ホーム
 function routeSvg(next){
   var first = Math.max(1, next - 2), xs = [0, 1, 2, 3, 4].map(function(i){ return 44 + 302 * i / 4; }), base = 287, ni = next - first;
   var yof = function(x){ return base - 40 * Math.sin(Math.PI * (x - 24) / 342); };
@@ -1800,7 +1656,6 @@ function buildHome(){
   document.getElementById('hNote').style.display = ready ? 'none' : 'block';
   document.getElementById('hNoteT').textContent = U.stageSoon(next);
 }
-// --- マイページ（モックなし。設定のモックの作りに合わせて作った）
 function buildMy(){
   var U = STR[LANG].ui, W = SAMPLE_WALLET;
   document.getElementById('myCleared').innerHTML = CLEARED + (U.stageUnit ? '<small>' + U.stageUnit + '</small>' : '');
@@ -1811,10 +1666,9 @@ function buildMy(){
   var hs = ''; for (var i = 0; i < 5; i++) hs += ICON.heart(14, i < 4); document.getElementById('myHearts').innerHTML = hs;
   document.getElementById('myBp').innerHTML = boardingPass(3);
 }
-// --- 画面の切り替え
 var toastTimer = null;
 function toast(t){ var e = document.getElementById('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function(){ e.classList.remove('on'); }, 1800); }
-function setInert(){ // 画面やシートが出ているあいだ、後ろのものは読み上げ・タップの対象から外す
+function setInert(){
   var sheetOn = document.querySelector('.sheet2.on');
   Array.prototype.forEach.call(app.children, function(c){
     if (c.classList.contains('sheet2') || c.id === 'toast' || c.id === 'live' || c.classList.contains('scrim2')) { if (c.classList.contains('sheet2')) c.inert = !c.classList.contains('on'); return; }
@@ -1824,15 +1678,13 @@ function setInert(){ // 画面やシートが出ているあいだ、後ろの�
     else c.inert = SCREEN !== 'game' || !!(TUT && TUT.on) || (typeof HC_ON !== 'undefined' && HC_ON && c.id !== 'scrim');
   });
 }
-// ---- ホームのあいさつ・久しぶりの再訪・扉絵のひとこと（ことばの体験ガイド v0.3）----
-// ?hour=H で時刻、?away=N で前回から N 日あいたことにする（スクリーンショット用）。前回の起動は localStorage に残す
 var GREET = (function(){
   var q = location.search, now = Date.now(), H = 3600000, last = 0, seen = false;
   try { last = +localStorage.getItem('tts_last_open') || 0; seen = !!localStorage.getItem('tts_seen_title'); localStorage.setItem('tts_last_open', String(now)); localStorage.setItem('tts_seen_title', '1'); } catch (e) {}
   var aw = /[?&]away=(\d+)/.exec(q); if (aw) last = now - (+aw[1]) * 24 * H;
   var hq = /[?&]hour=(\d+)/.exec(q), h = hq ? (+hq[1]) % 24 : new Date().getHours();
-  var gq = /[?&]gap=(\d+)/.exec(q); if (gq) last = now - (+gq[1]) * 60000; // ?gap=分 で前回からの時間を試せる
-  return { kind: L.greetKind(last, now, h), firstLaunch: !seen || /[?&]first=1/.test(q), used: false }; // 帯と4時間の決まりは logic.js（テストつき）
+  var gq = /[?&]gap=(\d+)/.exec(q); if (gq) last = now - (+gq[1]) * 60000;
+  return { kind: L.greetKind(last, now, h), firstLaunch: !seen || /[?&]first=1/.test(q), used: false };
 })();
 function greetText(){ var G = STR[LANG].greet; return GREET.kind === 'back14' ? G.back14(CLEARED + 1) : GREET.kind ? G[GREET.kind] : ''; }
 function show(name){
@@ -1841,20 +1693,20 @@ function show(name){
   Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); });
   if (name === 'title'){ playTitle(); }
   var homeLine = '';
-  if (name === 'home'){ buildHome(); taxi('hTaxi', 40, -30, 294, 467, 150);   // ホームは開くたびに1回滑走
-    var g = document.getElementById('hGreet'); g.lang = LANG; g.textContent = GREET.used ? '' : greetText(); // あいさつは起動して最初のホームだけ。ほかは無言
-    var rl = resumeLine(); if (rl){ g.textContent = rl; homeLine = rl; } // 続きから（?resume=1）／戻せなかった（?restore=fail、1回だけ）があれば、あいさつより先
-    if (!GREET.used && /^back/.test(GREET.kind || '')) homeLine = g.textContent; // 再訪のことばは1回読む（あいさつは見出しといっしょに読むだけ）
+  if (name === 'home'){ buildHome(); taxi('hTaxi', 40, -30, 294, 467, 150);
+    var g = document.getElementById('hGreet'); g.lang = LANG; g.textContent = GREET.used ? '' : greetText();
+    var rl = resumeLine(); if (rl){ g.textContent = rl; homeLine = rl; }
+    if (!GREET.used && /^back/.test(GREET.kind || '')) homeLine = g.textContent;
     GREET.used = true; }
   if (name === 'my'){ buildMy(); document.getElementById('myScroll').scrollTop = 0; }
   setInert();
   var live = document.getElementById('live'); live.textContent = { title: GREET.firstLaunch ? STR[LANG].title.vo : 'Take to the sky', home: STR[LANG].home.label + (homeLine ? (LANG === 'en' ? '. ' : '。') + homeLine : ''), my: STR[LANG].ui.profile, game: STR[LANG].ui.stageN(1) }[name];
 }
 function play(){ show('game'); start(); tutStart(); }
-var STAMP_DONE_SHOWN = false; // 完成の札はページを開いているあいだ1回だけ
-function stampScene(){ // 押したスタンプが着地して 0.2s 後に完成の札（7日目のときだけ）。動きを減らす設定ではフェードだけ
+var STAMP_DONE_SHOWN = false;
+function stampScene(){
   var st = document.querySelector('#sBp .d.today .s svg'), dn = document.getElementById('stampDone');
-  var S = STR[LANG].stamp, done = L.stampDoneShown(STAMP_DAY, STAMP_DONE_SHOWN); // 7日目が押されたときだけ、1回
+  var S = STR[LANG].stamp, done = L.stampDoneShown(STAMP_DAY, STAMP_DONE_SHOWN);
   dn.hidden = true;
   if (!done){ if (st && !RM) st.animate([{ opacity: 0, transform: 'scale(1.6)' }, { opacity: 1, transform: 'scale(.94)', offset: .8 }, { opacity: 1, transform: 'scale(1)' }], { duration: 320, delay: 250, easing: 'ease-in', fill: 'backwards' }); return; }
   STAMP_DONE_SHOWN = true;
@@ -1862,17 +1714,17 @@ function stampScene(){ // 押したスタンプが着地して 0.2s 後に完成
   var sub = document.getElementById('stampSub'); sub.textContent = S.doneSub; sub.lang = LANG;
   var showDone = function(){ dn.hidden = false; if (!RM) dn.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, easing: 'ease-out' });
     document.getElementById('stampDoneClose').focus({ preventScroll: true });
-    var lv = document.getElementById('live'); lv.innerHTML = ''; setTimeout(function(){ lv.innerHTML = '<span lang="en">' + S.doneHead + '</span> ' + sub.textContent; }, 50); }; // 完成の見出しと小さい行を1回読む
+    var lv = document.getElementById('live'); lv.innerHTML = ''; setTimeout(function(){ lv.innerHTML = '<span lang="en">' + S.doneHead + '</span> ' + sub.textContent; }, 50); };
   if (!st || RM){ showDone(); return; }
   st.animate([{ opacity: 0, transform: 'scale(1.6)' }, { opacity: 1, transform: 'scale(.94)', offset: .8 }, { opacity: 1, transform: 'scale(1)' }], { duration: 320, delay: 250, easing: 'ease-in', fill: 'backwards' }).finished.then(function(){ setTimeout(showDone, 200); });
 }
 function stampDoneClose(){ var dn = document.getElementById('stampDone'); if (dn.hidden) return false; dn.hidden = true; document.querySelector('#sStamp [data-close]').focus({ preventScroll: true }); return true; }
 document.getElementById('stampDoneClose').addEventListener('click', function(e){ e.stopPropagation(); stampDoneClose(); });
-function openSheet(id){ Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); }); // シートが開いているときは滑走しない
+function openSheet(id){ Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); });
   document.getElementById('sScrim').classList.add('on'); var s = document.getElementById(id); s.classList.add('on'); setInert(); s.querySelector('[data-close]').focus();
   if (!RM) s.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 250, easing: 'ease-out' }); }
 function closeSheet(){ document.getElementById('stampDone').hidden = true; document.querySelectorAll('.sheet2.on').forEach(function(s){ s.classList.remove('on'); }); document.getElementById('sScrim').classList.remove('on'); setInert(); }
-var STAMP_DAY = Math.min(7, Math.max(1, +((/[?&]stamps=(\d)/.exec(location.search) || [])[1] || 3))); // ?stamps=7 で完成の場面
+var STAMP_DAY = Math.min(7, Math.max(1, +((/[?&]stamps=(\d)/.exec(location.search) || [])[1] || 3)));
 document.getElementById('sBp').innerHTML = boardingPass(STAMP_DAY); document.getElementById('stampDay').innerHTML = stampDayLines().map(function(t){ return '<span>' + t + '</span>'; }).join('<br>'); document.getElementById('stampDay').lang = LANG;
 buildTitle();
 document.getElementById('tStart').addEventListener('click', function(){ show('home'); });
@@ -1888,37 +1740,35 @@ document.getElementById('hReplay').addEventListener('click', play);
 document.getElementById('sScrim').addEventListener('click', closeSheet);
 document.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', closeSheet); });
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape'){ if (!stampDoneClose()) closeSheet(); } });
-// ---- t110u：チュートリアル（ステージ1の初回だけ。?tutorial=1 でいつも、?tutorial=0 で出さない）----
 var TUT_Q = (/[?&]tutorial=([01])/.exec(location.search) || [])[1];
-var TUT_DONE = false; // このデモでは保存しない（ページを閉じると、また初回になる）
+var TUT_DONE = false;
 var TUT = { on: false, step: 0, target: null, steps: null };
 var TUT_DIM = 0.55, TUT_DIM_COLOR = '#1F1F1D';
 var TUT_COPY = STR[LANG].tut;
 document.getElementById('tut').lang = LANG; document.getElementById('whyTag').lang = LANG;
 var TUT_TEXT = TUT_COPY.steps;
-// 切り替えの動き（t111u）：札は 0.25s のクロスフェード（上↔下の移動もフェードだけ）、暗幕の穴は 0.3s easeInOut、③の前に飛行機雲を 0.3s で消す
 var TUT_MOTION = { cardFadeMs: 250, holeMs: 300, trailFadeMs: 300 };
-function tutRectOf(el, pad){ // 要素の四角（盤面の座標）
+function tutRectOf(el, pad){
   var a = app.getBoundingClientRect(), r = el.getBoundingClientRect(), k = BOARD_K; pad = pad || 0;
   return { x: (r.left - a.left) / k - pad, y: (r.top - a.top) / k - pad, w: r.width / k + pad * 2, h: r.height / k + pad * 2 };
 }
 function tutPlaneRing(id){ var p = L.planeById(state, id), c = cellCenter(p.col, p.row); return { x: c.x, y: c.y, r: R.planeLengthPt.runway[p.size] / 2 + 8 }; }
-function tutSeatHole(id){ var r = tutRectOf(seatEls[id].pill, 1); r.rx = r.h / 2; r.seat = true; return r; } // 席数の札も明るく見せる
+function tutSeatHole(id){ var r = tutRectOf(seatEls[id].pill, 1); r.rx = r.h / 2; r.seat = true; return r; }
 function tutGateRect(g){ return { x: GATE_X(g) - 4, y: GATE_Y - 4, w: GATE_W + 8, h: 77 + 8, rx: 16 }; }
-function tutArrow(from, gate){ // 機の〇の上の端から、ゲートの下の端へ。白の破線（6/5）＋三角の矢じり
+function tutArrow(from, gate){
   var x0 = from.x, y0 = from.y - from.r - 4, x1 = GATE_X(gate) + GATE_W / 2, y1 = GATE_Y + 77 + 10;
-  var cx = x0 + (x1 - x0) * 0.15, cy = y1 + (y0 - y1) * 0.15 - 6; // ゆるい弧
+  var cx = x0 + (x1 - x0) * 0.15, cy = y1 + (y0 - y1) * 0.15 - 6;
   var tx = x1 - cx, ty = y1 - cy, tl = Math.hypot(tx, ty) || 1; tx /= tl; ty /= tl;
   var hx = x1 - tx * 11, hy = y1 - ty * 11, nx = -ty * 6, ny = tx * 6;
   return '<path d="M' + x0 + ' ' + y0 + ' Q' + cx + ' ' + cy + ' ' + hx + ' ' + hy + '" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-dasharray="6 5"/>' +
          '<path d="M' + x1 + ' ' + y1 + ' L' + (hx + nx) + ' ' + (hy + ny) + ' L' + (hx - nx) + ' ' + (hy - ny) + ' Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>';
 }
-function tutFirstStep(){ // 最初に動かす機：ソルバーの1手め（今すぐ乗れる機）
+function tutFirstStep(){
   var id = (L.solve(state, 50000).moves || L.legalMoves(state))[0], pl = L.planeById(state, id);
   var slot = -1; state.slots.forEach(function(pid, i){ if (slot < 0 && pid !== null && state.passengers[pid].color === pl.color) slot = i; });
   return { id: id, slot: slot, gate: state.gates.indexOf(null) };
 }
-function tutBlockPair(){ // ③ 前をふさがれた機と、その前の機（できれば「今は乗る人がいない、でも動かせる」機）
+function tutBlockPair(){
   var best = null;
   state.planes.forEach(function(p){
     if (p.status !== 'runway' || L.canMove(state, p.id) !== 'blocked') return;
@@ -1932,25 +1782,25 @@ function tutBlockPair(){ // ③ 前をふさがれた機と、その前の機（
   });
   return best;
 }
-function tutForwardPlane(){ // ③の機（CD v0.6）：盤面の端にいない・横か下を向いている・今動ける（動かしても解ける）機。なければ点線の道だけ
-  var g = state.gates.indexOf(null), edgeOk = /[?&]tut3edge=1/.test(location.search); // ?tut3edge=1：端の機でもタップできる案（比べる用）
+function tutForwardPlane(){
+  var g = state.gates.indexOf(null);
   var best = null, still = null;
   state.planes.forEach(function(p){
     if (p.status !== 'runway' || p.dir === 'up') return;
     var inner = L.isInnerCell(state, p.col, p.row), ok = g >= 0 && L.canMove(state, p.id) === 'ok';
     var solvable = ok && !!(L.solve(L.tap(state, p.id).state, 50000).moves);
-    var score = (inner ? 8 : 0) + (p.dir === 'down' ? 1 : 0) + (L.hasMatch(state, p.color) ? 2 : 0);
-    if (solvable && (inner || edgeOk)){ if (!best || score > best.score) best = { id: p.id, gate: g, score: score, tap: true }; }
-    else if (inner && (!still || score > still.score)) still = { id: p.id, gate: g >= 0 ? g : 0, score: score, tap: false }; // 動けない：点線の道だけ
+    var score = (p.dir === 'down' ? 1 : 0) + (L.hasMatch(state, p.color) ? 2 : 0);
+    if (solvable && !inner){ if (!best || score > best.score) best = { id: p.id, gate: g, score: score, tap: true }; }
+    else if (!best && (!still || score + (inner ? 8 : 0) > still.score)) still = { id: p.id, gate: g >= 0 ? g : 0, score: score + (inner ? 8 : 0), tap: false };
   });
   return best || still;
 }
-function tutRoute(id, gate, flow){ // movePath の道を白の破線（6/5）＋矢じりで。flow＝破線をゲートの向きへ流す（動きを減らす設定やタップできないときは止めた点線）
+function tutRoute(id, gate, flow, under){
   var pts = movePath(L.planeById(state, id), gate), n = pts.length, a = pts[n - 2], b = pts[n - 1];
   var tx = b.x - a.x, ty = b.y - a.y, tl = Math.hypot(tx, ty) || 1; tx /= tl; ty /= tl;
   var hx = b.x - tx * 11, hy = b.y - ty * 11, nx = -ty * 6, ny = tx * 6;
   var d = 'M' + pts.slice(0, n - 1).map(function(q){ return q.x + ' ' + q.y; }).join(' L') + ' L' + hx + ' ' + hy;
-  return '<path' + (flow ? ' class="tutFlow"' : '') + ' d="' + d + '" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="' + (flow ? '6 5' : '2 5') + '"/>' +
+  return (under ? '<path d="' + d + '" fill="none" stroke="#2B5C8A" stroke-opacity="0.55" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>' : '') + '<path' + (flow ? ' class="tutFlow"' : '') + ' d="' + d + '" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="' + (flow ? '6 5' : '2 5') + '"/>' +
          '<path d="M' + b.x + ' ' + b.y + ' L' + (hx + nx) + ' ' + (hy + ny) + ' L' + (hx - nx) + ' ' + (hy - ny) + ' Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>';
 }
 function tutShouldShow(){ return TUT_Q === '1' || (TUT_Q !== '0' && !TUT_DONE); }
@@ -1969,7 +1819,7 @@ function tutEnd(){
   document.getElementById('live').textContent = LANG === 'en' ? 'Stage 1' : 'ステージ1';
   heartTip();
 }
-function tutSetText(el, t){ // 日本語は、各文の終わりの6文字を改行させない（「よ」だけが次の行に落ちないように）
+function tutSetText(el, t){
   if (LANG !== 'ja'){ el.textContent = t; return; }
   el.textContent = '';
   t.split(/(?<=。)/).forEach(function(sn){
@@ -1989,15 +1839,15 @@ function tutDraw(animate){
     holes.push(px, pr, gr, tutSeatHole(f.id)); marks += ring(px) + ring(pr, 'pulse') + rect(gr) + tutArrow(pr, f.gate);
     TUT.target = { id: f.id, ring: pr };
   } else if (st === 1){
-    var room = { x: 12, y: 143, w: 366, h: 328, rx: 16 }, g1 = tutGateRect(TUT.first.gate); // 搭乗口の枠も角丸16（ゲートの列の枠とそろえる）
+    var room = { x: 12, y: 143, w: 366, h: 328, rx: 16 }, g1 = tutGateRect(TUT.first.gate);
     holes.push(room); marks += rect(room) + rect(g1);
-  } else if (st === 2){ // 案：前にしか進めない・滑走路の外を回ってゲートへ（上向き以外で今動ける機を選び、通る道を白の破線で見せる）
+  } else if (st === 2){
     var fw = TUT.fw = tutForwardPlane();
     if (fw){ var rr = tutPlaneRing(fw.id); holes.push(rr, tutSeatHole(fw.id), tutGateRect(fw.gate)); marks += ring(rr, fw.tap ? 'pulse' : '') + rect(tutGateRect(fw.gate)) + tutRoute(fw.id, fw.gate, fw.tap && !RM);
       if (fw.tap) TUT.target = { id: fw.id, ring: rr }; }
   } else if (st === 3){
     var bp = tutBlockPair();
-    if (bp){ // 動かす機：白3pt・点滅・矢印 ／ ふさがれた機：白2pt 破線4/4・不透明度0.7・点滅なし・矢印なし
+    if (bp){
       var rb = tutPlaneRing(bp.blocked), rf = tutPlaneRing(bp.front), fg = state.gates.indexOf(null);
       holes.push(rf, rb, tutSeatHole(bp.front), tutSeatHole(bp.blocked)); marks += ring(rb, 'dash') + ring(rf, 'pulse') + (fg >= 0 && L.canMove(state, bp.front) === 'ok' ? tutArrow(rf, fg) : '');
     }
@@ -2006,7 +1856,6 @@ function tutDraw(animate){
     cnt.rx = 10; holes.push(gs, cnt); marks += rect(cnt) + rect(gs);
   }
   holes = holes.map(tutHoleRect);
-  // 札の中身。②〜④は「次へ」（最後は「はじめる」）。①は〇の機のタップで進む
   var card = document.getElementById('tutCard'), oldTop = card.style.top;
   var ghost = null;
   if (animate){ var og = document.getElementById('tutGhost'); if (og) og.remove();
@@ -2015,7 +1864,7 @@ function tutDraw(animate){
   document.getElementById('tutStep').textContent = TUT_COPY.stepLabel(st + 1, TUT_TEXT.length);
   document.getElementById('tutStep').setAttribute('aria-label', TUT_COPY.stepAria(st + 1, TUT_TEXT.length));
   tutSetText(document.getElementById('tutText'), TUT_TEXT[st]);
-  var tapStep = !!TUT.target, note = st === 0 ? TUT_COPY.note1 : (tapStep ? TUT_COPY.note3 : ''); // ①と③（タップできる機があるとき）は〇の機のタップで進む
+  var tapStep = !!TUT.target, note = st === 0 ? TUT_COPY.note1 : (tapStep ? TUT_COPY.note3 : '');
   document.getElementById('tutDo').textContent = note;
   var next = document.getElementById('tutNext'), tapB = document.getElementById('tutTap');
   next.hidden = tapStep; next.textContent = st === TUT_TEXT.length - 1 ? TUT_COPY.start : TUT_COPY.next;
@@ -2023,21 +1872,21 @@ function tutDraw(animate){
   else tapB.style.display = 'none';
   tutLayout(holes);
   tutHoles(holes, animate && !RM);
-  var cut = holes.filter(function(h){ return h.seat; }).map(function(h){ // 〇の線は席数の札の上では切る（札のまわり2pt）
+  var cut = holes.filter(function(h){ return h.seat; }).map(function(h){
     return '<rect x="' + (h.x - 2) + '" y="' + (h.y - 2) + '" width="' + (h.w + 4) + '" height="' + (h.h + 4) + '" rx="' + (h.rx + 2) + '" fill="#000"/>'; }).join('');
   document.getElementById('tutCutG').innerHTML = cut;
   var mg = document.getElementById('tutMarks'); mg.innerHTML = marks;
-  if (animate){ // クロスフェード（動きを減らす設定でもフェードは残す）
+  if (animate){
     var o = { duration: TUT_MOTION.cardFadeMs, easing: 'ease-in-out', fill: 'both' };
     ghost.animate([{ opacity: 1 }, { opacity: 0 }], o).finished.then(function(){ ghost.remove(); });
     card.animate([{ opacity: 0 }, { opacity: 1 }], o);
     mg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: TUT_MOTION.holeMs, easing: 'ease-in-out' });
   }
-  var live = document.getElementById('live'); live.textContent = ''; // 各段の始めに札の本文を読み上げる
+  var live = document.getElementById('live'); live.textContent = '';
   setTimeout(function(){ live.textContent = TUT_COPY.stepAria(st + 1, TUT_TEXT.length) + (LANG === 'en' ? '. ' : '。') + TUT_TEXT[st] + (note ? TUT_COPY.sep + note : ''); }, 30);
   (tapStep ? tapB : next).focus({ preventScroll: true });
 }
-function tutHoles(to, animate){ // 暗幕の穴。前の段の穴から 0.3s easeInOut で動く（数がちがう分は中心から広がる／中心へ縮む）
+function tutHoles(to, animate){
   var g = document.getElementById('tutHoleG'), from = TUT.holesNow || [], n = Math.max(from.length, to.length), seq = (TUT.holeSeq = (TUT.holeSeq || 0) + 1);
   var dot = function(h){ return { x: h.x + h.w / 2, y: h.y + h.h / 2, w: 0, h: 0, rx: 0 }; };
   var A = [], B = [];
@@ -2051,7 +1900,7 @@ function tutHoles(to, animate){ // 暗幕の穴。前の段の穴から 0.3s eas
   var t0 = performance.now(), ease = function(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
   (function f(now){ if (seq !== TUT.holeSeq || !TUT.on) return; var t = Math.min(1, (now - t0) / TUT_MOTION.holeMs); draw(ease(t)); if (t < 1) requestAnimationFrame(f); })(t0);
 }
-function tutLayout(holes){ // 札は〇と重ならない側へ（上を優先）。SE で縮むときは文字を実寸に戻す
+function tutLayout(holes){
   var t = document.getElementById('tut'), card = document.getElementById('tutCard');
   t.style.setProperty('--tk', 1 / Math.min(BOARD_K, 1)); t.style.setProperty('--tf', DT_LARGE ? 1.18 : 1);
   holes = holes || TUT.holesNow || []; if (!holes.length && TUT.holesNow) holes = TUT.holesNow;
@@ -2061,14 +1910,14 @@ function tutLayout(holes){ // 札は〇と重ならない側へ（上を優先�
   card.style.top = top + 'px';
 }
 function tutWaitIdle(){ return new Promise(function(res){ (function f(){ if (pending === 0) res(); else setTimeout(f, 50); })(); }); }
-function tutFadeTrails(){ // 飛行機雲などの名残を 0.3s で消す（③では、動くのは〇などの目印だけ）
+function tutFadeTrails(){
   if (!fxSvg.children.length) return Promise.resolve();
   return fxSvg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: TUT_MOTION.trailFadeMs, easing: 'ease-in-out' }).finished.then(function(){
     while (fxSvg.firstChild) fxSvg.firstChild.remove(); });
 }
 function tutGo(step){
   if (TUT.busy) return; TUT.busy = true;
-  var pre = step === 2 || step === 3 ? tutWaitIdle().then(tutFadeTrails) : Promise.resolve(); // ③の札は離陸の動きが終わってから。④は③で動かした機がゲートに着いてから
+  var pre = step === 2 || step === 3 ? tutWaitIdle().then(tutFadeTrails) : Promise.resolve();
   pre.then(function(){ TUT.busy = false; if (!TUT.on) return; TUT.step = step; tutDraw(true); });
 }
 document.getElementById('tut').addEventListener('click', function(e){
@@ -2076,53 +1925,53 @@ document.getElementById('tut').addEventListener('click', function(e){
   var a = app.getBoundingClientRect(), x = (e.clientX - a.left) / BOARD_K, y = (e.clientY - a.top) / BOARD_K, r = TUT.target.ring;
   if (Math.hypot(x - r.x, y - r.y) <= r.r) tutTapTarget();
 });
-function tutTapTarget(){ if (!TUT.on || !TUT.target || TUT.busy || !onTap(TUT.target.id)) return;
+function tutTapTarget(){ if (!TUT.on || !TUT.target || TUT.busy) return;
+  var route = TUT.step === 0 ? '' : tutRoute(TUT.target.id, state.gates.indexOf(null), !RM, true);
+  if (!onTap(TUT.target.id)) return;
   if (TUT.step === 0){ TUT.step = 1; tutDraw(true); }
-  else { var cur = TUT.step; TUT.target = null; document.getElementById('tutMarks').innerHTML = ''; tutHoles([{ x: 0, y: GATE_Y - 8, w: 390, h: 852 - GATE_Y, rx: 0 }], !RM); // 動いている間は、ゲートと滑走路をまとめて明るく document.getElementById('tutDo').textContent = ''; // ③：〇の機が外を回ってゲートへ行くのを見せてから④へ
-    TUT.busy = true; tutWaitIdle().then(function(){ TUT.busy = false; if (TUT.on && TUT.step === cur) tutGo(cur + 1); }); } }
+  else { var cur = TUT.step, mk = document.getElementById('tutMarks'); TUT.target = null; mk.innerHTML = route; document.getElementById('tutCutG').innerHTML = '';
+    tutHoles([{ x: 0, y: GATE_Y - 8, w: 390, h: 852 - GATE_Y, rx: 0 }], !RM);
+    document.getElementById('tutDo').textContent = '';
+    MOVE_END_HOOK = function(id, g){ if (!TUT.on || TUT.step !== cur) return; var r = tutGateRect(g);
+      mk.innerHTML = RM ? '' : '<rect class="tutGlow" x="' + r.x + '" y="' + r.y + '" width="' + r.w + '" height="' + r.h + '" rx="' + r.rx + '" fill="#FFFFFF" fill-opacity="0.25" stroke="#FFFFFF" stroke-width="4"/>'; };
+    TUT.busy = true; tutWaitIdle().then(function(){ TUT.busy = false; MOVE_END_HOOK = null; if (TUT.on && TUT.step === cur) tutGo(cur + 1); }); } }
 document.getElementById('tutTap').addEventListener('click', tutTapTarget);
 document.getElementById('tutNext').addEventListener('click', function(){ if (TUT.busy) return; if (TUT.step >= TUT_TEXT.length - 1) tutEnd(); else tutGo(TUT.step + 1); });
-// 枠線（2pt）はキーボードやスイッチで動かしているときだけ
 document.addEventListener('keydown', function(e){ if (e.key === 'Tab' || e.key.indexOf('Arrow') === 0 || e.key === ' ' || e.key === 'Enter') document.documentElement.classList.add('kbd'); }, true);
 document.addEventListener('pointerdown', function(){ document.documentElement.classList.remove('kbd'); }, true);
 document.getElementById('tutSkip').addEventListener('click', tutEnd);
 function fit(){ var k = Math.min(window.innerWidth / 390, window.innerHeight / 844); app.style.transform = 'scale(' + k + ')'; BOARD_K = k; layoutSeats(); if (TUT.on) tutLayout(); }
 window.addEventListener('resize', fit); fit();
 start();
-// 最初の画面は扉絵。?screen=home / my / game で直接開ける（確認用）
 var Q0 = /[?&]screen=(title|home|my|game)/.exec(location.search); show(Q0 ? Q0[1] : 'title'); if (SCREEN === 'game') tutStart();
-// 録画・確認用
-// 広告ボタンの表示（デモに画面はない）。残り回数も上限も L.adCounter → rules.ads.adCaps の同じ値から（利用規約 7条2項）
-var AD_Q = (/[?&]ad=(offline|nofill)/.exec(location.search) || [])[1], AD_HEARTS = +((/[?&]adhearts=(\d)/.exec(location.search) || [])[1] || 3), AD_COINS = +((/[?&]adcoins=(\d+)/.exec(location.search) || [])[1] || 120), AD_PRICE = +((/[?&]adprice=(\d+)/.exec(location.search) || [])[1] || 100); // 値段は rules.json で TBD。見た目用に ?adcoins / ?adprice // ?adhearts=5 で満タン
+var AD_Q = (/[?&]ad=(offline|nofill)/.exec(location.search) || [])[1], AD_HEARTS = +((/[?&]adhearts=(\d)/.exec(location.search) || [])[1] || 3), AD_COINS = +((/[?&]adcoins=(\d+)/.exec(location.search) || [])[1] || 120), AD_PRICE = +((/[?&]adprice=(\d+)/.exec(location.search) || [])[1] || 100);
 function adUi(store, kind, nowMs){
   var c = L.adCounter(store, RULES, kind, nowMs), A = STR[LANG].ad, net = AD_Q === 'offline' ? false : navigator.onLine !== false;
-  var b = L.adButtonState(c, { online: net, noFill: AD_Q === 'nofill', heartsFull: kind === 'heart' && !L.heartAdOffered(AD_HEARTS, RULES) }); // 優先：上限 → オフライン → 在庫なし（?ad=offline / ?ad=nofill で試せる）
-  if (b.note === 'full') return { button: false, note: null }; // 満タン：ハートの広告ボタンは出さない
+  var b = L.adButtonState(c, { online: net, noFill: AD_Q === 'nofill', heartsFull: kind === 'heart' && !L.heartAdOffered(AD_HEARTS, RULES) });
+  if (b.note === 'full') return { button: false, note: null };
   if (b.note === 'cap'){ if (kind === 'heart') return { button: false, note: A.heartCap };
     var u = L.unlockCapState(AD_COINS, AD_PRICE); if (!u.note) return { button: false, note: null };
-    return u.coinButton ? { button: false, note: A.unlockCap, coinButton: A.coinUnlock(u.price), state: 'enough' } : { button: false, note: A.unlockCapShort(u.short), small: A.earnByClearing, state: 'short' }; } // 解除：コインが足りれば上限の文＋「コインn枚で開ける」、足りなければ「あとコインd枚」＋小さな一文
+    return u.coinButton ? { button: false, note: A.unlockCap, coinButton: A.coinUnlock(u.price), state: 'enough' } : { button: false, note: A.unlockCapShort(u.short), small: A.earnByClearing, state: 'short' }; }
   return { button: true, enabled: b.enabled, label: A.remaining(b.remaining), note: b.note ? A[b.note] : null };
 }
-// ?restorepreview=before|success|active|none|failed：購入の復元の見た目だけ（ショップの画面はデモにない）。結果は画面に出して1回だけ読む。赤・警告のアイコンなし
 (function(){
   var m = /[?&]restorepreview=(before|success|active|none|failed)/.exec(location.search); if (!m) return;
   var k = m[1], T = STR[LANG].restore, box = document.createElement('div'); box.id = 'restorePreview'; box.className = 'abs'; box.lang = LANG; document.getElementById('app').appendChild(box);
-  var jb = function(t){ return LANG === 'ja' ? L.jaNoBreakHtml(t) : t; }, res = k === 'before' ? '' : jb(T[k]) + (k === 'success' ? '<small>' + jb(T.successCoins) + '</small>' : ''); // 日本語は「。」のあとで改行
+  var jb = function(t){ return LANG === 'ja' ? L.jaNoBreakHtml(t) : t; }, res = k === 'before' ? '' : jb(T[k]) + (k === 'success' ? '<small>' + jb(T.successCoins) + '</small>' : '');
   box.innerHTML = '<button type="button" class="primary">' + T.button + '</button><p class="rnote">' + T.note + '</p>' + (res ? '<p class="rres" role="status">' + res + '</p>' : '') +
     (k === 'failed' ? '<div class="rbtns"><button type="button">' + T.close + '</button><button type="button" class="primary">' + T.retry + '</button></div>' : '');
-  if (res) setTimeout(function(){ document.getElementById('live').textContent = T[k] + (k === 'success' ? ' ' + T.successCoins : ''); }, 300); // 1回だけ
+  if (res) setTimeout(function(){ document.getElementById('live').textContent = T[k] + (k === 'success' ? ' ' + T.successCoins : ''); }, 300);
 })();
-// ?adpreview=heart|unlock：広告ボタンの見た目だけ（広告の画面はデモにない）。?adused=N で今日使った回数、?ad=offline / ?ad=nofill
 (function(){
   var m = /[?&]adpreview=(heart|unlock)/.exec(location.search); if (!m) return;
-  var kind = m[1], used = +((/[?&]adused=(\d+)/.exec(location.search) || [])[1] || 0), hq = /[?&]hour=(\d+)/.exec(location.search), now = hq ? new Date().setHours(+hq[1], 0, 0, 0) : Date.now(), /* ?hour=H でその時刻に */ st = { day: L.adDayKey(now, RULES.ads.adResetHour), used: {} }; st.used[kind] = used;
+  var kind = m[1], used = +((/[?&]adused=(\d+)/.exec(location.search) || [])[1] || 0), hq = /[?&]hour=(\d+)/.exec(location.search), now = hq ? new Date().setHours(+hq[1], 0, 0, 0) : Date.now(),   st = { day: L.adDayKey(now, RULES.ads.adResetHour), used: {} }; st.used[kind] = used;
   var box = document.createElement('div'); box.id = 'adPreview'; box.className = 'abs'; box.lang = LANG; document.getElementById('app').appendChild(box);
   function draw(){ var u = adUi(st, kind, now);
     box.innerHTML = (u.button ? '<button type="button" class="primary"' + (u.enabled ? '' : ' disabled aria-disabled="true"') + '>' + u.label + '</button>' : '') + (u.note ? '<p>' + (LANG === 'ja' ? L.jaNoBreakHtml(u.note) : u.note) + '</p>' : '') + (u.small ? '<p class="sm">' + (LANG === 'ja' ? L.jaNoBreakHtml(u.small) : u.small) + '</p>' : '') + (u.coinButton ? '<button type="button" class="coinBtn">' + u.coinButton + '</button>' : ''); }
-  var lastState = null; function say(u){ if (u.state && u.state !== lastState){ lastState = u.state; var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = u.note + (u.small ? ' ' + u.small : ''); }, 300); } } // 文と小さな一文を1回読む。足りるようになったら読み直す
+  var lastState = null; function say(u){ if (u.state && u.state !== lastState){ lastState = u.state; var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = u.note + (u.small ? ' ' + u.small : ''); }, 300); } }
   var draw0 = draw; draw = function(){ draw0(); say(adUi(st, kind, now)); };
-  window.TTS_setCoins = function(n){ AD_COINS = n; SAMPLE_WALLET = { paid: 0, free: n }; if (SCREEN === 'home') buildHome(); draw(); }; // 確認用：コインが増えたら「足りる」へ切り替え（上の持っているコインも同じ数に）
-  draw(); window.addEventListener('online', draw); window.addEventListener('offline', draw); // つながれば自動で戻る
+  window.TTS_setCoins = function(n){ AD_COINS = n; SAMPLE_WALLET = { paid: 0, free: n }; if (SCREEN === 'home') buildHome(); draw(); };
+  draw(); window.addEventListener('online', draw); window.addEventListener('offline', draw);
 })();
 window.TTS = { tap: onTap, adUi: adUi, state: function(){ return state; }, canMove: function(id){ return L.canMove(state, id); }, status: function(){ return L.status(state); },
   solution: function(){ return L.solve(state).moves; }, idle: function(){ return pending === 0; }, celebrated: function(){ return celebrated; }, restart: start, reducedMotion: RM, seatInfo: function(){ return SEAT_INFO; },
