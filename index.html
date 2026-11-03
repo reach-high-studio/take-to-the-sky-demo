@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Take to the sky デモ v0.8</title>
+<title>Take to the sky デモ v0.9.2</title>
 <style>
 :root{--paper:#F6F5F1;--ink:#1F1F1D;--graphite:#5B5A56;--sky:#2B5C8A;--band:#E6EFF6;--room:#EEF3F8;--gate:#E4ECF4;--runway:#E6E3DC;--edge:#CFCBC3;--sign:#24272B;--signText:#F2C94C;--taxi:#D9B44A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -19,6 +19,7 @@ body{display:flex;align-items:flex-start;justify-content:center;font-family:-app
 .kbd #homeBtn:focus-visible,.kbd #hcBtns button:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
 #homeConfirm{left:40px;width:310px;top:300px;z-index:30;background:#FFFFFF;border-radius:20px;box-shadow:0 8px 24px rgba(31,31,29,.18);padding:20px 16px 14px;opacity:0;pointer-events:none;transition:opacity .2s}
 #homeConfirm.on{opacity:1;pointer-events:auto}
+#homeConfirm:not(.on),#sheet:not(.on),#card:not(.on){display:none}
 #hcQ{margin:0;font-size:17px;font-weight:700;color:var(--ink);line-height:1.4}
 #hcNote:empty{display:none}
 #hcNote{margin:2px 0 0;font-size:13px;color:var(--graphite);line-height:1.4}
@@ -31,9 +32,9 @@ body{display:flex;align-items:flex-start;justify-content:center;font-family:-app
 #gHearts{left:calc(20px + 44px*var(--seatInv,1) + 92px);top:61px;display:flex;gap:2px;align-items:center}
 #gHearts .hs.use{opacity:.35}
 #gHearts .inf{margin-left:3px;font-size:15px;font-weight:700;color:var(--graphite)}
-#heartTip{left:96px;top:88px;z-index:25;max-width:270px;padding:8px 12px;border:0;border-radius:12px;background:rgba(31,31,29,.88);color:#fff;font:inherit;font-size:13px;line-height:18px;text-align:left;opacity:0;pointer-events:none;transition:opacity .2s}
+#heartTip{left:96px;top:3px;z-index:25;max-width:300px;padding:8px 12px;border:0;border-radius:12px;background:rgba(31,31,29,.88);color:#fff;font:inherit;font-size:13px;line-height:18px;text-align:left;opacity:0;pointer-events:none;transition:opacity .2s}
 #heartTip.on{opacity:1;pointer-events:auto}
-#heartTip::before{content:'';position:absolute;left:28px;top:-6px;border:6px solid transparent;border-top:0;border-bottom-color:rgba(31,31,29,.88)}
+#heartTip::before{content:'';position:absolute;left:var(--ax,28px);bottom:-6px;border:6px solid transparent;border-bottom:0;border-top-color:rgba(31,31,29,.88)}
 #restart{right:8px;top:47px;height:44px;padding:0 10px;border:0;background:none;font:inherit;font-size:15px;font-weight:600;color:var(--graphite);cursor:pointer}
 #nextLbl{left:16px;top:111px;font-size:12px;font-weight:700;color:var(--graphite)}
 #dots{left:270px;top:108px;font-size:15px;color:var(--graphite)}
@@ -47,6 +48,7 @@ body{display:flex;align-items:flex-start;justify-content:center;font-family:-app
 .gate::before{content:'';position:absolute;left:calc(50% - .5px);top:50%;bottom:0;width:1px;background:var(--taxi);opacity:.6}
 .gate .empty{position:absolute;left:50%;top:42px;transform:translateX(-50%);padding:0 6px;border-radius:4px;background:var(--gate);text-align:center;font-size:13px;line-height:20px;color:var(--graphite)}
 #runway{left:16px;top:482px;width:358px;height:308px;border-radius:18px;background:var(--runway);border:1px solid var(--edge)}
+#waitTag{left:0;top:0;z-index:17;pointer-events:none;white-space:nowrap;background:#1F1F1D;color:#FFFFFF;border-radius:10px;padding:5px 10px;font-size:13px;font-weight:600;line-height:1.3;opacity:0}
 #whyTag{left:0;top:0;z-index:17;pointer-events:none;white-space:nowrap;background:#FFFFFF;border:1px solid #CFCBC3;border-radius:calc(10px*var(--tk,1));padding:calc(5px*var(--tk,1)) calc(10px*var(--tk,1));font-size:calc(15px*var(--tk,1));font-weight:600;line-height:1.3;color:#1F1F1D;opacity:0;box-shadow:0 2px 6px rgba(31,31,29,.10)}
 .pax{left:0;top:0;width:26px;height:32px;transition:transform .32s cubic-bezier(.3,.9,.4,1),opacity .28s ease;will-change:transform}
 .plane{left:0;top:0;cursor:pointer;will-change:transform}
@@ -74,7 +76,17 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #card h2{font-size:28px}
 .sub{margin:0 0 24px;font-size:15px;color:var(--graphite)}
 #card .sub{font-size:17px;word-break:auto-phrase}
-#cardEn{margin:0 0 4px;font-size:20px;font-weight:700;color:var(--sky)}
+#cardEn{margin:4px 0 0;font-size:13px;line-height:18px;font-weight:400;color:#5B5A56}
+#card.ja #cardSub{font-size:18px;font-weight:700;color:var(--sky)}
+#card.ja h2{font-size:24px;font-weight:700;color:#1F1F1D}
+#cardStars{display:flex;justify-content:center;gap:6px;margin:10px 0 0}
+#cardStars svg{display:block}
+#cardStarNote{margin:6px auto 0;max-width:326px;font-size:12px;line-height:18px;color:#5B5A56;text-align:center}
+#cardStarNote span{display:block;white-space:nowrap}
+#cardEnd{margin:0 0 14px;font-size:15px;line-height:22px;color:#5B5A56}
+#cardEnd:empty{display:none}
+#jamNote{margin:6px 0 14px;font-size:14px;line-height:20px;color:#5B5A56}
+#jamNote[hidden]{display:none}
 #cardEn:empty{display:none}
 #stampDone{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);border-radius:inherit}
 #stampDone[hidden]{display:none}
@@ -85,20 +97,8 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #stampSub{margin:6px 24px 0;font-size:14px;color:var(--graphite);line-height:20px}
 #hGreet{position:absolute;left:24px;right:24px;top:104px;font-size:15px;line-height:20px;color:var(--graphite)}
 #hGreet:empty{display:none}
-#restorePreview{left:24px;right:24px;top:520px;z-index:60;background:#fff;border-radius:16px;padding:12px;box-shadow:0 4px 16px rgba(31,31,29,.15)}
-#restorePreview p{margin:8px 0 0;font-size:13px;line-height:18px;color:var(--graphite);text-align:center}
-#restorePreview .rres{font-size:15px;color:var(--ink)}
-#restorePreview .rres small{display:block;font-size:13px;color:var(--graphite)}
-#restorePreview .rbtns{display:flex;gap:8px;margin-top:10px}
-#restorePreview .rbtns button{flex:1;height:48px;border-radius:14px;font:inherit;font-size:15px;font-weight:600}
-#restorePreview .rbtns button:not(.primary){background:#fff;border:1px solid #CFCBC3;color:var(--ink)}
-#adPreview{left:24px;right:24px;top:560px;z-index:60;background:#fff;border-radius:16px;padding:12px;box-shadow:0 4px 16px rgba(31,31,29,.15)}
-#adPreview .primary[disabled]{background:#CFCBC3;color:#5B5A56;cursor:default}
-#adPreview .coinBtn{display:block;width:100%;height:48px;margin-top:10px;border-radius:14px;background:#fff;border:1px solid #CFCBC3;color:var(--ink);font:inherit;font-size:15px;font-weight:600}
-#adPreview p.sm{font-size:12px}
 .sent{display:inline-block}
 .nb{white-space:nowrap}
-#adPreview p{margin:8px 0 0;font-size:13px;line-height:18px;color:var(--graphite);text-align:center}
 .primary{display:block;width:100%;height:56px;border:0;border-radius:16px;background:var(--sky);color:#fff;font:inherit;font-size:17px;font-weight:700;cursor:pointer}
 #card .primary{height:64px}
 .primary:active{transform:scale(.98)}
@@ -131,10 +131,17 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .credit2{position:absolute;left:0;right:0;top:808px;text-align:center;font-size:12px;line-height:16px;color:#5B5A56;letter-spacing:.02em}
 #hHud{position:absolute;left:16px;top:61px;height:28px;display:flex;align-items:center;gap:6px}
 .hearts{display:flex;gap:2px}
-.cap{display:flex;align-items:center;height:40px;box-sizing:border-box;padding:0 10px;border-radius:20px;background:#fff;border:1px solid var(--edge);font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;margin-left:4px}
-.cap svg{flex:none;display:block}
-.cap .dv{width:1px;height:20px;background:var(--edge);margin:0 7px}
-.cap span{margin-left:3px}
+#hCoins{display:flex;align-items:stretch;min-height:48px;box-sizing:border-box;padding:4px 10px;margin-left:4px;border-radius:14px;background:#fff;border:1px solid var(--edge);font:inherit;color:var(--ink);cursor:pointer}
+.cc{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 2px}
+.cc .cn{display:flex;align-items:center;gap:3px;font-size:15px;font-weight:700;line-height:22px;font-variant-numeric:tabular-nums;color:#1F1F1D}
+.cc .cn svg{flex:none;display:block}
+.cc .cl{font-size:12px;line-height:16px;color:#5B5A56;white-space:nowrap}
+.ccv{width:1px;background:#CFCBC3;margin:2px 8px}
+.sheet2 .bal .cchip{display:flex;align-items:stretch;padding:6px 12px;border-radius:14px;background:#fff;border:1px solid var(--edge);max-width:100%;box-sizing:border-box}
+.cc .cl .cl1{display:block}
+.hs2.lost{display:inline-flex}
+.tdemo{position:absolute;left:32px;right:32px;top:231px;margin:0;text-align:center;font-size:14px;line-height:20px;color:#5B5A56}
+.tdemo[hidden]{display:none}
 .ex{display:inline-block;height:18px;padding:0 6px;border-radius:9px;border:1px dashed #8C8A84;font-size:10px;line-height:16px;color:var(--graphite);font-weight:600;white-space:nowrap}
 #hRouteT{position:absolute;left:24px;top:168px;font-size:17px;font-weight:700;line-height:22px}
 #hRouteN{position:absolute;right:24px;top:170px;font-size:13px;color:var(--graphite);line-height:18px;font-variant-numeric:tabular-nums}
@@ -208,7 +215,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .para p{margin:0}
 .para p + p{margin-top:6px;color:var(--graphite)}
 .mycredit{margin:28px 0 0;text-align:center;font-size:12px;line-height:18px;color:var(--graphite)}
-#toast{position:absolute;left:50%;top:668px;transform:translateX(-50%);z-index:80;max-width:340px;padding:10px 16px;border-radius:12px;background:rgba(31,31,29,.88);color:#fff;font-size:13px;line-height:18px;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s;width:max-content;box-sizing:border-box;word-break:auto-phrase;overflow-wrap:anywhere}
+#toast{position:absolute;left:50%;top:668px;transform:translateX(-50%);z-index:80;max-width:352px;padding:10px 16px;border-radius:12px;background:rgba(31,31,29,.88);color:#fff;font-size:13px;line-height:18px;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s;width:max-content;box-sizing:border-box;word-break:auto-phrase;overflow-wrap:anywhere}
 #toast.on{opacity:1}
 #tut{left:0;top:0;width:390px;height:844px;z-index:26;display:none;--tk:1;--tf:1}
 #tut.on{display:block}
@@ -253,7 +260,6 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .sheet2 .sub2{margin:6px 24px 0;font-size:13px;line-height:18px;color:var(--graphite);text-align:center}
 .sheet2 .sub2.l{text-align:left}
 .sheet2 .bal{display:flex;justify-content:flex-start;margin:12px 24px 0}
-.sheet2 .bal .cap{margin-left:0}
 .sheet2 .sep{height:1px;background:#E6E3DC;margin:18px 24px 0}
 .dtag{display:inline-block;height:22px;padding:0 10px;border-radius:11px;background:#fff;border:1.5px solid var(--ink);color:var(--ink);font-size:12px;font-weight:700;line-height:19px;white-space:nowrap}
 #sheet .obtn2{display:block;width:100%;height:48px;margin:0 0 12px;border-radius:12px;border:1.5px solid var(--sky);background:#fff;color:var(--sky);font:inherit;font-size:16px;font-weight:700;cursor:pointer}
@@ -272,6 +278,10 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #adScr #adPre:empty{display:none}
 #adScr #adB{margin:10px 0 0;font-size:15px;line-height:22px;color:#E3E6EA}
 #adScr #adN{margin:28px 0 0;min-height:28px;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+#adScr #adGet{margin:8px 0 0;font-size:15px;line-height:22px;color:#E3E6EA}
+#adScr #adGet:empty{display:none}
+#adDoneBtn{position:absolute;left:24px;right:24px;bottom:66px;height:52px;border:0;border-radius:14px;background:#fff;color:#1F1F1D;font:inherit;font-size:17px;font-weight:700;cursor:pointer}
+#adDoneBtn[hidden]{display:none}
 .dbanner{display:flex;gap:10px;align-items:flex-start;margin:16px 16px 0;padding:12px 14px;border-radius:12px;background:#fff;border:1.5px solid var(--ink);font-size:13px;line-height:19px}
 .dbanner .dtag{flex:none}
 .shopLead{margin:16px 24px 0;font-size:17px;font-weight:700;line-height:24px}
@@ -311,7 +321,7 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
   <button id="restart" class="abs" data-t="restart">やり直す</button>
   <div id="nextLbl" class="abs" data-t="next">次</div>
   <div id="dots" class="abs">…</div>
-  <div id="waitLbl" class="abs" data-t="waiting">待っている人</div>
+  <div id="waitLbl" class="abs" data-t="waiting" aria-hidden="true">搭乗待ち</div>
   <div id="waitNum" class="abs">0人</div>
   <div id="room" class="abs"></div>
   <svg id="decorRoom" class="abs decor" viewBox="0 0 390 844" aria-hidden="true"></svg>
@@ -324,20 +334,25 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
   <div id="seats"></div>
   <div id="paxLayer"></div>
   <div id="whyTag" class="abs" lang="ja" aria-hidden="true"></div>
-  <div id="credit" class="abs" data-t="credit">Reach High Studio　デモ v0.8</div>
+  <div id="waitTag" class="abs" aria-hidden="true"></div>
+  <div id="credit" class="abs" data-t="credit">Reach High Studio　デモ v0.9.2</div>
   <svg id="fx" class="abs" viewBox="0 0 390 844"></svg>
   <div id="scrim" class="abs"></div>
   <div id="confetti" class="abs"></div>
-  <div id="card" class="abs" role="dialog" aria-modal="true" aria-labelledby="cardTitle cardEn cardSub">
+  <div id="card" class="abs" role="dialog" aria-modal="true" aria-labelledby="cardTitle cardSub">
     <h2 id="cardTitle" lang="en"></h2>
-    <p id="cardEn" lang="en"></p>
     <p id="cardSub" class="sub"></p>
+    <p id="cardEn" lang="en" aria-hidden="true"></p>
+    <p id="cardStars" role="img"></p>
+    <p id="cardStarNote" aria-hidden="true"></p>
     <p id="cardCoins" aria-hidden="true"></p>
+    <p id="cardEnd"></p>
     <button id="cardNext" class="primary" data-act="next"></button>
   </div>
   <div id="sheet" class="abs" role="dialog" aria-modal="true">
     <h2 data-t="stuckHead">ここで渋滞みたい。作戦を立て直そうか</h2>
-    <button type="button" class="obtn2" id="jamOpen" data-t="jamOpen" hidden>枠を開ける</button>
+    <p id="jamNote" data-t="jamNote">ここでやめると、使ったハートは戻らないよ</p>
+    <button type="button" class="obtn2" id="jamOpen" data-t="jamOpen" hidden>ゲートを開ける</button>
     <button class="primary" data-act="retry" id="jamRetry">やり直す（ハートを1つ使うよ）</button>
     <button type="button" class="tclose" id="jamClose" data-t="jamClose">閉じる</button>
   </div>
@@ -362,22 +377,23 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
     <div class="ttl" id="tL2" style="top:147px">the sky</div>
     <h1 class="sr">Take to the sky</h1>
     <div class="subttl" id="tSub"></div>
+    <p class="tdemo tfade" id="tDemo" hidden></p>
     <button class="ibtn tfade" id="tInfo" style="left:288px;top:41px" aria-label="このアプリについて" data-ta="about"></button>
     <button class="ibtn tfade" id="tGear" style="left:332px;top:41px" aria-label="設定" data-ta="settings"></button>
     <button class="bigbtn tfade" id="tStart" data-t="start">スタート</button>
-    <div class="credit2 tfade" data-t="credit">Reach High Studio　デモ v0.8</div>
+    <div class="credit2 tfade" data-t="credit">Reach High Studio　デモ v0.9.2</div>
   </section>
   <section id="scrHome" class="screen" aria-label="ホーム" data-ta="home">
     <svg class="scene" id="hScene" viewBox="0 0 390 844" aria-hidden="true"></svg>
     <h1 class="sr" data-t="home">ホーム</h1>
     <p id="hGreet"></p>
-    <div id="hHud" role="img"></div>
+    <div id="hHud" role="group"></div>
     <button class="ibtn" id="hGear" style="left:330px;top:53px" aria-label="設定" data-ta="settings"></button>
     <div id="hRouteT" data-t="route">飛行ルート</div>
     <div id="hRouteN"></div>
     <div id="hRouteA" class="sr"></div>
     <div class="hcards">
-      <button class="hcard" id="hStamp" aria-haspopup="dialog"><span class="ic" id="icStamp"></span><span class="lb" data-t="stamps">スタンプ</span><span class="sb" data-t="day3sample">3日目（表示例）</span></button>
+      <button class="hcard" id="hStamp" aria-haspopup="dialog"><span class="ic" id="icStamp"></span><span class="lb" data-t="stamps">スタンプ</span><span class="sb" id="hStampSb"></span></button>
       <button class="hcard" id="hMy"><span class="ic" id="icMy"></span><span class="lb" data-t="profile">マイページ</span><span class="sb" data-t="logItems">記録と持ち物</span></button>
       <button class="hcard" id="hShop"><span class="ic" id="icShop"></span><span class="lb" data-t="shop">ショップ</span><span class="sb" data-t="shopSub">コインとハート</span></button>
     </div>
@@ -385,7 +401,7 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
     <button class="bigbtn" id="hPlay"><span data-t="play">プレイ</span><span id="hPlayN">ステージ1</span></button>
   </section>
   <section id="scrMy" class="screen" aria-label="マイページ" data-ta="profile">
-    <div class="nav"><button class="back" id="myBack" aria-label="戻る（ホームへ）" data-ta="backHome"><svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="back">戻る</span></button><h1 data-t="profile">マイページ</h1></div>
+    <div class="nav"><button class="back" id="myBack" aria-label="ホームに戻る" data-ta="backHome"><svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="back">戻る</span></button><h1 data-t="profile">マイページ</h1></div>
     <div class="scroll" id="myScroll">
       <div class="grp"><div class="gl" data-t="flightLog">記録</div>
         <div class="box stats">
@@ -404,9 +420,9 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
         <div class="mynote" data-t="itemsNote">このデモの中だけのコインとハートだよ。実際のお金は使わないよ</div>
       </div>
       <div class="grp"><div class="gl" data-t="saving">記録の保存</div>
-        <div class="box para"><p data-t="icloud">記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。</p><p data-t="noSave">このデモでは保存しません。ページを閉じると最初に戻ります。</p></div>
+        <div class="box para"><p data-t="saveNote"></p></div>
       </div>
-      <div class="mycredit">Take to the sky<br><span data-t="credit">Reach High Studio　デモ v0.8</span></div>
+      <div class="mycredit">Take to the sky<br><span data-t="credit">Reach High Studio　デモ v0.9.2</span></div>
     </div>
   </section>
   
@@ -421,8 +437,8 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
   <div class="scrim2" id="sScrim"></div>
   <div class="sheet2" id="sStamp" role="dialog" aria-modal="true" aria-labelledby="sStampH">
     <div class="grab"></div>
-    <h2 id="sStampH"><span data-t="stampCard">スタンプカード</span> <span class="ex" style="vertical-align:middle" data-t="sampleDemo">表示例（デモ）</span></h2>
-    <p class="desc" data-tbr="stampHow">毎日最初に開いたとき、自動で押されるよ。<br>休んだ日があっても、続きから押せるよ</p>
+    <h2 id="sStampH" data-t="stampCard">スタンプカード</h2>
+    <p class="desc" data-tbr="stampHow">毎日、最初にゲームを開いたとき、自動で押されるよ。<br>休んだ日があっても、続きから押せるよ</p>
     <div id="sBp"></div>
     <p id="stampDay" aria-hidden="true"></p>
     <p class="foot" data-t="newCard">7日目のあとは、新しいカードになるよ</p>
@@ -432,7 +448,7 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
   <div class="sheet2" id="sAbout" role="dialog" aria-modal="true" aria-labelledby="sAboutH">
     <div class="grab"></div>
     <h2 id="sAboutH" data-t="about">このアプリについて</h2>
-    <p class="desc">Take to the sky<br><span data-t="madeBy">制作：Reach High Studio</span><br><span data-t="demoVer">デモ v0.8（ステージ2まで遊べるよ）</span></p>
+    <p class="desc">Take to the sky<br><span data-t="madeBy">制作：Reach High Studio</span><br><span data-t="demoVer">デモ v0.9.2（ステージ2まで遊べるよ）</span></p>
     <button class="obtn" data-close data-t="close">閉じる</button>
   </div>
   <div class="sheet2" id="sUnlock" role="dialog" aria-modal="true" aria-labelledby="sUnlockH"></div>
@@ -440,20 +456,22 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
   <div class="sheet2" id="sHeartOut" role="dialog" aria-modal="true" aria-labelledby="sHeartOutH"></div>
   <div class="sheet2" id="sBuy" role="dialog" aria-modal="true" aria-labelledby="sBuyH"></div>
   <div class="sheet2" id="sResult" role="dialog" aria-modal="true" aria-labelledby="sResultT"></div>
+  <div class="sheet2" id="sRefill" role="alertdialog" aria-modal="true" aria-labelledby="sRefillH" aria-describedby="sRefillB sRefillP"></div>
+  <div class="sheet2" id="sCoins" role="dialog" aria-modal="true" aria-labelledby="sCoinsH"></div>
   <div id="adScr" class="abs" role="dialog" aria-modal="true" aria-labelledby="adT adPre adB">
     <span class="dtag" id="adTag"></span>
     <button type="button" id="adClose">×</button>
     <div class="abox"><svg width="64" height="64" viewBox="0 0 100 100" aria-hidden="true"><g fill="#E3E6EA" stroke="#E3E6EA" stroke-linejoin="round" stroke-width="4"><rect x="42" y="3" width="16" height="91" rx="8"/><path d="M50 36 L95 58 L95 66 L50 59 L5 66 L5 58 Z"/><path d="M50 80 L72 90 L72 95 L50 92 L28 95 L28 90 Z"/></g></svg>
-      <p id="adT"></p><p id="adPre"></p><p id="adB"></p><p id="adN" aria-hidden="true"></p></div>
+      <p id="adT"></p><p id="adPre"></p><p id="adB"></p><p id="adN" aria-hidden="true"></p><p id="adGet"></p></div>
+    <button type="button" id="adDoneBtn" hidden></button>
   </div>
   <div id="toast" role="status" aria-live="polite"></div>
   <div id="live" class="sr" aria-live="polite"></div>
 </div>
 <script>
-(function (root, factory) {
-  if (typeof module === 'object' && module.exports) module.exports = factory();
-  else root.TTSLogic = factory();
-})(typeof self !== 'undefined' ? self : this, function () {
+(function(){
+'use strict';
+var L = (function () {
   'use strict';
   var DIRS = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -645,8 +663,9 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
     return { id: pool[Math.min(pool.length - 1, Math.floor((rnd || Math.random)() * pool.length))] };
   }
   function quitNeedsConfirm(c) {
-    if (c.status === 'clear' || c.status === 'stuck') return false;
+    if (c.status === 'clear') return false;
     if (c.unlimited) return !!c.unlocked;
+    if (c.mode === 'retry') return true;
     return !!c.heartInUse || !!c.unlocked;
   }
   function saveProgress(stageId, moves) { return { v: 1, stage: stageId, moves: moves.slice(), seed: null }; }
@@ -772,30 +791,48 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
     if (lang === 'en') return capFirst(color.en) + ', ' + SIZE_LBL.en[size] + ' plane (' + seats + ' seats), facing ' + DIR_LBL.en[dir];
     return color.ja + '、' + SIZE_LBL.ja[size] + '飛行機（' + seats + '席）、' + DIR_LBL.ja[dir];
   }
-  function gateAria(g, open, lang) { var no = 'A' + (g + 1); return open ? no + (lang === 'en' ? ', open' : '、空き') : no; }
-  function stampCoins(n) { return n === 7 ? 30 : 10; }
-  function stampAria(n, lang) {
-    if (lang === 'en') return ['Stamp card (sample): ' + n + ' of 7 days stamped', 'Today is day ' + n + ', ' + stampCoins(n) + ' earned coins'];
-    return ['スタンプカード（表示例）：7日のうち' + n + '日分が押してあるよ', '今日は' + n + '日目、もらったコイン' + stampCoins(n) + '枚'];
+  function gateAria(g, open, lang) { var no = 'A' + (g + 1); return open ? no + (lang === 'en' ? ', empty' : '、空き') : no;   }
+  function stampCoins(n, rules) { var B = rules.loginBonus; return n === B.cardDays ? B.stampCoinsLastDay : B.stampCoins; }
+  function stampCardTotal(rules) { var t = 0; for (var n = 1; n <= rules.loginBonus.cardDays; n++) t += stampCoins(n, rules); return t; }
+  function stampAria(n, lang, rules) {
+    var D = rules.loginBonus.cardDays;
+    if (lang === 'en') return ['Stamp card: ' + n + ' of ' + D + ' days stamped', 'Today is day ' + n + ', ' + stampCoins(n, rules) + ' earned coins'];
+    return ['スタンプカード：' + D + '日のうち' + n + '日分が押してあるよ', '今日は' + n + '日目、もらったコイン' + stampCoins(n, rules) + '枚'];
   }
+  function stampAdvance(saved, todayKey, rules, hour) {
+    var D = rules.loginBonus.cardDays, ok = saved && typeof saved.day === 'string' && saved.n >= 1 && saved.n <= D;
+    var keep = function () { var o = { day: saved.day, n: saved.n }; if (typeof saved.h === 'number') o.h = saved.h; return { n: saved.n, isNew: false, saved: o }; };
+    if (ok && saved.day === todayKey) return keep();
+    if (ok && dayNum(todayKey) < dayNum(saved.day)) return keep();
+    var n = ok && saved.n < D ? saved.n + 1 : 1, o = { day: todayKey, n: n };
+    if (typeof hour === 'number' && hour >= 0 && hour < 24) o.h = hour;
+    return { n: n, isNew: true, coins: stampCoins(n, rules), saved: o };
+  }
+  function stampTonight(saved, resetHour) { return !!saved && typeof saved.h === 'number' && saved.h < (resetHour || 0); }
+  function dayNum(key) { var m = /^(\d+)-(\d+)-(\d+)$/.exec(String(key)); return m ? (+m[1]) * 10000 + (+m[2]) * 100 + (+m[3]) : NaN; }
+  function stampDate(nowMs, resetHour) { var d = new Date(nowMs); d.setHours(d.getHours() - (resetHour || 0)); return (d.getMonth() + 1) + '/' + ('0' + d.getDate()).slice(-2); }
+  function publicSearch(search) {
+    var out = [], m;
+    if ((m = /[?&]lang=(en|ja)(?=&|$)/.exec(search || ''))) out.push('lang=' + m[1]);
+    if ((m = /[?&]hour=(\d{1,2})(?=&|$)/.exec(search || '')) && +m[1] < 24) out.push('hour=' + m[1]);
+    if ((m = /[?&]dt=(large)(?=&|$)/.exec(search || ''))) out.push('dt=' + m[1]);
+    return out.length ? '?' + out.join('&') : '';
+  }
+  function unboardedCount(where) { var n = 0; (where || []).forEach(function (w) { if (w === 'slot' || w === 'queue') n++; }); return n; }
   function isInnerCell(s, col, row) { return col > 0 && row > 0 && col < s.cols - 1 && row < s.rows - 1; }
   function stampDoneShown(day, alreadyShown) { return day === 7 && !alreadyShown; }
-  return { greetBand: greetBand, greetKind: greetKind, jaNoBreakHtml: jaNoBreakHtml, ariaJoin: ariaJoin, planeAria: planeAria, gateAria: gateAria, stampCoins: stampCoins, stampAria: stampAria, stampDoneShown: stampDoneShown, isInnerCell: isInnerCell, createGame: createGame, canMove: canMove, legalMoves: legalMoves, tap: tap, isClear: isClear,
+  return { greetBand: greetBand, greetKind: greetKind, jaNoBreakHtml: jaNoBreakHtml, ariaJoin: ariaJoin, planeAria: planeAria, gateAria: gateAria, stampCoins: stampCoins, stampCardTotal: stampCardTotal, stampAdvance: stampAdvance, stampTonight: stampTonight, stampDate: stampDate, publicSearch: publicSearch, unboardedCount: unboardedCount, stampAria: stampAria, stampDoneShown: stampDoneShown, isInnerCell: isInnerCell, createGame: createGame, canMove: canMove, legalMoves: legalMoves, tap: tap, isClear: isClear,
            isStuck: isStuck, status: status, solve: solve, randomClearRate: randomClearRate, mulberry32: mulberry32,
            planeById: planeById, hasMatch: hasMatch, DIRS: DIRS,
            moveRange: moveRange, isPerfectClear: isPerfectClear, pickClear: pickClear, quitNeedsConfirm: quitNeedsConfirm, saveProgress: saveProgress, restoreProgress: restoreProgress, heartRegen: heartRegen, guardedNow: guardedNow, adButtonState: adButtonState, heartSpend: heartSpend, heartGain: heartGain, heartClearRefund: heartClearRefund, heartAdOffered: heartAdOffered, heartAdReward: heartAdReward, heartShopRefill: heartShopRefill, unlockCapState: unlockCapState, freeGate: freeGate, lockedSlots: lockedSlots, unlockGate: unlockGate, unlockHelps: unlockHelps, unlockPrice: unlockPrice, unlockWithCoins: unlockWithCoins, demoStars: demoStars, tutorialRewardCoins: tutorialRewardCoins, jamRetryLabel: jamRetryLabel, heartRefillOffer: heartRefillOffer, clearReward: clearReward, applyRevocation: applyRevocation, spendCoins: spendCoins, grantPack: grantPack, unlimitedOffers: unlimitedOffers, unlimitedEnd: unlimitedEnd, adDayKey: adDayKey, adToday: adToday, adCounter: adCounter, adFinish: adFinish };
-});
-</script>
-<script>
-var RULES = {"schema":"tts.rules/1","gates":{"base":4,"max":8,"lockedInDemo":true},"boardingArea":{"capacity":20,"cols":5,"rows":4},"waitingLine":{"visible":8},"seats":{"S":4,"M":8,"L":12},"planeLengthPt":{"runway":{"S":48,"M":60,"L":76.8},"gate":{"S":48,"M":52.8,"L":57.6}},"directions":["up","down","left","right"],"colors":[{"id":"red","hex":"#E5484D","symbol":"circle","ja":"赤の丸","en":"red circle"},{"id":"blue","hex":"#2F6FED","symbol":"square","ja":"青の四角","en":"blue square"},{"id":"yellow","hex":"#AC7600","symbol":"triangle","ja":"黄色の三角","en":"yellow triangle"},{"id":"green","hex":"#289446","symbol":"star","ja":"緑の星","en":"green star"}],"tokens":{"paper":"#F6F5F1","ink":"#1F1F1D","graphite":"#5B5A56","sky":"#2B5C8A","skyBand":"#E6EFF6","room":"#EEF3F8","gate":"#E4ECF4","runway":"#E6E3DC","runwayEdge":"#CFCBC3","white":"#FFFFFF"},"resolution":{"gateChoice":"lowestFreeIndex","boardingPriority":"gateArrivalOrder","refillSlot":"lowestEmptyIndex","boardWhom":"allMatchingInBoardingArea","tapCheckOrder":["pathClear","freeGate"],"boardWhen":"afterEveryMoveBoardTakeoffRefillUntilStable","noMatchPlaneMayPark":true},"hearts":{"max":5,"regenMinutes":30,"regenClock":"sinceLastBackground","webBackgroundEvents":["visibilitychange","pagehide"],"spentAtStageStart":true,"refundOnClear":"onceIdempotent","quitMidStageCostsHeart":true,"retryMidStageCostsHeart":true,"lostOnlyIfStateUnrestorable":true,"unlimitedHidesHeartNote":true,"quitBeforeFirstMoveCostsHeart":true,"unlimitedConfirmOnlyIfUnlocked":true,"clock":"monotonicInSession_deviceClockAfterReboot_capped_neverPunish_noServerTime","maxCreditPerGapMin":150,"hardCap":"max_everywhere_clearRefund_regen_adReward_shopRefill","regenStopsWhenFull":true,"adOfferedOnlyBelowMax":true,"shopRefill":"toMaxOnly","spentWhen":"stageStartTapped_preStageScreenFree"},"ads":{"rewardedOnly":true,"playerInitiatedOnly":true,"maxSeconds":30,"adCaps":{"heart":5,"unlock":10},"adCapsShared":false,"adResetHour":0,"afterCap":"hideButton","att":false,"personalizedAds":false,"sdk":"AdMobOnlyNoMediation","npa":1,"clock":"sameAsHearts_monotonicInSession_deviceLocalMidnightAfterReboot_noServerTime","priority":["cap","offline","noFill"],"offline":"showButtonDisabled_autoReenable_noCount","noFill":"message_noCount","mediation":false},"clear":{"perfect":"movesLessOrEqualStageReference","comeback":"clearAfterRetry","flights":"cumulativeClears","milestones":[10,25,50,100],"specialPriority":["first","perfect","comeback","milestone"]},"gateUnlock":{"currency":"coins","homeConfirmAfterUnlock":true,"slots":[{"slot":5,"coins":true,"ad":true,"priceCoins":30},{"slot":6,"coins":true,"ad":true,"priceCoins":30},{"slot":7,"coins":true,"ad":true,"priceCoins":30},{"slot":8,"coins":true,"ad":true,"priceCoins":30}],"rule":"everyLockedSlotCoinsOrOneAd_noAdOnlySlots","afterAdCap":"coinsEnough_capText+unlockForNCoinsButton__coinsShort_capTextDMoreCoins+smallEarnByClearing_noButton_noShopLink"},"loginBonus":{"loginResetHour":4},"coins":{"purchasedExpire":false,"packBonus":[30,70],"packBonusCountsAsPaid":true,"refund":"storeKit2RevocationDateOnDevice_subtractPackInclBonus_clamp0_keepProgress_dedupeTransactionIds"},"resume":{"saveAfterEveryMove":true,"format":"moveList","seed":null},"release":{"excludeRegionsAtLaunch":["EEA (EU27 + NO, IS, LI)","UK","CH"],"ump":"later"},"support":{"contactUrl":"TBD","contact":"supportPageFormOnly_externalSafari_noWKWebView","prefill":"appVersionOnly","ledgerExport":"shareSheetOnly_noPresetRecipient"},"tutorialReward":{"coins":100,"coinKind":"free","items":[]},"unlimitedHearts":{"hidesFullRefill":true,"hidesHeartAd":true,"onRevocation":"hearts=max_normalRules_currentStageFinishesNormally","familySharing":false},"clearReward":{"firstClearByStars":[20,25,30],"hardBonus":10,"reclear":5,"minCoins":1},"familySharing":{"allIAP":false,"enableRequiresOwnerApproval":"irreversibleInAppStoreConnect"},"stamps":{"dayResetHourFrom":"loginBonus.loginResetHour"},"iap":{"products":[{"id":"studio.reachhigh.taketothesky.coins100","type":"consumable","coins":100,"bonus":0,"priceJPY":160},{"id":"studio.reachhigh.taketothesky.coins300","type":"consumable","coins":300,"bonus":30,"priceJPY":480},{"id":"studio.reachhigh.taketothesky.coins500","type":"consumable","coins":500,"bonus":70,"priceJPY":800},{"id":"studio.reachhigh.taketothesky.unlimitedhearts","type":"nonConsumable","priceJPY":800}],"heartRefill":{"currency":"coins","price":60,"paidSpentFirst":true,"isIAP":false},"bonusCopy":"factsOnly_noPercent_noStrikethrough","wallet":"paidAndFreeShownSeparately_paidSpentFirst"}};
-var STAGES = [{"schema":"tts.stage/1","name":"ステージ1（デモ）","seed":"demo-v01-s73","verify":{"solvable":true,"solution":["p02","p04","p05","p03","p06","p07","p11","p08","p09","p01","p12","p10"],"explored":12,"randomClearRate":0.5625,"moveRange":{"min":12,"max":12}},"id":1,"board":{"cols":4,"rows":3},"planes":[{"id":"p01","color":"red","size":"L","col":0,"row":0,"dir":"down"},{"id":"p02","color":"blue","size":"S","col":1,"row":0,"dir":"up"},{"id":"p03","color":"yellow","size":"M","col":2,"row":0,"dir":"up"},{"id":"p04","color":"green","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"blue","size":"M","col":0,"row":1,"dir":"left"},{"id":"p06","color":"green","size":"M","col":1,"row":1,"dir":"left"},{"id":"p07","color":"red","size":"S","col":2,"row":1,"dir":"up"},{"id":"p08","color":"yellow","size":"S","col":3,"row":1,"dir":"right"},{"id":"p09","color":"yellow","size":"S","col":0,"row":2,"dir":"left"},{"id":"p10","color":"green","size":"L","col":1,"row":2,"dir":"right"},{"id":"p11","color":"red","size":"M","col":2,"row":2,"dir":"up"},{"id":"p12","color":"blue","size":"S","col":3,"row":2,"dir":"right"}],"passengers":["green","green","green","green","red","red","red","red","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","green","green","green","green","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","red","red","red","red","yellow","yellow","yellow","yellow","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","yellow","yellow","yellow","yellow"]},{"schema":"tts.stage/1","name":"ステージ2（デモ）","seed":"demo-v08-s4756","verify":{"solvable":true,"solution":["p04","p07","p08","p09","p06","p05","p01","p10","p13","p12","p11","p02","p03"],"explored":13,"randomClearRate":0.35,"moveRange":{"min":13,"max":13}},"id":2,"board":{"cols":4,"rows":4},"planes":[{"id":"p01","color":"green","size":"M","col":0,"row":0,"dir":"down"},{"id":"p02","color":"red","size":"S","col":1,"row":0,"dir":"down"},{"id":"p03","color":"blue","size":"L","col":2,"row":0,"dir":"left"},{"id":"p04","color":"yellow","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"red","size":"M","col":0,"row":1,"dir":"right"},{"id":"p06","color":"yellow","size":"M","col":2,"row":1,"dir":"right"},{"id":"p07","color":"green","size":"S","col":3,"row":1,"dir":"up"},{"id":"p08","color":"blue","size":"S","col":0,"row":2,"dir":"down"},{"id":"p09","color":"red","size":"L","col":1,"row":2,"dir":"left"},{"id":"p10","color":"yellow","size":"S","col":3,"row":2,"dir":"up"},{"id":"p11","color":"green","size":"M","col":1,"row":3,"dir":"right"},{"id":"p12","color":"blue","size":"M","col":2,"row":3,"dir":"right"},{"id":"p13","color":"yellow","size":"S","col":3,"row":3,"dir":"up"}],"passengers":["blue","blue","blue","blue","yellow","yellow","yellow","yellow","green","green","green","green","red","red","red","red","red","red","red","red","blue","blue","blue","blue","blue","blue","blue","blue","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","yellow","yellow","yellow","yellow","red","red","red","red","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","blue","blue","blue","blue","green","green","green","green","green","green","green","green","red","red","red","red","green","green","green","green","red","red","red","red","yellow","yellow","yellow","yellow","red","red","red","red"]}], STAGE = STAGES[0];
+})();
+var RULES = {"gates":{"base":4,"max":8,"lockedInDemo":true},"boardingArea":{"capacity":20,"cols":5,"rows":4},"waitingLine":{"visible":8},"seats":{"S":4,"M":8,"L":12},"planeLengthPt":{"runway":{"S":48,"M":60,"L":76.8},"gate":{"S":48,"M":52.8,"L":57.6}},"directions":["up","down","left","right"],"colors":[{"id":"red","hex":"#E5484D","symbol":"circle","ja":"赤の丸","en":"red circle"},{"id":"blue","hex":"#2F6FED","symbol":"square","ja":"青の四角","en":"blue square"},{"id":"yellow","hex":"#AC7600","symbol":"triangle","ja":"黄色の三角","en":"yellow triangle"},{"id":"green","hex":"#289446","symbol":"star","ja":"緑の星","en":"green star"}],"tokens":{"paper":"#F6F5F1","ink":"#1F1F1D","graphite":"#5B5A56","sky":"#2B5C8A","skyBand":"#E6EFF6","room":"#EEF3F8","gate":"#E4ECF4","runway":"#E6E3DC","runwayEdge":"#CFCBC3","white":"#FFFFFF"},"resolution":{"gateChoice":"lowestFreeIndex","boardingPriority":"gateArrivalOrder","refillSlot":"lowestEmptyIndex","boardWhom":"allMatchingInBoardingArea","tapCheckOrder":["pathClear","freeGate"],"boardWhen":"afterEveryMoveBoardTakeoffRefillUntilStable","noMatchPlaneMayPark":true},"hearts":{"max":5,"regenMinutes":30,"spentAtStageStart":true,"quitMidStageCostsHeart":true,"retryMidStageCostsHeart":true,"unlimitedHidesHeartNote":true,"quitBeforeFirstMoveCostsHeart":true,"unlimitedConfirmOnlyIfUnlocked":true,"maxCreditPerGapMin":150,"regenStopsWhenFull":true,"adOfferedOnlyBelowMax":true},"ads":{"maxSeconds":30,"adCaps":{"heart":5,"unlock":10},"adResetHour":0},"clear":{"milestones":[10,25,50,100]},"gateUnlock":{"currency":"coins","slots":[{"slot":5,"coins":true,"ad":true,"priceCoins":30},{"slot":6,"coins":true,"ad":true,"priceCoins":30},{"slot":7,"coins":true,"ad":true,"priceCoins":30},{"slot":8,"coins":true,"ad":true,"priceCoins":30}]},"loginBonus":{"loginResetHour":4,"cardDays":7,"stampCoins":10,"stampCoinsLastDay":30},"coins":{"purchasedExpire":false,"packBonus":[30,70],"packBonusCountsAsPaid":true},"tutorialReward":{"coins":100,"coinKind":"free","items":[]},"unlimitedHearts":{"hidesFullRefill":true,"hidesHeartAd":true},"clearReward":{"firstClearByStars":[20,25,30],"hardBonus":10,"reclear":5,"minCoins":1},"iap":{"products":[{"id":"p1","type":"consumable","coins":100,"bonus":0,"priceJPY":160},{"id":"p2","type":"consumable","coins":300,"bonus":30,"priceJPY":480},{"id":"p3","type":"consumable","coins":500,"bonus":70,"priceJPY":800},{"id":"p4","type":"nonConsumable","priceJPY":800}],"heartRefill":{"currency":"coins","price":60,"paidSpentFirst":true,"isIAP":false}}};
+var STAGES = [{"id":1,"board":{"cols":4,"rows":3},"planes":[{"id":"p01","color":"red","size":"L","col":0,"row":0,"dir":"down"},{"id":"p02","color":"blue","size":"S","col":1,"row":0,"dir":"up"},{"id":"p03","color":"yellow","size":"M","col":2,"row":0,"dir":"up"},{"id":"p04","color":"green","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"blue","size":"M","col":0,"row":1,"dir":"left"},{"id":"p06","color":"green","size":"M","col":1,"row":1,"dir":"left"},{"id":"p07","color":"red","size":"S","col":2,"row":1,"dir":"up"},{"id":"p08","color":"yellow","size":"S","col":3,"row":1,"dir":"right"},{"id":"p09","color":"yellow","size":"S","col":0,"row":2,"dir":"left"},{"id":"p10","color":"green","size":"L","col":1,"row":2,"dir":"right"},{"id":"p11","color":"red","size":"M","col":2,"row":2,"dir":"up"},{"id":"p12","color":"blue","size":"S","col":3,"row":2,"dir":"right"}],"passengers":["green","green","green","green","red","red","red","red","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","green","green","green","green","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","red","red","red","red","yellow","yellow","yellow","yellow","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","yellow","yellow","yellow","yellow"],"moveRange":{"min":12,"max":12}},{"id":2,"board":{"cols":4,"rows":4},"planes":[{"id":"p01","color":"green","size":"M","col":0,"row":0,"dir":"down"},{"id":"p02","color":"red","size":"S","col":1,"row":0,"dir":"down"},{"id":"p03","color":"blue","size":"L","col":2,"row":0,"dir":"left"},{"id":"p04","color":"yellow","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"red","size":"M","col":0,"row":1,"dir":"right"},{"id":"p06","color":"yellow","size":"M","col":2,"row":1,"dir":"right"},{"id":"p07","color":"green","size":"S","col":3,"row":1,"dir":"up"},{"id":"p08","color":"blue","size":"S","col":0,"row":2,"dir":"down"},{"id":"p09","color":"red","size":"L","col":1,"row":2,"dir":"left"},{"id":"p10","color":"yellow","size":"S","col":3,"row":2,"dir":"up"},{"id":"p11","color":"green","size":"M","col":1,"row":3,"dir":"right"},{"id":"p12","color":"blue","size":"M","col":2,"row":3,"dir":"right"},{"id":"p13","color":"yellow","size":"S","col":3,"row":3,"dir":"up"}],"passengers":["blue","blue","blue","blue","yellow","yellow","yellow","yellow","green","green","green","green","red","red","red","red","red","red","red","red","blue","blue","blue","blue","blue","blue","blue","blue","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","yellow","yellow","yellow","yellow","red","red","red","red","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","blue","blue","blue","blue","green","green","green","green","green","green","green","green","red","red","red","red","green","green","green","green","red","red","red","red","yellow","yellow","yellow","yellow","red","red","red","red"],"moveRange":{"min":13,"max":13}}], STAGE = STAGES[0];
 var MOTION = {"schema":"tts.motion/1","move":{"speedPtPerMs":0.8,"minMs":500,"maxMs":1200,"easing":"ease-in-out"},"boarding":{"gatherStaggerMs":40,"gatherMs":300,"lineSpacingPt":21,"lineYOffsetFromGateTopPt":-9,"lineScale":0.75,"staggerMs":100,"stepMs":85,"enterMs":170,"enterPopScale":1.15,"enterEndScale":0.2,"hopHeightPt":4,"hopPeriodMs":150,"planePopScale":1.08,"planePopMs":140,"counterBumpScale":1.25,"counterBumpMs":160},"refill":{"durationMs":320,"staggerMs":40,"easing":"cubic-bezier(.3,.9,.4,1)"},"full":{"badgeText":"満席","badgeMs":220,"pulseMs":380,"pulseScales":[1,1.14,1,1.07,1],"sparkleCount":10,"sparkleFromPt":22,"sparkleToPt":46,"sparkleMs":420},"takeoff":{"climbMs":1050,"accelPower":2,"controlRisePt":230,"exitDxPt":250,"exitMinXPt":450,"exitYPt":-90,"endScale":1.5,"contrailStartU":0.15,"contrailWidthPt":3,"contrailOpacity":0.32,"contrailFadeMs":600,"releaseGateAfterMs":250,"totalMsApprox":1430},"clear":{"startAfterLastLiftoffMs":350,"confettiCount":70,"confettiMs":[1500,2000],"confettiSizePt":[7,11],"confettiSpeedPtPerMs":[0.35,0.8],"confettiSpreadRad":1.1,"gravityPtPerMs2":0.0009,"cardDelayMs":450,"cardPopMs":340,"cardPopFromScale":0.92,"cardEasing":"cubic-bezier(.2,1.3,.4,1)"},"reducedMotion":{"moveCrossfadeMs":200,"boardStaggerMs":60,"boardHopPt":6,"boardHopMs":140,"boardFadeMs":160,"takeoffBadgeHoldMs":300,"takeoffSlidePt":90,"takeoffMs":450,"confetti":false,"cardFadeMs":200}};
-</script>
-<script>
-(function(){
-'use strict';
-var L = window.TTSLogic, R = RULES, S = STAGE, M = MOTION;
-var RM = (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) || /[?&]rm=1/.test(location.search);
+var R = RULES, S = STAGE, M = MOTION;
+var QSTR = L.publicSearch(location.search);
+var CARRY = (function(){ try { var t = sessionStorage.getItem('tts_carry'); sessionStorage.removeItem('tts_carry'); var o = t ? JSON.parse(t) : null; return o && o.v === 1 && Date.now() - o.at >= 0 && Date.now() - o.at < 120000 ? o : null; } catch (e) { return null; } })();
+var RM = (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ;
 var COLOR = {}; R.colors.forEach(function(c){ COLOR[c.id] = c; });
 var SIZE_JA = { S: '小さい', M: '中くらいの', L: '大きい' };
 var DIR_JA = { up: '上向き', down: '下向き', left: '左向き', right: '右向き' };
@@ -803,7 +840,7 @@ function planeAria(c, size, dir){ return L.planeAria(c, size, dir, R.seats[size]
 var DIR_DEG = { up: 0, right: 90, down: 180, left: -90 };
 var app = document.getElementById('app');
 var SVGNS = 'http://www.w3.org/2000/svg';
-var DT_LARGE = /[?&]dt=large/.test(location.search); if (DT_LARGE) app.classList.add('dt-large');
+var DT_LARGE = /[?&]dt=large/.test(QSTR); if (DT_LARGE) app.classList.add('dt-large');
 var SEAT_GLYPH = '<svg viewBox="0 0 7 10" aria-hidden="true"><path fill="#5B5A56" d="M3.5 0.2a2.05 2.05 0 0 1 1.35 3.6C6 4.2 7 5.3 7 6.7V8.6A1.4 1.4 0 0 1 5.6 10H1.4A1.4 1.4 0 0 1 0 8.6V6.7C0 5.3 1 4.2 2.15 3.8A2.05 2.05 0 0 1 3.5 0.2Z"/></svg>';
 var BOARD_K = 1;
 var RW = { x: 16, y: 482, w: 358, h: 308 };
@@ -885,7 +922,8 @@ function build(){
   S.planes.forEach(function(p){
     var c = COLOR[p.color], len = R.planeLengthPt.runway[p.size];
     var e = document.createElement('div'); e.className = 'plane abs'; e.style.width = len + 'px'; e.style.height = len + 'px';
-    e.setAttribute('role', 'button');
+    e.setAttribute('role', 'button'); e.tabIndex = 0;
+    e.addEventListener('keydown', function(ev){ if (ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); onTap(p.id); } });
     e.setAttribute('aria-label', planeAria(c, p.size, p.dir));
     e.innerHTML = '<div class="hit"></div><div class="pop"><div class="body">' + planeBody(c.hex) + '</div><div class="sym">' + planeSym(c.symbol) + '</div></div>';
     var sb = document.createElement('div'); sb.className = 'seat'; sb.setAttribute('aria-hidden', 'true');
@@ -1017,7 +1055,7 @@ function updateCounts(){
   var inSlot = 0, inQ = 0;
   paxWhere.forEach(function(w){ if (w === 'slot') inSlot++; else if (w === 'queue') inQ++; });
   document.getElementById('roomCount').textContent = inSlot + '/' + R.boardingArea.capacity;
-  document.getElementById('waitNum').textContent = STR[LANG].ui.waitN(inQ);
+  var nb = L.unboardedCount(paxWhere), U5 = STR[LANG].ui; document.getElementById('waitNum').innerHTML = '<span aria-hidden="true">' + esc(U5.waitN(nb)) + '</span><span class="sr">' + esc(U5.waitAria(nb)) + '</span>';
   document.getElementById('dots').style.visibility = inQ > R.waitingLine.visible ? '' : 'hidden';
   document.getElementById('nextLbl').style.visibility = inQ ? '' : 'hidden';
 }
@@ -1227,9 +1265,10 @@ function celebrate(){
   CLEAR_TOTAL++; var back = heartRefund();
   var first = !CLEARED_SET[STAGE_N], stars = L.demoStars({ retried: RETRIED, unlocked: GATE_UNLOCKED }), got = L.clearReward(R, { first: first, stars: stars, hard: false }), tut = L.tutorialRewardCoins(R, { first: first, stage: STAGE_N, given: TUT_REWARD_GIVEN });
   if (first && STAGE_N === 1) TUT_REWARD_GIVEN = true;
+  var clearedBefore = CLEARED; CLEAR_STARS = stars;
   CLEARED_SET[STAGE_N] = true; CLEARED = Math.max(CLEARED, STAGE_N); WALLET = { paid: WALLET.paid, free: WALLET.free + got + tut }; CLEAR_COINS = got; CLEAR_TUT = tut; renderClearCoins(got, tut);
-  renderClear(pickClear(), back); RETRIED = false;
-  if (RM){ scrim.classList.add('on'); card.classList.add('on'); card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: M.reducedMotion.cardFadeMs }); return; }
+  renderClear(pickClear(clearedBefore), back); RETRIED = false;
+  if (RM){ scrim.classList.add('on'); card.classList.add('on'); setInert(); document.getElementById('cardNext').focus({ preventScroll: true }); card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: M.reducedMotion.cardFadeMs }); return; }
   var rnd = L.mulberry32(20261103), cols = R.colors, origin = { x: 195, y: 330 };
   for (var i = 0; i < c.confettiCount; i++){
     var col = cols[i % cols.length], sz = c.confettiSizePt[0] + rnd() * (c.confettiSizePt[1] - c.confettiSizePt[0]);
@@ -1246,31 +1285,32 @@ function celebrate(){
     el.animate(kf, { duration: dur, easing: 'linear', fill: 'forwards' });
   }
   setTimeout(function(){
-    scrim.classList.add('on'); card.classList.add('on');
+    scrim.classList.add('on'); card.classList.add('on'); setInert(); document.getElementById('cardNext').focus({ preventScroll: true });
     card.animate([{ opacity: 0, transform: 'scale(' + c.cardPopFromScale + ')' }, { opacity: 1, transform: 'scale(1)' }], { duration: c.cardPopMs, easing: c.cardEasing });
   }, c.cardDelayMs);
 }
-var LANG = /[?&]lang=en/.test(location.search) ? 'en' : 'ja';
+var LANG = /[?&]lang=en/.test(QSTR) ? 'en' : 'ja';
+document.title = LANG === 'en' ? 'Take to the sky demo v0.9.2' : 'Take to the sky デモ v0.9.2';
 var STR = {
   ja: {
     tut: {
       tone: 'guide',
       steps: [
-        '乗客と同じ色の飛行機をタップできるよ',
-        'ゲートに入ると乗客が乗り込むよ。数字は乗れる人数だよ',
+        '乗客と同じ色の飛行機をタップしよう。違う色でもゲートには入るよ',
+        'ゲートに入ると、同じ色の乗客が乗り込むよ。数字は乗れる人数だよ',
         '飛行機は前にだけ進むよ。横や下を向いていても、前が空いていれば外を回ってゲートへ行けるよ',
         '前がふさがった飛行機は動かせないよ。先に別の飛行機を動かして道をあけられるよ',
         '満席になると離陸するよ。待っている乗客がみんな乗ればクリア'
       ],
-      note1: '〇の飛行機をタップすると次に進むよ',
-      note3: '〇の飛行機をタップしてみてね',
+      note1: '光っている飛行機をタップすると次に進むよ',
+      note3: '光っている飛行機をタップしてみてね',
       next: '次へ', start: 'はじめる', skip: 'スキップ', sep: '。',
       stepLabel: function(n, all){ return n + ' / ' + all; },
       stepAria: function(n, all){ return 'ステップ ' + n + '/' + all; },
       tapLabel: function(c, size){ return c.ja + '、' + SIZE_JA[size] + '飛行機をタップする'; }
     },
-    why: { tone: 'guide', 'blocked': '前がふさがってるよ', 'no-gate': '空いてるゲートがないよ' },
-    clear: { tone: 'guide', next: '次のステージへ', head: '全員搭乗！',
+    why: { tone: 'guide', 'blocked': '前がふさがってるよ', 'no-gate': '空いてるゲートがないよ', waiting: 'この色の乗客を待っているよ' },
+    clear: { tone: 'guide', next: '次のステージへ', last: 'ホームへ', end: 'このデモはここまでだよ。ご搭乗ありがとう', stars: function(n){ return '星3つ中' + n + 'つ'; }, starNote: ['やり直さずにクリアすると星3つ。', '星が多いほど、はじめてのクリアのコインが増えるよ'],   head: '全員搭乗！',
       regular: [
         { id: 'nice', big: 'Nice flight.', small: 'いい飛び立ちだったね' },
         { id: 'wheels', big: 'Wheels up.', small: 'みんな笑顔で、空の上へ' },
@@ -1285,26 +1325,26 @@ var STR = {
         milestone: { big: function(n){ return n + ' flights flown.'; }, small: function(n){ return n + '便目も、いい空だったね'; } }
       } },
     board: { tone: 'guide', full: 'みんな乗ったよ', takeoff: '離陸どうぞ', vo: '満席、離陸どうぞ' },
-    stamp: { tone: 'guide', head: 'Have a nice trip.', sub: '良い旅を。スタンプが1つ増えたよ',
-      dayChange: 'スタンプは、朝4時に新しい日になるよ', tonight: '今夜の分も、今日のスタンプに入っているよ',
+    stamp: { tone: 'guide', head: 'Have a nice trip.', sub: 'いい旅を。スタンプが1つ増えたよ',
+      dayChange: 'スタンプは、朝4時に新しい日になるよ', tonight: '朝4時までは、前の日の分として押されるよ',
       doneHead: 'Frequent flyer!', doneSub: '搭乗券がいっぱいに。いい旅の記録だね' },
-    title: { tone: 'guide', welcome: 'ようこそ、空の玄関口へ', vo: 'Take to the sky。ようこそ、空の玄関口へ' },
+    title: { tone: 'guide', welcome: 'ようこそ、空の玄関口へ', vo: 'Take to the sky。ようこそ、空の玄関口へ', demo: 'ステージ2まで遊べるデモだよ。広告と購入は本物ではなく、お金はかからないよ' },
     greet: { tone: 'guide',
       morning: 'おはよう。ゲートはもう開いてるよ', day: 'こんにちは。ひと便、飛ばしていく？', evening: 'おつかれさま。夕方の便も出せるよ', night: '夜の便も出ているよ。のんびりどうぞ',
       back: 'おかえり。滑走路は整えてあるよ',
       back14: function(n){ return 'おかえり。続きはステージ' + n + 'からだよ'; } },
     ad: { tone: 'guide',
       before: '広告が流れるよ（30秒以内）。最後まで見ると、ハートが1つ増えるよ',
-      remaining: function(n){ return '今日はあと' + n + '回'; },
+      remaining: function(n){ return '今日はあと' + n + '回。夜0時にまた見られるよ'; },
       heartCap: '今日のハートの広告はここまでだよ。夜0時にまた見られるよ',
-      unlockCap: '今日はこの広告での解除はここまでだよ。コインでも開けられるよ',
-      unlockCapShort: function(d){ return '今日はこの広告での解除はここまでだよ。あとコイン' + d + '枚で開けられるよ'; }, earnByClearing: 'コインは、ステージをクリアするとたまるよ',
+      unlockCap: '今日は広告でゲートを開けるのはここまでだよ。コインでも開けられるよ',
+      unlockCapShort: function(d){ return '今日は広告でゲートを開けるのはここまでだよ。あとコイン' + d + '枚で開けられるよ'; }, earnByClearing: 'コインは、ステージをクリアするとたまるよ',
       coinUnlock: function(n){ return 'コイン' + n + '枚で開ける'; },
       noFill: '今は広告を用意できなかったよ。少したってから試してみてね', offline: 'インターネットにつながると、広告を見られるよ'   },
     home: { tone: 'guide', label: 'ホーム',
-      q: 'ホームに戻る？', body: 'ここでやめると、使ったハート1つは戻らないよ', unlocked: '開けた枠も元に戻るよ', go: 'ホームに戻る', stay: '続ける',
+      q: 'ホームに戻る？', body: 'ここでやめると、使ったハート1つは戻らないよ', unlocked: '開けたゲートも元に戻るよ', go: 'ホームに戻る', stay: '続ける',
       retryQ: 'やり直す？', retryBody: '使ったハートは戻らず、新しくハートを1つ使うよ', retryGo: 'やり直す',
-      unlimited: 'ハートは無制限だから減らないよ。開けた枠も元に戻るよ' },
+      unlimited: 'ハートは無制限だから減らないよ。開けたゲートも元に戻るよ' },
     heart: { tone: 'guide', tip: 'ステージを始めるとハートを1つ使うよ。クリアすると戻ってくるよ',
       back: 'ハートが戻ったよ', inUse: '使用中',
       resume: '続きから遊べるよ', restoreFail: '前回の続きを戻せなかったので、ハートが1つ減ったよ',
@@ -1319,75 +1359,77 @@ var STR = {
       pending: [] },
     unlock: { tone: 'guide',
       head: function(g){ return 'ゲートA' + (g + 1) + 'を開ける'; },
-      lockAria: function(g){ return 'ゲートA' + (g + 1) + '、閉まっている枠。開け方を選ぶ'; },
-      guide: '広告を見ると、この枠を開けられるよ', guideBoth: '広告かコインで、この枠を開けられるよ',
+      lockAria: function(g){ return 'ゲートA' + (g + 1) + '、閉まっている。開け方を選ぶ'; },
+      guide: '広告を見ると、このゲートを開けられるよ', guideBoth: '広告かコインで、このゲートを開けられるよ',
       adBtn: '広告を見て開ける',
       short: function(d){ return 'あとコイン' + d + '枚で開けられるよ'; },
       balAria: function(w){ return '買ったコイン' + w.paid + '枚、もらったコイン' + w.free + '枚'; },
-      confirmQ: function(n){ return 'コイン' + n + '枚で開ける？'; }, confirmBody: '開けた枠は、このプレイのあいだだけ使えるよ', confirmPaid: '買ったコインから先に使うよ', confirmGo: '開ける', confirmNo: 'やめる',
+      confirmQ: function(n){ return 'コイン' + n + '枚で開ける？'; }, confirmBody: '開けたゲートは、このプレイのあいだだけ使えるよ', confirmPaid: '買ったコインから先に使うよ', confirmGo: '開ける', confirmNo: 'やめる',
       done: function(g){ return 'ゲートA' + (g + 1) + 'を開けたよ'; },
       adEarly: '最後まで見ると開けられるよ。今回は閉じたままだよ' },
     heartOut: { tone: 'guide',
       head: 'ハートが0になったよ', regen: function(t){ return '30分ごとに1つ回復するよ。次の1つまで ' + t; },
       wait: '回復を待つ', ad: '広告を見て1つもらう', shop: 'ショップ', optional: '見るかどうかは自由だよ。30秒以内',
-      got: 'ハートを1つ受け取ったよ', early: '最後まで見ると受け取れるよ。今回はなしだよ', full: 'ハートが満タンだよ' },
+      got: 'ハートが1つ増えたよ',
+      early: '最後まで見ると受け取れるよ。今回はなしだよ', full: 'ハートが満タンだよ' },
     demo: { tone: 'official',
       tag: 'デモ', banner: 'デモです。実際の購入は行われず、料金はかかりません。',
-      adTitle: 'デモの広告', adBody: 'これは実際の広告ではないよ。3秒で終わるよ', adLeft: function(n){ return 'あと' + n + '秒'; }, adDone: '見終わったよ', adCloseAria: '広告を閉じる',
+      adTitle: 'デモの広告', adBody: 'これは実際の広告ではないよ。3秒で終わるよ', adLeft: function(n){ return 'あと' + n + '秒'; }, adDone: '見終わったよ', adCloseAria: '広告を閉じる', adClose: '閉じる', adGetHeart: 'ハートが1つ増えるよ', adGetGate: function(g){ return 'ゲートA' + (g + 1) + 'が開くよ'; },
       buyNote: 'デモのため、実際の購入は行われません。料金はかかりません。', buy: '購入する', cancel: 'やめる' },
-    coins: { tone: 'guide', clear: function(n){ return 'もらったコイン +' + n; }, vo: function(n){ return 'もらったコイン' + n + '枚'; } },
+    coins: { tone: 'guide', clear: function(n){ return 'もらったコイン +' + n; }, vo: function(n){ return 'もらったコイン、' + n + '枚'; }, tut: function(n){ return 'チュートリアルのごほうび +' + n; }, tutVo: function(n){ return 'チュートリアルのごほうび、' + n + '枚'; } },
     shopScr: { tone: 'official',
       lead: '必要なときに、必要なぶんだけ', minors: '未成年の方は、保護者の方の同意を得てから購入してください。',
       have: '持ち物', coinsGrp: 'コイン', heartsGrp: 'ハート',
-      pack: function(n){ return 'コイン' + n + '枚'; }, packSub: function(c, b){ return c + '枚＋おまけ' + b + '枚'; },
+      pack: function(n){ return 'コイン' + n + '枚'; },
       unlimited: 'ハート無制限', unlimitedSub: 'ハートが減らなくなります。', owned: 'ハート無制限は、すでに使えます。',
       refill: 'ハート全回復', refillSub: 'ハートが5つまで戻るよ', refillBtn: function(n){ return 'コイン' + n + '枚で回復する'; },
+      refillQ: function(n){ return 'コイン' + n + '枚で回復する？'; }, refillGo: '回復する', refillNo: 'やめる',
       full: 'ハートは満タンだよ', short: function(d){ return 'あとコイン' + d + '枚で回復できるよ'; }, refillDone: 'ハートが満タンになったよ',
       okCoins: function(n){ return '購入が完了しました。買ったコイン' + n + '枚を追加しました。'; },
       okUnlimited: '購入が完了しました。ハート無制限が使えます。',
       failed: '購入を完了できませんでした。料金は請求されていません。時間をおいて、もう一度お試しください。', pending: '購入の承認を待っています。承認されると自動で追加されます。',
-      offline: 'インターネットに接続されていません。接続を確認して、もう一度お試しください。',
-      links: ['コインと購入について', '特定商取引法に基づく表記', '利用規約', 'プライバシーポリシー'], linkSoon: 'デモにはありません' },
+      coinsAbout: 'コインと購入について', links: ['プライバシーポリシー', '利用規約', '特定商取引法に基づく表記', 'お問い合わせ'], linkSoon: 'デモにはありません' },
     settingsScr: { tone: 'official',
-      music: '音楽', sfx: '効果音', haptics: '振動', replayTut: 'チュートリアルをもう一度見る', soonAria: function(k){ return k + '、オフ、準備中'; },
+      soundGrp: '音と振動', sound: '音楽、効果音、振動は、アプリ版で入るよ', replayTut: 'チュートリアルをもう一度見る',
       lang: '言語', langs: { ja: '日本語', en: 'English' }, restoreGrp: '購入', aboutGrp: 'このアプリについて',
-      links: ['プライバシーポリシー', '利用規約', '特定商取引法に基づく表記', 'お問い合わせ'], linkSoon: 'デモにはありません', madeBy: '制作', madeByVal: 'Reach High Studio', version: 'バージョン', versionVal: 'デモ v0.8（ステージ2まで）', noSave: 'このデモは、遊んだ記録を保存しないよ' },
+      links: ['プライバシーポリシー', '利用規約', '特定商取引法に基づく表記', 'お問い合わせ'], linkSoon: 'デモにはありません', madeBy: '制作', madeByVal: 'Reach High Studio', version: 'バージョン', versionVal: 'デモ v0.9.2（ステージ2まで）', noSave: 'このデモは、進み具合とコインを保存しません。' },
     ui: {
-      titleAria: '扉絵', about: 'このアプリについて', settingsSoon: '設定（準備中）', settings: '設定', shopSub: 'コインとハート', jamOpen: '枠を開ける',   start: 'スタート', credit: 'Reach High Studio　デモ v0.8',
-      home: 'ホーム', route: '飛行ルート', stamps: 'スタンプ', day3sample: '3日目（表示例）', profile: 'マイページ', logItems: '記録と持ち物', shop: 'ショップ', soon: '準備中', shopSoon: 'ショップ（準備中）',
-      playStage1: 'ステージ1を遊ぶ', play: 'プレイ', back: '戻る', backHome: '戻る（ホームへ）', flightLog: '記録', stagesCleared: 'クリアしたステージ', nextStage: '次のステージ',
-      myResults: 'このデモで遊んだ結果だよ', items: '持ち物', sample: '表示例', sampleDemo: '表示例（デモ）', paidCoins: '買ったコイン', freeCoins: 'もらったコイン', hearts: 'ハート',
-      notInGame: 'コインとハートは、まだゲームに入っていないよ。数字は見た目の例だよ', stampCard: 'スタンプカード', stampHow: ['毎日最初に開いたとき、自動で押されるよ。', '休んだ日があっても、続きから押せるよ'],
-      saving: '記録の保存', icloud: '記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。', noSave: 'このデモでは保存しません。ページを閉じると最初に戻ります。',
-      newCard: '7日目のあとは、新しいカードになるよ', close: '閉じる', madeBy: '制作：Reach High Studio', demoVer: 'デモ v0.8（ステージ2まで遊べるよ）',
-      restart: 'やり直す', stuckHead: 'ここで渋滞みたい。作戦を立て直そうか', tryAgain: 'やり直す', tryAgainHeart: 'やり直す（ハートを1つ使うよ）', waiting: '待っている人', next: '次', boardingArea: '搭乗口', gateOpen: '空き', jamClose: '閉じる',
-      waitN: function(n){ return n + '人'; }, routeN: function(n){ return n + 'ステージ クリア'; }, nextN: function(n){ return '次は ' + n; }, stageN: function(n){ return 'ステージ' + n; },
+      titleAria: '扉絵', about: 'このアプリについて', settings: '設定', shopSub: 'コインとハート', jamOpen: 'ゲートを開ける', jamNote: 'ここでやめると、使ったハートは戻らないよ',   start: 'スタート', credit: 'Reach High Studio　デモ v0.9.2',
+      home: 'ホーム', route: '飛行ルート', stamps: 'スタンプ', profile: 'マイページ', logItems: '記録と持ち物', shop: 'ショップ',
+      play: 'プレイ', back: '戻る', backHome: 'ホームに戻る', flightLog: '記録', stagesCleared: 'クリアしたステージ', nextStage: '次のステージ',
+      myResults: 'このデモで遊んだ結果だよ', items: '持ち物', paidCoins: '買ったコイン（有料コイン）', freeCoins: 'もらったコイン（無料コイン）', paidShort: '買ったコイン', freeShort: 'もらったコイン', hearts: 'ハート',
+      coinsHead: 'コインについて', coinsPaid: '買ったコイン（有料コイン）：ショップで買ったコインだよ。先に使われるよ', coinsFree: 'もらったコイン（無料コイン）：クリアやスタンプでもらったコインだよ', coinsOpen: 'コインについて',
+      stampCard: 'スタンプカード', stampHow: ['毎日、最初にゲームを開いたとき、自動で押されるよ。', '休んだ日があっても、続きから押せるよ'],
+      saving: '記録の保存', saveNote: 'アプリでは、記録はお使いの iCloud に自動で保存されます。ログインや登録はありません。このデモでは、進み具合、コイン、ハートは保存されず、ページを閉じると最初に戻ります。スタンプの日付と、一度見た案内だけは、このブラウザに残ります。',
+      newCard: '7日目のあとは、新しいカードになるよ', close: '閉じる', madeBy: '制作：Reach High Studio', demoVer: 'デモ v0.9.2（ステージ2まで遊べるよ）',
+      restart: 'やり直す', stuckHead: 'ここで渋滞みたい。作戦を立て直そうか', tryAgain: 'やり直す', tryAgainHeart: 'やり直す（ハートを1つ使うよ）', waiting: '搭乗待ち', waitAria: function(n){ return 'まだ乗っていない人、' + n + '人'; }, next: '次',   boardingArea: '搭乗口', gateOpen: '空き', jamClose: '閉じる',
+      waitN: function(n){ return n + '人'; }, routeN: function(n){ return n + 'ステージ クリア'; }, nextN: function(n){ return '次は ' + n; }, routeEnd: 'デモはここまで', routeEndAria: function(c){ return '飛行ルート：' + c + 'ステージ クリア。このデモはここまで'; }, dayN: function(n){ return n + '日目'; }, stageN: function(n){ return 'ステージ' + n; },
       routeAria: function(c, n){ return '飛行ルート：' + c + 'ステージ クリア、次はステージ' + n; }, playAria: function(n){ return 'プレイ、ステージ' + n; }, stageSoonAria: function(n){ return 'ステージ' + n + '、準備中'; },
-      stageSoon: function(n, last){ return 'ステージ' + n + 'は準備中だよ。このデモはステージ' + last + 'までだよ'; }, playStageN: function(n){ return 'ステージ' + n + 'を遊ぶ'; },   shopToast: 'ショップは準備中だよ（デモ）', settingsToast: '設定は準備中だよ（デモ）',
+      stageSoon: function(n, last){ return 'ステージ' + n + 'は準備中だよ。このデモはステージ' + last + 'までだよ'; }, playStageN: function(n){ return 'ステージ' + n + 'を遊ぶ'; },
       hudAria: function(w, h, u){ return L.ariaJoin([u ? 'ハート無制限' : 'ハート 5つ中' + h + 'つ', '買ったコイン' + w.paid + '枚、もらったコイン' + w.free + '枚'], 'ja'); }, coinVal: function(n){ return n + '枚'; },
       rowAria: function(k, v){ return k + '：' + v; }, heartsVal: function(n){ return '5つ中' + n + 'つ'; }, itemsNote: 'このデモの中だけのコインとハートだよ。実際のお金は使わないよ',   stageUnit: 'ステージ',
-      bp: { top: '搭乗券', f: ['便', 'ゲート', '特典', '日付'], coins: 'コイン', day: function(n){ return n + '日目'; }, today: '・今日', todayOnly: false, stamp: '出発', sum: function(n){ return '今日は' + n + '日目　もらったコイン +' + L.stampCoins(n); },
-        aria: function(n){ return L.stampAria(n, 'ja'); } } },
+      bp: { top: '搭乗券', f: ['便', 'ゲート', '特典', '日付'], coins: 'コイン', day: function(n){ return n + '日目'; }, today: '・今日', todayOnly: false, stamp: '出発', sum: function(n){ return '今日は' + n + '日目　もらったコイン +' + L.stampCoins(n, R); },
+        aria: function(n){ return L.stampAria(n, 'ja', R); } } },
   },
   en: {
     tut: {
       tone: 'guide',
       steps: [
-        'Tap a plane that matches a passenger’s color.',
-        'When a plane pulls into a gate, passengers hop on. The number shows how many seats it has.',
+        'Tap a plane that matches a passenger’s color. Other colors can still take a gate.',
+        'When a plane pulls into a gate, passengers of its color hop on. The number shows how many seats it has.',
         'Planes only move forward. Facing sideways or down? With a clear path, they taxi around to a gate.',
         'A plane can’t move if something’s in its way. Move another plane first to clear the path.',
         'Full planes take off. Board everyone who’s waiting to clear the stage.'
       ],
-      note1: 'Tap the circled plane to continue.',
-      note3: 'Tap the circled plane to try it.',
+      note1: 'Tap the highlighted plane to continue.',
+      note3: 'Tap the highlighted plane to try it.',
       next: 'Next', start: 'Let’s go', skip: 'Skip', sep: ' ',
       stepLabel: function(n, all){ return n + ' / ' + all; },
       stepAria: function(n, all){ return 'Step ' + n + ' of ' + all; },
       tapLabel: function(c, size){ return 'Tap the ' + { S: 'small', M: 'medium', L: 'large' }[size] + ' ' + c.en + ' plane'; }
     },
-    why: { tone: 'guide', 'blocked': 'Something’s in the way', 'no-gate': 'No open gates right now' },
-    clear: { tone: 'guide', next: 'Next stage', head: null,
+    why: { tone: 'guide', 'blocked': 'Something’s in the way', 'no-gate': 'No open gates right now', waiting: 'Waiting for its passengers' },
+    clear: { tone: 'guide', next: 'Next stage', last: 'Go to Home', end: 'That’s the end of the demo. Thanks for flying with us.', stars: function(n){ return n + ' of 3 stars'; }, starNote: ['Clear without restarting for 3 stars.', 'More stars, more coins on your first clear.'],   head: null,
       regular: [
         { id: 'nice', big: 'Nice flight!', small: 'Every plane took off smoothly' },
         { id: 'wheels', big: 'Wheels up!', small: 'Everyone’s on their way' },
@@ -1402,20 +1444,20 @@ var STR = {
         milestone: { big: function(n){ return n + ' flights flown!'; }, small: function(){ return 'And the sky keeps getting better'; } }
       } },
     board: { tone: 'guide', full: 'All aboard', takeoff: 'Cleared for takeoff', vo: 'All aboard, cleared for takeoff' },
-    stamp: { tone: 'guide', head: 'Have a nice trip.', sub: 'One more stamp in your passport', doneHead: 'Frequent flyer!', doneSub: 'A full card of good trips.', dayChange: 'Stamps start a new day at 4 a.m.', tonight: 'Tonight still counts as today.' },
-    title: { tone: 'guide', welcome: 'Welcome aboard.', vo: 'Take to the sky. Welcome aboard.' },
+    stamp: { tone: 'guide', head: 'Have a nice trip.', sub: 'One more stamp on your card.', doneHead: 'Frequent flyer!', doneSub: 'A full card of good trips.', dayChange: 'Stamps start a new day at 4 a.m.', tonight: 'Until 4 a.m., it counts as the day before.' },
+    title: { tone: 'guide', welcome: 'Welcome aboard.', vo: 'Take to the sky. Welcome aboard.', demo: 'A demo up to stage 2. Ads and purchases aren’t real, and nothing is charged.' },
     greet: { tone: 'guide',
       morning: 'Good morning. The gates are open.', day: 'Hi there. Time for a quick flight?', evening: 'Long day? The evening flights are ready.', night: 'Night flights are running. Take it easy.',
       back: 'Welcome back. The runway’s all set.',
       back14: function(n){ return 'Welcome back. You’re on stage ' + n + '.'; } },
     ad: { tone: 'guide',
       before: 'An ad will play (30 seconds or less). Watch it to the end and you’ll get 1 heart.',
-      remaining: function(n){ return n + ' left today'; },
+      remaining: function(n){ return n + ' left today. More at midnight.'; },
       heartCap: 'That’s all the ads for today. Your hearts will refill over time.',
-      unlockCap: 'That’s all the unlock ads for today. You can also unlock it with coins.', unlockCapShort: function(d){ return 'That’s all the unlock ads for today. ' + (d === 1 ? '1 more coin' : d + ' more coins') + ' to unlock it.'; }, earnByClearing: 'You earn coins by clearing stages.', coinUnlock: function(n){ return 'Unlock for ' + n + (n === 1 ? ' coin' : ' coins'); }, noFill: 'No ad is ready right now. Try again in a little while.', offline: 'Connect to the internet to watch an ad.' },
-    home: { tone: 'guide', label: 'Home', q: 'Head home?', body: 'If you stop now, the heart you used won’t come back.', unlocked: 'Opened spots will reset too.', go: 'Go home', stay: 'Keep playing',
+      unlockCap: 'That’s all the gate ads for today. You can still open it with coins.', unlockCapShort: function(d){ return 'That’s all the gate ads for today. ' + (d === 1 ? '1 more coin' : d + ' more coins') + ' to open it.'; }, earnByClearing: 'You earn coins by clearing stages.', coinUnlock: function(n){ return 'Open for ' + n + (n === 1 ? ' coin' : ' coins'); }, noFill: 'No ad is ready right now. Try again in a little while.', offline: 'Connect to the internet to watch an ad.' },
+    home: { tone: 'guide', label: 'Home', q: 'Head Home?', body: 'If you stop now, the heart you used won’t come back.', unlocked: 'Opened gates will reset too.', go: 'Go Home', stay: 'Keep playing',
       retryQ: 'Restart?', retryBody: 'The heart you used won’t come back, and restarting uses 1 more.', retryGo: 'Restart',
-      unlimited: 'Your hearts are unlimited, so none are used. Opened spots will reset too.' },
+      unlimited: 'Your hearts are unlimited, so none are used. Opened gates will reset too.' },
     heart: { tone: 'guide', tip: 'Starting a stage uses 1 heart. Clear it and you’ll get it back.', back: 'Your heart is back.', inUse: 'in use',
       resume: 'Pick up where you left off.', restoreFail: 'We couldn’t restore your last stage, so 1 heart was used.',
       hud: function(n, u){ return 'Hearts: ' + n + ' of 5' + (u ? ', 1 in use' : ''); }, hudUnlimited: 'Unlimited Hearts' },
@@ -1425,47 +1467,48 @@ var STR = {
       none: 'No purchases to restore. Make sure you’re signed in with the Apple Account you used to buy.', failed: 'We couldn’t restore your purchases. Check your internet connection and try again.', retry: 'Try Again', close: 'Close',
       pending: [] },
     unlock: { tone: 'guide', head: function(g){ return 'Open gate A' + (g + 1); }, lockAria: function(g){ return 'Gate A' + (g + 1) + ', locked. Choose how to open it'; },
-      guide: 'Watch an ad to open this spot.', guideBoth: 'Open this spot with an ad or coins.', adBtn: 'Watch an ad to open', short: function(d){ return (d === 1 ? '1 more coin' : d + ' more coins') + ' to unlock it.'; },
+      guide: 'Watch an ad to open this gate.', guideBoth: 'Open this gate with an ad or coins.', adBtn: 'Watch an ad to open', short: function(d){ return (d === 1 ? '1 more coin' : d + ' more coins') + ' to open it.'; },
       balAria: function(w){ return (w.paid === 1 ? '1 purchased coin' : w.paid + ' purchased coins') + ', ' + (w.free === 1 ? '1 earned coin' : w.free + ' earned coins'); },
-      confirmQ: function(n){ return 'Unlock for ' + n + (n === 1 ? ' coin?' : ' coins?'); }, confirmBody: 'The spot stays open for this play only.', confirmPaid: 'Purchased coins are used first.', confirmGo: 'Unlock', confirmNo: 'Cancel',
-      done: function(g){ return 'Gate A' + (g + 1) + ' is open.'; }, adEarly: 'Ad closed early. The spot stays locked this time.' },
+      confirmQ: function(n){ return 'Open for ' + n + (n === 1 ? ' coin?' : ' coins?'); }, confirmBody: 'This gate stays open for this play only.', confirmPaid: 'Purchased coins are used first.', confirmGo: 'Open', confirmNo: 'Cancel',
+      done: function(g){ return 'Gate A' + (g + 1) + ' is open.'; }, adEarly: 'Ad closed early. The gate stays closed this time.' },
     heartOut: { tone: 'guide', head: 'You’re out of hearts.', regen: function(t){ return 'You get 1 back every 30 minutes. Next one in ' + t + '.'; },
       wait: 'Wait', ad: 'Watch an ad for 1 heart', shop: 'Shop', optional: 'Totally optional. 30 seconds or less.',
       got: 'You got 1 heart.', early: 'The ad was closed early, so no heart this time.', full: 'Hearts are full.' },
     demo: { tone: 'official', tag: 'Demo', banner: 'Demo. No real purchase is made and you won’t be charged.',
-      adTitle: 'Demo ad', adBody: 'This isn’t a real ad. It ends in 3 seconds.', adLeft: function(n){ return n === 1 ? '1 second left' : n + ' seconds left'; }, adDone: 'Ad finished.', adCloseAria: 'Close ad',
+      adTitle: 'Demo ad', adBody: 'This isn’t a real ad. It ends in 3 seconds.', adLeft: function(n){ return n === 1 ? '1 second left' : n + ' seconds left'; }, adDone: 'Ad finished.', adCloseAria: 'Close ad', adClose: 'Close', adGetHeart: 'You’ll get 1 heart.', adGetGate: function(g){ return 'Gate A' + (g + 1) + ' will open.'; },
       buyNote: 'This is a demo. No real purchase is made, and you won’t be charged.', buy: 'Buy', cancel: 'Cancel' },
-    coins: { tone: 'guide', clear: function(n){ return 'Earned coins +' + n; }, vo: function(n){ return n === 1 ? '1 earned coin.' : n + ' earned coins.'; } },
+    coins: { tone: 'guide', clear: function(n){ return 'Earned coins +' + n; }, vo: function(n){ return 'Earned coins: ' + n + '.'; }, tut: function(n){ return 'Tutorial reward +' + n; }, tutVo: function(n){ return 'Tutorial reward: ' + (n === 1 ? '1 coin.' : n + ' coins.'); } },
     shopScr: { tone: 'official', lead: 'Only what you need, when you need it.', minors: 'If you are a minor, please get permission from a parent or guardian before making a purchase.',
       have: 'Items', coinsGrp: 'Coins', heartsGrp: 'Hearts',
-      pack: function(n){ return n + ' coins'; }, packSub: function(c, b){ return c + ' + ' + b + ' bonus'; },
+      pack: function(n){ return n + ' coins'; },
       unlimited: 'Unlimited Hearts', unlimitedSub: 'Your hearts never run out.', owned: 'Unlimited Hearts is already active.',
       refill: 'Full heart refill', refillSub: 'Refills your hearts to 5.', refillBtn: function(n){ return 'Refill for ' + n + (n === 1 ? ' coin' : ' coins'); },
+      refillQ: function(n){ return 'Refill for ' + n + (n === 1 ? ' coin?' : ' coins?'); }, refillGo: 'Refill', refillNo: 'Cancel',
       full: 'Your hearts are full.', short: function(d){ return (d === 1 ? '1 more coin' : d + ' more coins') + ' to refill.'; }, refillDone: 'Your hearts are full.',
       okCoins: function(n){ return 'Purchase complete. ' + n + ' purchased coins have been added.'; },
       okUnlimited: 'Purchase complete. Unlimited Hearts is active.',
       failed: 'The purchase couldn’t be completed. You haven’t been charged. Please try again later.', pending: 'Your purchase is waiting for approval. It’ll be added automatically once approved.',
-      offline: 'You’re not connected to the internet. Please check your connection and try again.',
-      links: ['About coins and purchases', 'Legal notice', 'Terms of use', 'Privacy policy'], linkSoon: 'Not in the demo' },
-    settingsScr: { tone: 'official', music: 'Music', sfx: 'Sound effects', haptics: 'Haptics', replayTut: 'Replay tutorial', soonAria: function(k){ return k + ', off, coming soon'; },
+      coinsAbout: 'About coins and purchases', links: ['Privacy policy', 'Terms of use', 'Legal notice', 'Contact us'], linkSoon: 'Not in the demo' },
+    settingsScr: { tone: 'official', soundGrp: 'Sound and haptics', sound: 'Music, sound effects and haptics are coming in the app.', replayTut: 'Replay tutorial',
       lang: 'Language', langs: { ja: '日本語', en: 'English' }, restoreGrp: 'Purchases', aboutGrp: 'About this app',
-      links: ['Privacy policy', 'Terms of use', 'Legal notice', 'Contact us'], linkSoon: 'Not in the demo', madeBy: 'Made by', madeByVal: 'Reach High Studio', version: 'Version', versionVal: 'Demo v0.8 (stages 1–2)', noSave: 'This demo doesn’t save your progress.' },
+      links: ['Privacy policy', 'Terms of use', 'Legal notice', 'Contact us'], linkSoon: 'Not in the demo', madeBy: 'Made by', madeByVal: 'Reach High Studio', version: 'Version', versionVal: 'Demo v0.9.2 (stages 1–2)', noSave: 'This demo doesn’t save your progress or coins.' },
     ui: {
-      titleAria: 'Title screen', about: 'About this app', settingsSoon: 'Settings (coming soon)', settings: 'Settings', shopSub: 'Coins and hearts', jamOpen: 'Open a spot', start: 'Start', credit: 'Reach High Studio　Demo v0.8',
-      home: 'Home', route: 'Flight route', stamps: 'Stamps', day3sample: 'Day 3 (sample)', profile: 'Profile', logItems: 'Log and items', shop: 'Shop', soon: 'Coming soon', shopSoon: 'Shop (coming soon)',
-      playStage1: 'Play stage 1', play: 'Play', back: 'Back', backHome: 'Back to home', flightLog: 'Flight log', stagesCleared: 'Stages cleared', nextStage: 'Next stage',
-      myResults: 'Your results from this demo.', items: 'Items', sample: 'Sample', sampleDemo: 'Sample (demo)', paidCoins: 'Purchased coins', freeCoins: 'Earned coins', hearts: 'Hearts',
-      notInGame: 'Coins and hearts aren’t in the game yet. The numbers are just samples.', stampCard: 'Stamp card', stampHow: ['You get a stamp the first time you open the app each day.', 'Missed a day? Pick up where you left off.'],
-      saving: 'Saving your progress', icloud: 'Your progress is saved to your iCloud automatically. No sign-in or sign-up is needed.', noSave: 'This demo doesn’t save. Closing the page starts it over.',
-      newCard: 'After day 7, you’ll get a new card.', close: 'Close', madeBy: 'Made by Reach High Studio', demoVer: 'Demo v0.8 (stages 1–2)',
-      restart: 'Restart', stuckHead: 'Looks like a traffic jam. Time for a new plan.', tryAgain: 'Try again', tryAgainHeart: 'Try again (uses 1 heart)', waiting: 'Waiting', next: 'Next', boardingArea: 'Boarding area', gateOpen: 'Open', jamClose: 'Close',
-      waitN: function(n){ return String(n); }, routeN: function(n){ return n === 1 ? '1 stage cleared' : n + ' stages cleared'; }, nextN: function(n){ return 'Next: ' + n; }, stageN: function(n){ return 'Stage ' + n; },
+      titleAria: 'Title screen', about: 'About this app', settings: 'Settings', shopSub: 'Coins and hearts', jamOpen: 'Open a gate', jamNote: 'If you stop here, the heart you used won’t come back.', start: 'Start', credit: 'Reach High Studio Demo v0.9.2',
+      home: 'Home', route: 'Flight route', stamps: 'Stamps', profile: 'Profile', logItems: 'Log and items', shop: 'Shop',
+      play: 'Play', back: 'Back', backHome: 'Back to Home', flightLog: 'Flight log', stagesCleared: 'Stages cleared', nextStage: 'Next stage',
+      myResults: 'Your results from this demo.', items: 'Items', paidCoins: 'Purchased coins (paid)', freeCoins: 'Earned coins (free)', paidShort: 'Purchased', freeShort: 'Earned', hearts: 'Hearts',
+      coinsHead: 'About coins', coinsPaid: 'Purchased coins (paid): coins you bought in the shop. These are used first.', coinsFree: 'Earned coins (free): coins you got from clears and stamps.', coinsOpen: 'About coins',
+      stampCard: 'Stamp card', stampHow: ['You get a stamp the first time you open the game each day.', 'Missed a day? Pick up where you left off.'],
+      saving: 'Saving your progress', saveNote: 'In the app, your progress is saved to your iCloud automatically. No sign-in or sign-up is needed. This demo doesn’t save your progress, coins or hearts; closing the page starts you over. Only your stamp dates and the tips you’ve seen stay in this browser.',
+      newCard: 'After day 7, you’ll get a new card.', close: 'Close', madeBy: 'Made by Reach High Studio', demoVer: 'Demo v0.9.2 (stages 1–2)',
+      restart: 'Restart', stuckHead: 'Looks like a traffic jam. Time for a new plan.', tryAgain: 'Restart', tryAgainHeart: 'Restart (uses 1 heart)', waiting: 'To board', waitAria: function(n){ return n === 1 ? '1 passenger still to board' : n + ' passengers still to board'; }, next: 'Next', boardingArea: 'Boarding area', gateOpen: 'Empty', jamClose: 'Close',
+      waitN: function(n){ return String(n); }, routeN: function(n){ return n === 1 ? '1 stage cleared' : n + ' stages cleared'; }, nextN: function(n){ return 'Next: ' + n; }, routeEnd: 'End of demo', routeEndAria: function(c){ return 'Flight route: ' + (c === 1 ? '1 stage cleared' : c + ' stages cleared') + '. End of demo.'; }, dayN: function(n){ return 'Day ' + n; }, stageN: function(n){ return 'Stage ' + n; },
       routeAria: function(c, n){ return 'Flight route: ' + (c === 1 ? '1 stage cleared' : c + ' stages cleared') + '. Next: stage ' + n; }, playAria: function(n){ return 'Play, stage ' + n; }, stageSoonAria: function(n){ return 'Stage ' + n + ', coming soon'; },
-      stageSoon: function(n, last){ return 'Stage ' + n + ' is coming soon. This demo goes up to stage ' + last + '.'; }, playStageN: function(n){ return 'Play stage ' + n; }, shopToast: 'The shop is coming soon (demo).', settingsToast: 'Settings are coming soon (demo).',
+      stageSoon: function(n, last){ return 'Stage ' + n + ' is coming soon. This demo goes up to stage ' + last + '.'; }, playStageN: function(n){ return 'Play stage ' + n; },
       hudAria: function(w, h, u){ return L.ariaJoin([u ? 'Unlimited Hearts' : 'Hearts: ' + h + ' of 5', 'Purchased coins: ' + w.paid + ', earned coins: ' + w.free], 'en'); }, coinVal: function(n){ return String(n); },
       rowAria: function(k, v){ return k + ': ' + v; }, heartsVal: function(n){ return n + ' of 5'; }, itemsNote: 'These coins and hearts exist only in this demo. No real money is used.', stageUnit: '',
-      bp: { top: null, f: null, coins: 'coins', day: function(n){ return 'Day ' + n; }, today: 'Today', todayOnly: true, stamp: 'FLOWN', sum: function(n){ return 'Day ' + n + ' today · Earned coins +' + L.stampCoins(n); },
-        aria: function(n){ return L.stampAria(n, 'en'); } } },
+      bp: { top: null, f: null, coins: 'coins', day: function(n){ return 'Day ' + n; }, today: 'Today', todayOnly: true, stamp: 'FLOWN', sum: function(n){ return 'Today: Day ' + n + ' · Earned coins +' + L.stampCoins(n, R); },
+        aria: function(n){ return L.stampAria(n, 'en', R); } } },
   }
 };
 var WHY = STR[LANG].why;
@@ -1476,15 +1519,15 @@ var WHY = STR[LANG].why;
   document.getElementById('stagePill').textContent = U.stageN(STAGE_N); document.getElementById('hPlayN').textContent = U.stageN(STAGE_N);
   document.querySelectorAll('[data-tbr]').forEach(function(e){ e.innerHTML = U[e.getAttribute('data-tbr')].join('<br>'); });
 })();
-var QS = function(k){ var m = new RegExp('[?&]' + k + '=([^&]*)').exec(location.search); return m ? decodeURIComponent(m[1]) : null; };
-var WALLET = { paid: +(QS('paid') || 0), free: +(QS('free') || QS('adcoins') || 0) };
-var UNLIMITED_HEARTS = /[?&]unlimited=1/.test(location.search), UNLIMITED_OWNED = UNLIMITED_HEARTS || /[?&]owned=1/.test(location.search);
-var HEARTS = Math.min(5, +((/[?&]hearts=(\d+)/.exec(location.search) || [])[1] || 5)), HEART_IN_USE = false;
-var HEART_CARRY = QS('heartnext') ? Math.max(0, R.hearts.regenMinutes * 60 - +QS('heartnext')) * 1000 : 0, HEART_MONO = performance.now();
+var QS = function(k){ var m = new RegExp('[?&]' + k + '=([^&]*)').exec(QSTR); return m ? decodeURIComponent(m[1]) : null; };
+var WALLET = CARRY ? { paid: Math.max(0, +CARRY.wallet.paid || 0), free: Math.max(0, +CARRY.wallet.free || 0) } : { paid: 0, free: 0 };
+var UNLIMITED_HEARTS = CARRY ? !!CARRY.unlimited : false, UNLIMITED_OWNED = UNLIMITED_HEARTS || (CARRY ? !!CARRY.owned : false);
+var HEARTS = CARRY ? Math.max(0, Math.min(5, +CARRY.hearts || 0)) : 5, HEART_IN_USE = false;
+var HEART_CARRY = CARRY ? Math.max(0, +CARRY.carry || 0) : 0, HEART_MONO = performance.now() - (CARRY ? Math.min(120000, Math.max(0, Date.now() - CARRY.at)) : 0);
 function heartSync(){ var r = L.heartRegen({ hearts: HEARTS, carryMs: HEART_CARRY, wall: 0, mono: HEART_MONO, boot: 1 }, R, { wall: 0, mono: performance.now(), boot: 1 }); var ch = r.hearts !== HEARTS; HEARTS = r.hearts; HEART_CARRY = r.carryMs; HEART_MONO = r.mono; return ch; }
 function heartNextText(){ heartSync(); var ms = Math.max(0, R.hearts.regenMinutes * 60000 - HEART_CARRY), t = Math.ceil(ms / 1000); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); }
 function adNow(){ var hq = QS('hour'); return hq ? new Date().setHours(+hq, 0, 0, 0) : Date.now(); }
-var AD_STORE = { day: L.adDayKey(adNow(), R.ads.adResetHour), used: { heart: +(QS('adusedh') || 0), unlock: +(QS('adusedu') || 0) } };
+var AD_STORE = CARRY && CARRY.ad && typeof CARRY.ad.day === 'string' ? { day: CARRY.ad.day, used: { heart: +CARRY.ad.used.heart || 0, unlock: +CARRY.ad.used.unlock || 0 } } : { day: L.adDayKey(adNow(), R.ads.adResetHour), used: { heart: 0, unlock: 0 } };
 (function(){
   var H = STR[LANG].home, b = document.getElementById('homeBtn'), dlg = document.getElementById('homeConfirm');
   b.setAttribute('aria-label', H.label); b.title = H.label;
@@ -1492,29 +1535,38 @@ var AD_STORE = { day: L.adDayKey(adNow(), R.ads.adResetHour), used: { heart: +(Q
   document.getElementById('hcGo').textContent = H.go; document.getElementById('hcStay').textContent = H.stay;
   dlg.lang = LANG;
 })();
-var HC_ON = false, MOVES = 0, UNLOCK_COIN = false, GATE_UNLOCKED = /[?&]unlocked=1/.test(location.search);
-var CLEAR_Q = (/[?&]clear=([a-z]+)/.exec(location.search) || [])[1], CLEAR_N_Q = +((/[?&]flights=(\d+)/.exec(location.search) || [])[1] || 10);
-var CLEAR_LAST = null, CLEAR_TOTAL = +((/[?&]flown=(\d+)/.exec(location.search) || [])[1] || 0),   FAILED_TAPS = 0, RETRIED = false, MIN_MOVES = null, MOVE_RANGE = null, CLEAR_MILESTONES = RULES.clear.milestones, CLEAR_SHOWN = null;
-function pickClear(){
+var HC_ON = false, MOVES = 0, UNLOCK_COIN = false, GATE_UNLOCKED = false;
+var CLEAR_LAST = CARRY ? CARRY.clearLast || null : null, CLEAR_TOTAL = CARRY ? +CARRY.clearTotal || 0 : 0,   FAILED_TAPS = 0, RETRIED = false, MIN_MOVES = null, MOVE_RANGE = null, CLEAR_MILESTONES = RULES.clear.milestones, CLEAR_SHOWN = null;
+function pickClear(clearedBefore){
   var C = STR[LANG].clear, ids = C.regular.map(function(r){ return r.id; });
-  if (CLEAR_Q) return CLEAR_Q === 'milestone' ? { id: 'milestone', n: CLEAR_N_Q } : { id: CLEAR_Q };
-  return L.pickClear({ clearedBefore: CLEARED, moves: MOVES, ref: MIN_MOVES, range: MOVE_RANGE, retried: RETRIED, flights: CLEAR_TOTAL, milestones: CLEAR_MILESTONES, regular: ids, last: CLEAR_LAST });
+  return L.pickClear({ clearedBefore: clearedBefore == null ? CLEARED : clearedBefore, moves: MOVES, ref: MIN_MOVES, range: MOVE_RANGE, retried: RETRIED, flights: CLEAR_TOTAL, milestones: CLEAR_MILESTONES, regular: ids, last: CLEAR_LAST });
 }
-var CLEAR_COINS = 0, CLEAR_TUT = 0, TUT_REWARD_GIVEN = false;
-function renderClearCoins(n, tut){ var e = document.getElementById('cardCoins'), C = STR[LANG].coins, vals = [n, tut || 0].filter(function(v){ return v > 0; }); if (!vals.length){ e.innerHTML = ''; return; }
-  e.innerHTML = vals.map(function(v, i){ return '<span class="ccl">' + ICON.gift(22) + '<span class="ccN" id="ccN' + i + '">' + C.clear(RM ? v : 0) + '</span></span>'; }).join(''); if (RM) return;
-  vals.forEach(function(v, i){ var t0 = performance.now(), d = 700, step = function(t){ var k = Math.min(1, (t - t0) / d), el = document.getElementById('ccN' + i); if (!el) return; el.textContent = C.clear(Math.round(v * k)); if (k < 1) requestAnimationFrame(step); };
+var CLEAR_STARS = 3;
+function renderStars(n){
+  var e = document.getElementById('cardStars'), h = '', d = 'M12 2.6l2.8 6 6.5.7-4.9 4.4 1.4 6.4L12 16.9 6.2 20.1l1.4-6.4L2.7 9.3l6.5-.7z';
+  for (var i = 0; i < 3; i++) h += '<svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><path d="' + d + '" fill="' + (i < n ? '#8A6614' : 'none') + '" stroke="' + (i < n ? '#8A6614' : '#6E7781') + '" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+  e.innerHTML = h; e.setAttribute('aria-label', starsSr(n));
+  document.getElementById('cardStarNote').innerHTML = STR[LANG].clear.starNote.map(function(t){ return '<span>' + esc(t) + '</span>'; }).join('');
+}
+function starsSr(n){ var C = STR[LANG].clear; return L.ariaJoin([C.stars(n), C.starNote.join(LANG === 'en' ? ' ' : '')], LANG); }
+var CLEAR_COINS = 0, CLEAR_TUT = 0, TUT_REWARD_GIVEN = CARRY ? !!CARRY.tutReward : false;
+function renderClearCoins(n, tut){ var e = document.getElementById('cardCoins'), C = STR[LANG].coins, vals = [{ v: n, f: C.clear }, { v: tut || 0, f: C.tut }].filter(function(x){ return x.v > 0; }); if (!vals.length){ e.innerHTML = ''; return; }
+  e.innerHTML = vals.map(function(x, i){ return '<span class="ccl">' + ICON.gift(22) + '<span class="ccN" id="ccN' + i + '">' + x.f(RM ? x.v : 0) + '</span></span>'; }).join(''); if (RM) return;
+  vals.forEach(function(x, i){ var v = x.v, t0 = performance.now(), d = 700, step = function(t){ var k = Math.min(1, (t - t0) / d), el = document.getElementById('ccN' + i); if (!el) return; el.textContent = x.f(Math.round(v * k)); if (k < 1) requestAnimationFrame(step); };
     setTimeout(function(){ t0 = performance.now(); requestAnimationFrame(step); }, M.clear.cardDelayMs + 200); }); }
 function renderClear(v, heartBack){
   var C = STR[LANG].clear, r = C.regular.filter(function(x){ return x.id === v.id; })[0], sp = C.special[v.id], big, small;
   if (r){ big = r.big; small = r.small; } else if (sp){ big = typeof sp.big === 'function' ? sp.big(v.n) : sp.big; small = typeof sp.small === 'function' ? sp.small(v.n) : sp.small; } else return renderClear({ id: 'nice' });
-  var T = document.getElementById('cardTitle'), E = document.getElementById('cardEn');
+  var T = document.getElementById('cardTitle'), E = document.getElementById('cardEn'), last = STAGE_N >= DEMO_LAST_STAGE;
   if (C.head){ T.textContent = C.head; T.lang = LANG; E.textContent = big; } else { T.textContent = big; T.lang = 'en'; E.textContent = ''; }
+  document.getElementById('card').classList.toggle('ja', !!C.head);
   document.getElementById('cardSub').textContent = small;
-  document.getElementById('cardSub').lang = LANG; document.getElementById('cardNext').textContent = C.next;
+  document.getElementById('cardSub').lang = LANG; document.getElementById('cardNext').textContent = last ? C.last : C.next;
+  document.getElementById('cardEnd').textContent = last ? C.end : '';
+  renderStars(CLEAR_STARS);
   if (r) CLEAR_LAST = v.id; CLEAR_SHOWN = v;
   var live = document.getElementById('live'); live.innerHTML = '';
-  setTimeout(function(){ if (C.head) live.appendChild(document.createTextNode(C.head + ' ')); var a = document.createElement('span'); a.lang = 'en'; a.textContent = big; live.appendChild(a); live.appendChild(document.createTextNode(' ' + small + (heartBack ? (LANG === 'en' ? ' ' : '。') + STR[LANG].heart.back : '') + (CLEAR_COINS ? (LANG === 'en' ? ' ' : '。') + STR[LANG].coins.vo(CLEAR_COINS) : '') + (CLEAR_TUT ? (LANG === 'en' ? ' ' : '。') + STR[LANG].coins.vo(CLEAR_TUT) : ''))); }, 30);
+  setTimeout(function(){ if (C.head) live.appendChild(document.createTextNode(C.head + ' ')); else { var a = document.createElement('span'); a.lang = 'en'; a.textContent = big; live.appendChild(a); } live.appendChild(document.createTextNode((C.head ? '' : ' ') + srJoin([small, starsSr(CLEAR_STARS), heartBack ? STR[LANG].heart.back : '', CLEAR_COINS ? STR[LANG].coins.vo(CLEAR_COINS) : '', CLEAR_TUT ? STR[LANG].coins.tutVo(CLEAR_TUT) : '', last ? C.end : '']))); }, 30);
 }
 document.getElementById('scrim').addEventListener('click', function(){ if (HC_ON) homeConfirmClose(); });
 (function(){ var y0 = null, d = document.getElementById('homeConfirm');
@@ -1555,32 +1607,31 @@ function renderHearts(anim){
   var b = el.querySelector('.back');
   if (b){ if (RM){ b.style.opacity = 1; } else b.animate([{ opacity: .35, transform: 'scale(1)' }, { opacity: 1, transform: 'scale(1.25)', offset: .6 }, { opacity: 1, transform: 'scale(1)' }], { duration: 600, easing: 'ease-out' }); }
 }
-var HEART_TIP_Q = (/[?&]hearttip=(\d)/.exec(location.search) || [])[1], HEART_TIP_SHOWN = false;
+var HEART_TIP_SHOWN = false;
 function heartTip(){
-  if (UNLIMITED_HEARTS || HEART_TIP_Q === '0' || HEART_TIP_SHOWN) return;
-  try { if (HEART_TIP_Q !== '1' && localStorage.getItem('tts_heart_tip')) return; localStorage.setItem('tts_heart_tip', '1'); } catch (e) {}
-  HEART_TIP_SHOWN = true; var t = document.getElementById('heartTip'); t.textContent = STR[LANG].heart.tip; t.lang = LANG; t.classList.add('on');
+  if (UNLIMITED_HEARTS || HEART_TIP_SHOWN || !HEART_IN_USE) return;
+  try { if (localStorage.getItem('tts_heart_tip')) return; localStorage.setItem('tts_heart_tip', '1'); } catch (e) {}
+  HEART_TIP_SHOWN = true; var t = document.getElementById('heartTip'); t.textContent = STR[LANG].heart.tip; t.lang = LANG; heartTipPlace(t); t.classList.add('on');
   var lv = document.getElementById('live'); setTimeout(function(){ lv.textContent = STR[LANG].heart.tip; }, 400);
   clearTimeout(heartTip.t); heartTip.t = setTimeout(heartTipClose, 5000);
 }
+function heartTipPlace(t){
+  var hs = document.getElementById('gHearts'), cx = hs.offsetLeft + hs.offsetWidth / 2, w = t.offsetWidth, left = Math.max(12, Math.min(390 - 12 - w, cx - 40));
+  t.style.left = left + 'px'; t.style.top = Math.max(2, hs.offsetTop - 6 - t.offsetHeight) + 'px'; t.style.setProperty('--ax', Math.max(12, Math.min(w - 24, cx - left - 6)) + 'px'); }
 function heartTipClose(){ document.getElementById('heartTip').classList.remove('on'); }
-var RESTORE_Q = (/[?&]restore=(fail)/.exec(location.search) || [])[1], RESUME_Q = /[?&]resume=1/.test(location.search), RESTORE_TOLD = false;
 function resumeLine(){
-  var Hs = STR[LANG].heart;
-  if (RESTORE_Q && !RESTORE_TOLD){ RESTORE_TOLD = true; if (!UNLIMITED_HEARTS) HEARTS = Math.max(0, HEARTS - 1); return Hs.restoreFail; }
-  if (RESUME_Q && SCREEN === 'home' && !celebrated) return Hs.resume;
   return '';
 }
 var HC_MODE = 'home';
 function homeConfirmOpen(mode){
   HC_MODE = mode === 'retry' ? 'retry' : 'home';
   if (TUT && TUT.on) return;
-  var stt = L.status(state); if (!L.quitNeedsConfirm({ status: stt, unlimited: UNLIMITED_HEARTS, unlocked: UNLIMITED_HEARTS ? (UNLOCK_COIN || GATE_UNLOCKED) : GATE_UNLOCKED, heartInUse: HEART_IN_USE })){ hcConfirm(); return; }
+  var stt = L.status(state); if (!L.quitNeedsConfirm({ mode: HC_MODE, status: stt, unlimited: UNLIMITED_HEARTS, unlocked: UNLIMITED_HEARTS ? (UNLOCK_COIN || GATE_UNLOCKED) : GATE_UNLOCKED, heartInUse: HEART_IN_USE })){ hcConfirm(); return; }
   var H = STR[LANG].home, rt = HC_MODE === 'retry';
   document.getElementById('hcQ').textContent = rt ? H.retryQ : H.q; document.getElementById('hcGo').textContent = rt ? H.retryGo : H.go; document.getElementById('hcStay').textContent = H.stay;
   document.getElementById('hcBody').textContent = UNLIMITED_HEARTS ? H.unlimited : rt ? H.retryBody : H.body;
   document.getElementById('hcNote').textContent = !UNLIMITED_HEARTS && GATE_UNLOCKED ? H.unlocked : '';
-  HC_ON = true; document.getElementById('scrim').classList.add('on'); document.getElementById('homeConfirm').classList.add('on'); setInert();
+  HC_ON = true; document.getElementById('scrim').classList.add('on'); var hcd = document.getElementById('homeConfirm'); hcd.classList.add('on'); setInert(); if (!RM) hcd.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
   document.getElementById('hcStay').focus({ preventScroll: true });
 }
 function homeConfirmClose(){
@@ -1595,7 +1646,7 @@ function hcConfirm(){
 function goHome(){
   if (MOVES > 0 && L.status(state) !== 'clear') RETRIED = true;
   HC_ON = false; epoch++; pending = 0;
-  if (L.status(state) !== 'clear') HEART_IN_USE = false;
+  if (L.status(state) !== 'clear'){ if (HEART_IN_USE && !UNLIMITED_HEARTS) HUD_LOST = true; HEART_IN_USE = false; }
   renderHearts(false);
   ['homeConfirm', 'scrim', 'sheet', 'card'].forEach(function(k){ document.getElementById(k).classList.remove('on'); });
   show('home');
@@ -1617,6 +1668,15 @@ function showWhy(id, text){
   tagAnim = t.animate([{ opacity: 0, offset: 0 }, { opacity: 1, offset: a }, { opacity: 1, offset: b }, { opacity: 0, offset: 1 }], { duration: all, easing: 'linear', fill: 'forwards' });
   var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = text; }, 30);
 }
+var WAIT_TAG_SHOWN = {}, waitAnim = null;
+function showWaitTag(g){
+  var t = document.getElementById('waitTag'), r = gateRect(g), text = WHY.waiting; t.textContent = text; t.setAttribute('lang', LANG);
+  if (waitAnim) waitAnim.cancel();
+  var w = t.offsetWidth, h = t.offsetHeight, x = Math.max(4, Math.min(390 - 4 - w, r.x + r.w / 2 - w / 2)), y = r.y - TAG.gapPt - h;
+  t.style.left = x + 'px'; t.style.top = y + 'px';
+  waitAnim = t.animate([{ opacity: 0, offset: 0 }, { opacity: 1, offset: 0.2 / 1.5 }, { opacity: 1, offset: 1.3 / 1.5 }, { opacity: 0, offset: 1 }], { duration: 1500, easing: 'linear', fill: 'forwards' });
+  say(text);
+}
 function shake(id){
   if (RM) return;
   var b = planeEls[id].querySelector('.body'), d = TAG.shakePt + 'px', ks = [{ translate: '0 0' }];
@@ -1626,11 +1686,11 @@ function shake(id){
 }
 function start(noHeart){
   if (state && MOVES > 0 && L.status(state) !== 'clear') RETRIED = true;
-  epoch++; pending = 0; seq = 0; celebrated = false; MOVES = 0; FAILED_TAPS = 0; GATE_UNLOCKED = /[?&]unlocked=1/.test(location.search); UNLOCK_COIN = false;
+  epoch++; pending = 0; seq = 0; celebrated = false; MOVES = 0; FAILED_TAPS = 0; GATE_UNLOCKED = false; UNLOCK_COIN = false;
   if (noHeart !== true) heartStageStart();
   state = L.createGame(R, S);
   document.getElementById('stagePill').textContent = STR[LANG].ui.stageN(STAGE_N);
-  if (MIN_MOVES === null){ var rq = /[?&]ref=(\d+)/.exec(location.search); var V = S.verify || {}; MOVE_RANGE = V.moveRange || null; MIN_MOVES = rq ? +rq[1] : MOVE_RANGE ? MOVE_RANGE.min : null; var mx = /[?&]maxmoves=(\d+)/.exec(location.search); if (mx && MOVE_RANGE) MOVE_RANGE = { min: MOVE_RANGE.min, max: +mx[1] }; }
+  if (MIN_MOVES === null){ MOVE_RANGE = S.moveRange || null; MIN_MOVES = MOVE_RANGE ? MOVE_RANGE.min : null; }
   visGate = state.gates.map(function(_, g){ return state.locked && state.locked[g] ? 'L' : null; }); gateWaiters = []; PV = {}; paxSeq = []; paxWhere = [];
   state.planes.forEach(function(p){ PV[p.id] = { seats: p.seats, filled: 0, gate: null, arrived: false, present: true, gateD: deferred(), arriveD: deferred(), fullD: deferred() }; });
   build();
@@ -1668,10 +1728,13 @@ function runPhases(phases, ep){
 }
 function onTap(id){
   var res = L.tap(state, id);
-  if (!res.ok){ if (res.reason !== 'not-on-runway'){ FAILED_TAPS++; shake(id); showWhy(id, WHY[res.reason]); if (res.reason === 'no-gate') flashGates(); } return false; }
-  state = res.state; MOVES++;
+  if (!res.ok){ if (res.reason !== 'not-on-runway'){ FAILED_TAPS++; shake(id); showWhy(id, WHY[res.reason]); if (res.reason === 'no-gate') flashGates(); if (L.status(state) === 'stuck') setTimeout(function(){ if (L.status(state) === 'stuck' && !HC_ON && !AD.on) showJam(); }, 700); } return false; }
+  state = res.state; MOVES++; JAM_CLOSED = false;
   var ep = epoch; pending++;
   res.phases.forEach(function(ph){ ph.seq = ++seq; });
+  var boardedNow = res.phases.some(function(ph){ return ph.type === 'board' && ph.items.some(function(it){ return it.planeId === id; }); });
+  if (!boardedNow && !WAIT_TAG_SHOWN[STAGE_N] && !TUT.on){ WAIT_TAG_SHOWN[STAGE_N] = true; PV[id].arriveD.p.then(function(){ if (ep === epoch && PV[id].gate != null) showWaitTag(PV[id].gate); }); }
+  if (L.status(state) === 'stuck') PV[id].arriveD.p.then(function(){ if (ep === epoch && L.status(state) === 'stuck' && !JAM_CLOSED) showJam(); });
   runPhases(res.phases, ep).then(function(){ if (ep === epoch){ pending--; checkEnd(); } });
   return true;
 }
@@ -1679,25 +1742,27 @@ function checkEnd(){
   if (pending > 0) return;
   var st = L.status(state);
   if (st === 'clear') maybeCelebrate(0);
-  else if (st === 'stuck') showJam();
+  else if (st === 'stuck' && !JAM_CLOSED) showJam();
 }
-function showJam(){
+var JAM_CLOSED = false;
+function showJam(){ var sh = document.getElementById('sheet'); if (sh.classList.contains('on') || document.querySelector('.sheet2.on')) return;
   var jo = document.getElementById('jamOpen'); jo.hidden = !L.unlockHelps(state);
   document.getElementById('jamRetry').textContent = L.jamRetryLabel(STR[LANG].ui, R, UNLIMITED_HEARTS);
-  document.getElementById('scrim').classList.add('on'); document.getElementById('sheet').classList.add('on'); document.getElementById('live').textContent = STR[LANG].ui.stuckHead;
+  document.getElementById('jamNote').hidden = UNLIMITED_HEARTS || !HEART_IN_USE;
+  document.getElementById('scrim').classList.add('on'); sh.classList.add('on'); setInert(); if (!RM) sh.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 250, easing: 'ease-out' }); document.getElementById('live').textContent = STR[LANG].ui.stuckHead;
   (jo.hidden ? document.querySelector('#sheet [data-act="retry"]') : jo).focus({ preventScroll: true });
 }
-function hideJam(){ document.getElementById('scrim').classList.remove('on'); document.getElementById('sheet').classList.remove('on'); }
+function hideJam(){ document.getElementById('scrim').classList.remove('on'); document.getElementById('sheet').classList.remove('on'); setInert(); }
 function retryStage(){
   if (!canStartStage()){ hideJam(); HEART_IN_USE = false; renderHearts(false); openHeartOut(); return; }
   start();
 }
-document.querySelectorAll('[data-act="retry"]').forEach(function(b){ b.addEventListener('click', retryStage); });
+document.querySelectorAll('[data-act="retry"]').forEach(function(b){ b.addEventListener('click', function(){ JAM_CLOSED = true; hideJam(); homeConfirmOpen('retry'); }); });
 document.getElementById('jamOpen').addEventListener('click', function(){ var g = state.locked.indexOf(true); if (g < 0) return; hideJam(); openUnlock(g); });
-document.getElementById('jamClose').addEventListener('click', function(){ document.getElementById('scrim').classList.remove('on'); document.getElementById('sheet').classList.remove('on'); document.getElementById('restart').focus({ preventScroll: true }); });
+document.getElementById('jamClose').addEventListener('click', function(){ JAM_CLOSED = true; hideJam(); document.getElementById('restart').focus({ preventScroll: true }); });
 document.querySelectorAll('[data-act="next"]').forEach(function(b){ b.addEventListener('click', function(){ ['scrim', 'card'].forEach(function(k){ document.getElementById(k).classList.remove('on'); }); if (STAGE_N < STAGES.length) play(STAGE_N + 1); else show('home'); }); });
 document.getElementById('restart').addEventListener('click', function(){ homeConfirmOpen('retry'); });
-var SCREEN = 'title', PREV_SCREEN = 'home', CLEARED = Math.min(STAGES.length, +(QS('cl') || 0)), DEMO_LAST_STAGE = STAGES.length, CLEARED_SET = {};
+var SCREEN = 'title', PREV_SCREEN = 'home', CLEARED = Math.min(STAGES.length, CARRY ? +CARRY.cleared || 0 : 0), DEMO_LAST_STAGE = STAGES.length, CLEARED_SET = {};
 for (var ci = 1; ci <= CLEARED; ci++) CLEARED_SET[ci] = true;
 var A = { skyT: '#D7E6F2', skyB: '#E6EFF6', sun: '#F3E4D8', ground: '#E9E4D8', term: '#DCD9D2', muted: '#77746E', low: '#EEF4F9' };
 var SCR = { title: document.getElementById('scrTitle'), home: document.getElementById('scrHome'), my: document.getElementById('scrMy'), shop: document.getElementById('scrShop'), settings: document.getElementById('scrSettings') };
@@ -1794,25 +1859,33 @@ function depStamp(ang){
     '<path d="' + sceneryD(14) + '" fill="#2B5C8A" transform="translate(0 -9)"/>' + (LANG === 'en' ? '<text x="0" y="11" text-anchor="middle" font-size="10" font-weight="700" fill="#2B5C8A" textLength="29" lengthAdjust="spacingAndGlyphs">FLOWN</text>' : '<text x="0" y="11" text-anchor="middle" font-size="12" font-weight="700" fill="#2B5C8A">出発</text>') + '</g></svg>';
 }
 function stampDayLines(){
-  var S = STR[LANG].stamp, hq = /[?&]hour=(\d+)/.exec(location.search), h = hq ? (+hq[1]) % 24 : new Date().getHours(), out = [S.dayChange];
-  if (h < stampResetHour() && STAMP_TODAY_TAKEN) out.push(S.tonight);
+  var S = STR[LANG].stamp, h = new Date(stampNow()).getHours(), out = [S.dayChange];
+  if (L.stampTonight(STAMP_SAVED, stampResetHour())) out.push(S.tonight);
   return out;
 }
 function stampResetHour(){ return RULES.loginBonus.loginResetHour; }
-var STAMP_TODAY_TAKEN = true;
+function stampNow(){ var hq = /[?&]hour=(\d+)/.exec(QSTR); return hq ? new Date().setHours(+hq[1] % 24, 0, 0, 0) : Date.now(); }
+var STAMP_NEW = null, STAMP_SAVED = null, STAMP_DAY = (function(){
+  var saved = null; try { saved = JSON.parse(localStorage.getItem('tts_stamp') || 'null'); } catch (e) {}
+  var r = L.stampAdvance(saved, L.adDayKey(stampNow(), stampResetHour()), R, new Date(stampNow()).getHours()); STAMP_SAVED = r.saved;
+  try { localStorage.setItem('tts_stamp', JSON.stringify(r.saved)); } catch (e) {}
+  if (r.isNew && !CARRY){ WALLET = { paid: WALLET.paid, free: WALLET.free + r.coins }; STAMP_NEW = r; }
+  return r.n;
+})();
 function boardingPass(today){
-  var B = STR[LANG].ui.bp, jf = B.f || [], f = [[16, jf[0], 'FLIGHT', 'TTS 007'], [116, jf[1], 'GATE', 'A1'], [184, jf[2], 'BONUS', '90<small>' + B.coins + '</small>'], [275, jf[3], 'DATE', '11/03']];
-  var h = '<div class="bp' + (B.top ? '' : ' en') + '" role="img" aria-label="' + L.ariaJoin(B.aria(today).concat(stampDayLines()), LANG) + '"><div class="top"><span class="en">BOARDING PASS</span>' + (B.top ? '<span class="ja">' + B.top + '</span>' : '') + '<span class="r">TAKE TO THE SKY</span></div><div class="flds">';
-  f.forEach(function(q){ h += '<div class="f" style="left:' + q[0] + 'px">' + (q[1] ? '<div class="l1">' + q[1] + '</div>' : '') + '<div class="l2">' + q[2] + '</div><div class="v">' + q[3] + '</div></div>'; });
+  var B = STR[LANG].ui.bp, jf = B.f || [], f = [[16, jf[0], 'FLIGHT', 'TTS 007'], [116, jf[1], 'GATE', 'A1'], [184, jf[2], 'BONUS', L.stampCardTotal(R) + '<small>' + B.coins + '</small>'], [275, jf[3], 'DATE', L.stampDate(stampNow(), stampResetHour())]];
+  var h = '<div class="bp' + (B.top ? '' : ' en') + '" role="img" aria-label="' + L.ariaJoin(B.aria(today).concat(stampDayLines()), LANG) + '"><div class="top"><span class="en" aria-hidden="true">BOARDING PASS</span>' + (B.top ? '<span class="ja">' + B.top + '</span>' : '') + '<span class="r" aria-hidden="true">TAKE TO THE SKY</span></div><div class="flds">';
+  f.forEach(function(q){ h += '<div class="f" style="left:' + q[0] + 'px">' + (q[1] ? '<div class="l1">' + q[1] + '</div>' : '') + '<div class="l2" aria-hidden="true">' + q[2] + '</div><div class="v">' + q[3] + '</div></div>'; });
   h += '</div><div class="perf"></div><span class="notch" style="left:-10px"></span><span class="notch" style="right:-10px"></span><div class="grid">';
-  for (var n = 1; n <= 7; n++){
-    var done = n <= today, cls = 'd' + (done ? ' done' : '') + (n === today ? ' today' : '') + (n === 7 ? ' d7' : '');
-    h += '<div class="' + cls + '"><div class="t">' + (n === today ? (B.todayOnly ? B.today : B.day(n) + B.today) : B.day(n)) + '</div><div class="s">' + (done ? depStamp([-6, 6, -4][(n - 1) % 3]) : ICON.gift(20)) + '</div><div class="p">' + (n === 7 ? '+30' : '+10') + '</div></div>';
+  for (var n = 1; n <= R.loginBonus.cardDays; n++){
+    var done = n <= today, cls = 'd' + (done ? ' done' : '') + (n === today ? ' today' : '') + (n === R.loginBonus.cardDays ? ' d7' : '');
+    h += '<div class="' + cls + '"><div class="t">' + (n === today ? (B.todayOnly ? B.today : B.day(n) + B.today) : B.day(n)) + '</div><div class="s">' + (done ? depStamp([-6, 6, -4][(n - 1) % 3]) : ICON.gift(20)) + '</div><div class="p">+' + L.stampCoins(n, R) + '</div></div>';
   }
   return h + '</div><div class="sum">' + B.sum(today) + '</div></div>';
 }
 function buildTitle(){
   var ts = document.getElementById('tSub'); ts.lang = LANG; ts.textContent = GREET.firstLaunch ? STR[LANG].title.welcome : '';
+  var td = document.getElementById('tDemo'); td.lang = LANG; td.hidden = !GREET.firstLaunch; td.innerHTML = LANG === 'ja' ? L.jaNoBreakHtml(STR[LANG].title.demo) : STR[LANG].title.demo;
   var hz = 573, s = skyRect('tSky', hz) + '<circle cx="305" cy="423" r="50" fill="' + A.sun + '"/>' + stratus(74, 377, 104) + stratus(328, 495, 80) + stratus(180, 461, 64) +
     '<rect x="24" y="527" width="126" height="46" fill="' + A.term + '"/><rect x="36" y="539" width="102" height="12" fill="' + A.skyB + '"/><rect x="120" y="495" width="12" height="32" fill="' + A.term + '"/><rect x="110" y="481" width="32" height="14" fill="' + A.term + '"/>' +
     groundBand(581, 48, 605);
@@ -1839,16 +1912,18 @@ function playTitle(){
   taxi('tTaxi', 40, -30, 305, 605, 580 + 400);
 }
 function routeSvg(next){
-  var first = Math.max(1, next - 2), xs = [0, 1, 2, 3, 4].map(function(i){ return 44 + 302 * i / 4; }), base = 287, ni = next - first;
+  var D = DEMO_LAST_STAGE, xs = [], base = 287, endX = 316; for (var i = 0; i < D; i++) xs.push(64 + 160 * i / Math.max(1, D - 1));
   var yof = function(x){ return base - 40 * Math.sin(Math.PI * (x - 24) / 342); };
   var pts = function(a, b){ var p = []; for (var i = 0; i <= 60; i++){ var x = a + (b - a) * i / 60; p.push(x.toFixed(1) + ' ' + yof(x).toFixed(1)); } return 'M' + p.join(' L'); };
-  var s = '';
+  var s = '', ni = Math.min(next, D) - 1, done = next > D;
   if (ni > 0) s += '<path d="' + pts(xs[0], xs[ni]) + '" fill="none" stroke="#2B5C8A" stroke-width="2"/>';
-  s += '<path d="' + pts(xs[ni], xs[4]) + '" fill="none" stroke="' + A.muted + '" stroke-width="2" stroke-dasharray="6 6"/>';
+  if (ni < D - 1) s += '<path d="' + pts(xs[ni], xs[D - 1]) + '" fill="none" stroke="' + A.muted + '" stroke-width="2" stroke-dasharray="6 6"/>';
+  s += '<path d="' + pts(xs[D - 1], endX - 10) + '" fill="none" stroke="' + A.muted + '" stroke-width="2" stroke-dasharray="2 5"/>';
+  var ey = yof(endX); s += '<rect x="' + (endX - 7) + '" y="' + (ey - 7) + '" width="14" height="14" rx="3" fill="#FFFFFF" stroke="' + A.muted + '" stroke-width="1.5"/><path d="M' + (endX - 3) + ' ' + ey + ' h6" stroke="' + A.muted + '" stroke-width="1.5" stroke-linecap="round"/>';
   xs.forEach(function(x, i){
-    var st = first + i, y = yof(x);
-    if (st < next) s += '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#2B5C8A"/><text x="' + x + '" y="' + (y + 27) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#1F1F1D">' + st + '</text>';
-    else if (st === next) s += '<circle cx="' + x + '" cy="' + y + '" r="24" fill="#FFFFFF" stroke="#2B5C8A" stroke-width="2"/>' + sceneryPlane(x, y, 28, 0, '#2B5C8A') + '<text x="' + x + '" y="' + (y + 45) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#2B5C8A">' + STR[LANG].ui.nextN(st) + '</text>';
+    var st = i + 1, y = yof(x);
+    if (st < next && !(done && st === D)) s += '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#2B5C8A"/><text x="' + x + '" y="' + (y + 27) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#1F1F1D">' + st + '</text>';
+    else if (st === next || (done && st === D)) s += '<circle cx="' + x + '" cy="' + y + '" r="24" fill="#FFFFFF" stroke="#2B5C8A" stroke-width="2"/>' + sceneryPlane(x, y, 28, 0, '#2B5C8A') + (done ? '<text x="' + x + '" y="' + (y + 45) + '" text-anchor="middle" font-size="12" fill="#5B5A56">' + STR[LANG].ui.routeEnd + '</text>' : '<text x="' + x + '" y="' + (y + 45) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#2B5C8A">' + STR[LANG].ui.nextN(st) + '</text>');
     else s += '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#FFFFFF" stroke="' + A.muted + '" stroke-width="1.5"/><text x="' + x + '" y="' + (y + 27) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#5B5A56">' + st + '</text>';
   });
   return '<g id="hRoute">' + s + '</g>';
@@ -1862,36 +1937,52 @@ function buildHome(){
   document.getElementById('hGear').innerHTML = ICON.gear;
   document.getElementById('icStamp').innerHTML = ICON.boarding; document.getElementById('icMy').innerHTML = ICON.log; document.getElementById('icShop').innerHTML = ICON.bag;
   document.getElementById('hRouteN').textContent = U.routeN(CLEARED);
-  document.getElementById('hRouteA').textContent = U.routeAria(CLEARED, next);
-  var play = document.getElementById('hPlay'), ready = next <= DEMO_LAST_STAGE;
+  document.getElementById('hRouteA').textContent = next > DEMO_LAST_STAGE ? U.routeEndAria(CLEARED) : U.routeAria(CLEARED, next);
+  var pb = document.getElementById('hPlay'), ready = next <= DEMO_LAST_STAGE;
   document.getElementById('hPlayN').textContent = U.stageN(next);
-  play.setAttribute('aria-label', ready ? U.playAria(next) : U.stageSoonAria(next));
-  if (ready) play.removeAttribute('aria-disabled'); else play.setAttribute('aria-disabled', 'true');
+  pb.setAttribute('aria-label', ready ? U.playAria(next) : U.stageSoonAria(next));
+  if (ready) pb.removeAttribute('aria-disabled'); else pb.setAttribute('aria-disabled', 'true');
+  document.getElementById('hStampSb').textContent = U.dayN(STAMP_DAY);
   document.getElementById('hNote').style.display = ready ? 'none' : 'block';
   document.getElementById('hNoteT').textContent = U.stageSoon(next, STAGES.length);
   var rp = document.getElementById('hReplays'); rp.innerHTML = '';
   if (!ready) STAGES.forEach(function(_, i){ var b = document.createElement('button'); b.type = 'button'; b.textContent = U.playStageN(i + 1); b.addEventListener('click', function(){ play(i + 1); }); rp.appendChild(b); });
 }
-function coinCap(W, z){ return '<span class="cap" aria-hidden="true">' + ICON.cart(z) + '<span>' + W.paid + '</span><span class="dv"></span>' + ICON.gift(z) + '<span>' + W.free + '</span></span>'; }
+function coinChip(W, full){
+  var U = STR[LANG].ui, nmHtml = function(nm){ if (!full) return esc(nm); var i = nm.search(/[（(]/); return i > 0 ? '<span class="cl1">' + esc(nm.slice(0, i).replace(/\s+$/, '')) + '</span><span class="cl1">' + esc(nm.slice(i)) + '</span>' : esc(nm); },
+    col = function(ic, n, nm){ return '<span class="cc"><span class="cn">' + ic + '<span>' + n + '</span></span><span class="cl">' + nmHtml(nm) + '</span></span>'; };
+  return col(ICON.cart(22), W.paid, full ? U.paidCoins : U.paidShort) + '<span class="ccv"></span>' + col(ICON.gift(22), W.free, full ? U.freeCoins : U.freeShort);
+}
+function openCoins(){ var U = STR[LANG].ui, s = document.getElementById('sCoins');
+  s.innerHTML = '<div class="grab"></div><h2 id="sCoinsH">' + esc(U.coinsHead) + '</h2><p class="desc" style="font-size:15px;line-height:22px;color:#1F1F1D">' + jbr(U.coinsPaid) + '</p><p class="desc" style="font-size:15px;line-height:22px;color:#1F1F1D;margin-top:10px">' + jbr(U.coinsFree) + '</p><button type="button" class="obtn" data-close>' + esc(U.close) + '</button>';
+  SHEET_AFTER = function(){ var b = document.getElementById('hCoins'); if (b) b.focus({ preventScroll: true }); }; openSheet('sCoins'); }
+var HUD_LOST = false;
 function renderHud(){
   var hud = document.getElementById('hHud'), U = STR[LANG].ui, hs = '', W = WALLET; heartSync();
   if (UNLIMITED_HEARTS) hs = ICON.heart(16, true) + '<span class="inf" style="font-size:15px;font-weight:700;margin-left:2px">∞</span>';
   else for (var i = 0; i < 5; i++) hs += ICON.heart(16, i < HEARTS);
-  hud.innerHTML = '<span class="hearts" aria-hidden="true">' + hs + '</span>' + coinCap(W, 20);
+  if (HUD_LOST && !UNLIMITED_HEARTS && !RM && HEARTS < 5){ hs = ''; for (var j = 0; j < 5; j++) hs += '<span class="hs2' + (j === HEARTS ? ' lost' : '') + '">' + ICON.heart(16, j <= HEARTS) + '</span>'; }
+  hud.innerHTML = '<span class="hearts" aria-hidden="true">' + hs + '</span><button type="button" id="hCoins" aria-haspopup="dialog">' + coinChip(W, false) + '</button>';
   hud.setAttribute('aria-label', U.hudAria(W, HEARTS, UNLIMITED_HEARTS));
+  var cb = document.getElementById('hCoins'); cb.setAttribute('aria-label', U.coinsOpen); cb.addEventListener('click', openCoins);
+  var lo = hud.querySelector('.lost'); if (lo){ HUD_LOST = false; lo.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, delay: 250, easing: 'ease-out', fill: 'forwards' }).finished.then(function(){ if (SCREEN === 'home') renderHud(); }); }
+  else HUD_LOST = false;
 }
 function buildMy(){
   var U = STR[LANG].ui, W = WALLET; heartSync();
   document.getElementById('myCleared').innerHTML = CLEARED + (U.stageUnit ? '<small>' + U.stageUnit + '</small>' : '');
   document.getElementById('myPaid').textContent = W.paid; document.getElementById('myFree').textContent = W.free;
   document.getElementById('myRowPaid').setAttribute('aria-label', U.rowAria(U.paidCoins, U.coinVal(W.paid))); document.getElementById('myRowFree').setAttribute('aria-label', U.rowAria(U.freeCoins, U.coinVal(W.free))); document.getElementById('myRowHearts').setAttribute('aria-label', U.rowAria(U.hearts, UNLIMITED_HEARTS ? STR[LANG].heart.hudUnlimited : U.heartsVal(HEARTS)));
-  document.getElementById('myNext').textContent = CLEARED + 1;
+  document.getElementById('myNext').textContent = CLEARED >= DEMO_LAST_STAGE ? STR[LANG].ui.routeEnd : CLEARED + 1;
   document.getElementById('myCart').innerHTML = ICON.cart(16); document.getElementById('myGift').innerHTML = ICON.gift(16);
   var hs = ''; for (var i = 0; i < 5; i++) hs += ICON.heart(14, UNLIMITED_HEARTS || i < HEARTS); document.getElementById('myHearts').innerHTML = UNLIMITED_HEARTS ? ICON.heart(14, true) : hs;
   document.getElementById('myHeartsN').textContent = UNLIMITED_HEARTS ? '∞' : HEARTS + ' / 5';
 }
 var toastTimer = null;
-function toast(t){ var e = document.getElementById('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function(){ e.classList.remove('on'); }, 1800); }
+function toast(t){ var e = document.getElementById('toast'); e.textContent = t; toastPlace(e); e.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function(){ e.classList.remove('on'); }, 1800);
+  setTimeout(function(){ toastPlace(e); }, 0); setTimeout(function(){ toastPlace(e); }, 120); }
+function toastPlace(e){ var top = 668; [].forEach.call(document.querySelectorAll('.sheet2.on, #sheet.on'), function(s){ top = Math.min(top, s.offsetTop - e.offsetHeight - 12); }); e.style.top = Math.max(16, top) + 'px'; }
+function srJoin(parts){ var en = LANG === 'en', out = ''; parts.forEach(function(x){ x = (x || '').replace(/\s+$/, ''); if (!x) return; if (out) out += /[.!?\u3002\uFF01\uFF1F]$/.test(out) ? (en ? ' ' : '') : (en ? '. ' : '。'); out += x; }); if (out && !/[.!?\u3002\uFF01\uFF1F]$/.test(out)) out += en ? '.' : '。'; return out; }
 function setInert(){
   var sheetOn = document.querySelector('.sheet2.on'), adOn = document.getElementById('adScr').classList.contains('on');
   Array.prototype.forEach.call(app.children, function(c){
@@ -1905,17 +1996,16 @@ function setInert(){
   });
 }
 var GREET = (function(){
-  var q = location.search, now = Date.now(), H = 3600000, last = 0, seen = false;
+  var q = QSTR, now = Date.now(), H = 3600000, last = 0, seen = false;
   try { last = +localStorage.getItem('tts_last_open') || 0; seen = !!localStorage.getItem('tts_seen_title'); localStorage.setItem('tts_last_open', String(now)); localStorage.setItem('tts_seen_title', '1'); } catch (e) {}
-  var aw = /[?&]away=(\d+)/.exec(q); if (aw) last = now - (+aw[1]) * 24 * H;
   var hq = /[?&]hour=(\d+)/.exec(q), h = hq ? (+hq[1]) % 24 : new Date().getHours();
-  var gq = /[?&]gap=(\d+)/.exec(q); if (gq) last = now - (+gq[1]) * 60000;
-  return { kind: L.greetKind(last, now, h), firstLaunch: !seen || /[?&]first=1/.test(q), used: false };
+  return { kind: L.greetKind(last, now, h), firstLaunch: (!seen) && !CARRY, used: !!CARRY };
 })();
 function greetText(){ var G = STR[LANG].greet; return GREET.kind === 'back14' ? G.back14(CLEARED + 1) : GREET.kind ? G[GREET.kind] : ''; }
 function show(name){
+  if (name !== SCREEN) SHOP_RES.restore = null;
   if (name !== SCREEN && (name === 'shop' || name === 'settings') && SCREEN !== 'shop' && SCREEN !== 'settings') PREV_SCREEN = SCREEN;
-  SCREEN = name;
+  SCREEN = name; backAria();
   Object.keys(SCR).forEach(function(k){ SCR[k].classList.toggle('on', k === name); });
   Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); });
   if (name === 'title'){ playTitle(); }
@@ -1924,13 +2014,14 @@ function show(name){
     var g = document.getElementById('hGreet'); g.lang = LANG; g.textContent = GREET.used ? '' : greetText();
     var rl = resumeLine(); if (rl){ g.textContent = rl; homeLine = rl; }
     if (!GREET.used && /^back/.test(GREET.kind || '')) homeLine = g.textContent;
-    GREET.used = true; }
+    GREET.used = true;
+    if (STAMP_NEW){ var sn = STR[LANG].stamp.sub; STAMP_NEW = null; setTimeout(function(){ toast(sn); }, 600); homeLine = homeLine ? homeLine + (LANG === 'en' ? ' ' : '。') + sn : sn; } }
   if (name === 'my'){ buildMy(); document.getElementById('myScroll').scrollTop = 0; }
   if (name === 'shop'){ buildShop(); document.getElementById('shopScroll').scrollTop = 0; }
   if (name === 'settings'){ buildSettings(); document.getElementById('setScroll').scrollTop = 0; }
   if (name === 'game') renderHearts(false);
   setInert();
-  var live = document.getElementById('live'); live.textContent = { title: GREET.firstLaunch ? STR[LANG].title.vo : 'Take to the sky', home: STR[LANG].home.label + (homeLine ? (LANG === 'en' ? '. ' : '。') + homeLine : ''), my: STR[LANG].ui.profile, game: STR[LANG].ui.stageN(STAGE_N), shop: STR[LANG].ui.shop, settings: STR[LANG].ui.settings }[name];
+  var live = document.getElementById('live'); live.textContent = { title: GREET.firstLaunch ? STR[LANG].title.vo + (LANG === 'en' ? ' ' : '。') + STR[LANG].title.demo : 'Take to the sky', home: STR[LANG].home.label + (homeLine ? (LANG === 'en' ? '. ' : '。') + homeLine : ''), my: STR[LANG].ui.profile, game: STR[LANG].ui.stageN(STAGE_N), shop: STR[LANG].ui.shop, settings: STR[LANG].ui.settings }[name];
 }
 function play(n){
   n = n || Math.min(CLEARED + 1, STAGES.length);
@@ -1938,7 +2029,7 @@ function play(n){
   ['scrim', 'sheet', 'card', 'homeConfirm'].forEach(function(k){ document.getElementById(k).classList.remove('on'); });
   setStage(n); show('game'); start(); if (STAGE_N === 1) tutStart();
 }
-var STAMP_DONE_SHOWN = false;
+var STAMP_DONE_SHOWN = CARRY ? !!CARRY.stampDone : false;
 function stampScene(){
   var st = document.querySelector('#sBp .d.today .s svg'), dn = document.getElementById('stampDone');
   var S = STR[LANG].stamp, done = L.stampDoneShown(STAMP_DAY, STAMP_DONE_SHOWN);
@@ -1958,30 +2049,29 @@ document.getElementById('stampDoneClose').addEventListener('click', function(e){
 var SHEET_AFTER = null;
 function openSheet(id, focusSel){ Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); });
   var was = !!document.querySelector('.sheet2.on'); document.querySelectorAll('.sheet2.on').forEach(function(x){ x.classList.remove('on'); });
-  document.getElementById('sScrim').classList.add('on'); var s = document.getElementById(id); s.classList.add('on'); setInert(); (s.querySelector(focusSel || '[data-close]') || s.querySelector('button')).focus();
+  document.getElementById('sScrim').classList.add('on'); var s = document.getElementById(id); s.classList.add('on'); setInert(); (s.querySelector(focusSel || '[data-close]') || s.querySelector('button')).focus({ preventScroll: true });
   if (!RM && !was) s.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 250, easing: 'ease-out' }); }
 function closeSheet(){ document.getElementById('stampDone').hidden = true; document.querySelectorAll('.sheet2.on').forEach(function(s){ s.classList.remove('on'); }); document.getElementById('sScrim').classList.remove('on'); setInert();
   var f = SHEET_AFTER; SHEET_AFTER = null; if (f) f(); }
-var STAMP_DAY = Math.min(7, Math.max(1, +((/[?&]stamps=(\d)/.exec(location.search) || [])[1] || 3)));
 document.getElementById('sBp').innerHTML = boardingPass(STAMP_DAY); document.getElementById('stampDay').innerHTML = stampDayLines().map(function(t){ return '<span>' + t + '</span>'; }).join('<br>'); document.getElementById('stampDay').lang = LANG;
 buildTitle();
 document.getElementById('tStart').addEventListener('click', function(){ show('home'); });
 document.getElementById('tInfo').addEventListener('click', function(){ openSheet('sAbout'); });
-document.getElementById('tGear').addEventListener('click', function(){ show('settings'); document.getElementById('setBack').focus(); });
-document.getElementById('hGear').addEventListener('click', function(){ show('settings'); document.getElementById('setBack').focus(); });
-document.getElementById('hShop').addEventListener('click', function(){ show('shop'); document.getElementById('shopBack').focus(); });
-document.getElementById('myShop').addEventListener('click', function(){ show('shop'); document.getElementById('shopBack').focus(); });
+document.getElementById('tGear').addEventListener('click', function(){ show('settings'); document.getElementById('setBack').focus({ preventScroll: true }); });
+document.getElementById('hGear').addEventListener('click', function(){ show('settings'); document.getElementById('setBack').focus({ preventScroll: true }); });
+document.getElementById('hShop').addEventListener('click', function(){ show('shop'); document.getElementById('shopBack').focus({ preventScroll: true }); });
+document.getElementById('myShop').addEventListener('click', function(){ show('shop'); document.getElementById('shopBack').focus({ preventScroll: true }); });
 document.getElementById('shopBack').addEventListener('click', function(){ show(PREV_SCREEN); });
+function backAria(){ var U = STR[LANG].ui; ['shopBack', 'setBack'].forEach(function(id){ var b = document.getElementById(id), k = PREV_SCREEN === 'home' ? 'backHome' : 'back'; b.setAttribute('data-ta', k); b.setAttribute('aria-label', U[k]); }); }
 document.getElementById('setBack').addEventListener('click', function(){ show(PREV_SCREEN); });
 document.getElementById('hStamp').addEventListener('click', function(){ openSheet('sStamp'); SHEET_AFTER = function(){ document.getElementById('hStamp').focus({ preventScroll: true }); }; stampScene(); });
-document.getElementById('hMy').addEventListener('click', function(){ show('my'); document.getElementById('myBack').focus(); });
-document.getElementById('myBack').addEventListener('click', function(){ show('home'); document.getElementById('hMy').focus(); });
+document.getElementById('hMy').addEventListener('click', function(){ show('my'); document.getElementById('myBack').focus({ preventScroll: true }); });
+document.getElementById('myBack').addEventListener('click', function(){ show('home'); document.getElementById('hMy').focus({ preventScroll: true }); });
 document.getElementById('hPlay').addEventListener('click', function(){ if (CLEARED + 1 <= DEMO_LAST_STAGE) play(CLEARED + 1); else toast(STR[LANG].ui.stageSoon(CLEARED + 1, STAGES.length)); });
 document.getElementById('sScrim').addEventListener('click', closeSheet);
 app.addEventListener('click', function(e){ var c = e.target.closest && e.target.closest('.sheet2 [data-close]'); if (c) closeSheet(); });
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape'){ if (AD.on){ adClose(); return; } if (!stampDoneClose()) closeSheet(); } });
-var TUT_Q = (/[?&]tutorial=([01])/.exec(location.search) || [])[1];
-var TUT_DONE = false;
+var TUT_DONE = CARRY ? !!CARRY.tutDone : false;
 var TUT = { on: false, step: 0, target: null, steps: null };
 var TUT_DIM = 0.55, TUT_DIM_COLOR = '#1F1F1D';
 var TUT_COPY = STR[LANG].tut;
@@ -2043,7 +2133,7 @@ function tutRoute(id, gate, flow, under){
   return (under ? '<path d="' + d + '" fill="none" stroke="#2B5C8A" stroke-opacity="0.55" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>' : '') + '<path' + (flow ? ' class="tutFlow"' : '') + ' d="' + d + '" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="' + (flow ? '6 5' : '2 5') + '"/>' +
          '<path d="M' + b.x + ' ' + b.y + ' L' + (hx + nx) + ' ' + (hy + ny) + ' L' + (hx - nx) + ' ' + (hy - ny) + ' Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>';
 }
-function tutShouldShow(){ return TUT_Q === '1' || (TUT_Q !== '0' && !TUT_DONE); }
+function tutShouldShow(){ return !TUT_DONE; }
 function tutStart(){
   if (!tutShouldShow()) return;
   TUT.on = true; TUT.step = 0; TUT.busy = false; TUT.first = tutFirstStep(); TUT.holesNow = null;
@@ -2051,10 +2141,10 @@ function tutStart(){
     '<mask id="tutCut"><rect x="-50" y="-50" width="490" height="944" fill="#fff"/><g id="tutCutG"></g></mask></defs>' +
     '<rect x="-50" y="-50" width="490" height="944" fill="' + TUT_DIM_COLOR + '" opacity="' + TUT_DIM + '" mask="url(#tutMask)"/><g mask="url(#tutCut)"><g id="tutMarks"></g></g>';
   document.getElementById('tutSkip').textContent = TUT_COPY.skip;
-  document.getElementById('tut').classList.add('on'); setInert(); tutDraw(false);
+  document.getElementById('tut').classList.add('on'); document.getElementById('homeBtn').style.visibility = 'hidden'; setInert(); tutDraw(false);
 }
 function tutEnd(){
-  TUT.on = false; TUT_DONE = true; document.getElementById('tut').classList.remove('on'); setInert();
+  TUT.on = false; TUT_DONE = true; document.getElementById('tut').classList.remove('on'); document.getElementById('homeBtn').style.visibility = ''; setInert();
   var g = document.getElementById('tutGhost'); if (g) g.remove();
   document.getElementById('live').textContent = STR[LANG].ui.stageN(STAGE_N);
   heartTip();
@@ -2111,7 +2201,10 @@ function tutDraw(animate){
   if (tapStep){ var pl = L.planeById(state, TUT.target.id); tapB.style.display = ''; tapB.textContent = TUT_COPY.tapLabel(COLOR[pl.color], pl.size); }
   else tapB.style.display = 'none';
   tutLayout(holes);
-  tutHoles(holes, animate && !RM);
+  if (st === 1 && pending > 0){
+    var fin = holes, mv = holes.concat([tutHoleRect({ x: 0, y: GATE_Y - 8, w: 390, h: 852 - GATE_Y, rx: 0 })]);
+    tutHoles(mv, animate && !RM); tutWaitIdle().then(function(){ if (TUT.on && TUT.step === 1) tutHoles(fin, !RM); });
+  } else tutHoles(holes, animate && !RM);
   var cut = holes.filter(function(h){ return h.seat; }).map(function(h){
     return '<rect x="' + (h.x - 2) + '" y="' + (h.y - 2) + '" width="' + (h.w + 4) + '" height="' + (h.h + 4) + '" rx="' + (h.rx + 2) + '" fill="#000"/>'; }).join('');
   document.getElementById('tutCutG').innerHTML = cut;
@@ -2181,7 +2274,6 @@ document.addEventListener('keydown', function(e){ if (e.key === 'Tab' || e.key.i
 document.addEventListener('pointerdown', function(){ document.documentElement.classList.remove('kbd'); }, true);
 document.getElementById('tutSkip').addEventListener('click', tutEnd);
 function fit(){ var k = Math.min(window.innerWidth / 390, window.innerHeight / 844); app.style.transform = 'scale(' + k + ')'; BOARD_K = k; layoutSeats(); if (TUT.on) tutLayout(); }
-var AD_Q = (/[?&]ad=(offline|nofill)/.exec(location.search) || [])[1];
 var jbr = function(t){ return LANG === 'ja' ? L.jaNoBreakHtml(t) : t; }, esc = function(t){ return String(t).replace(/[&<>"]/g, function(c){ return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
 function say(t){ var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = t; }, 60); }
 function walletTotal(){ return WALLET.paid + WALLET.free; }
@@ -2195,15 +2287,15 @@ function openGate(g, how){
   var t = STR[LANG].unlock.done(g); toast(t); say(t);
 }
 function adUi(store, kind, nowMs, g){
-  var c = L.adCounter(store, RULES, kind, nowMs), A = STR[LANG].ad, net = AD_Q === 'offline' ? false : navigator.onLine !== false; heartSync();
-  var b = L.adButtonState(c, { online: net, noFill: AD_Q === 'nofill', heartsFull: kind === 'heart' && !L.heartAdOffered(HEARTS, RULES) });
+  var c = L.adCounter(store, RULES, kind, nowMs), A = STR[LANG].ad, net = navigator.onLine !== false; heartSync();
+  var b = L.adButtonState(c, { online: net, noFill: false, heartsFull: kind === 'heart' && !L.heartAdOffered(HEARTS, RULES) });
   if (b.note === 'full') return { button: false, note: null };
   if (b.note === 'cap'){ if (kind === 'heart') return { button: false, note: A.heartCap };
     var u = L.unlockCapState(walletTotal(), L.unlockPrice(RULES, g == null ? R.gates.base : g)); if (!u.note) return { button: false, note: null };
     return u.coinButton ? { button: false, cap: true, note: A.unlockCap, coinButton: A.coinUnlock(u.price), price: u.price, state: 'enough' } : { button: false, cap: true, note: A.unlockCapShort(u.short), small: A.earnByClearing, state: 'short' }; }
   return { button: true, enabled: b.enabled, label: A.remaining(b.remaining), note: b.note ? A[b.note] : null };
 }
-function balHtml(){ return '<div class="bal" aria-hidden="true">' + coinCap(WALLET, 18) + '</div>'; }
+function balHtml(){ return '<div class="bal" aria-hidden="true"><span class="cchip">' + coinChip(WALLET, true) + '</span></div>'; }
 function openUnlock(g){
   var U = STR[LANG].unlock, A = STR[LANG].ad, s = document.getElementById('sUnlock'), price = L.unlockPrice(R, g), u = adUi(AD_STORE, 'unlock', adNow(), g), h = '<div class="grab"></div>';
   h += '<h2 id="sUnlockH">' + esc(U.head(g)) + '</h2>' + balHtml() + '<p class="sr">' + esc(U.balAria(WALLET)) + '</p>';
@@ -2238,9 +2330,10 @@ function adStart(kind, g){
   document.getElementById('adTag').textContent = D.tag; document.getElementById('adT').textContent = D.adTitle;
   document.getElementById('adPre').innerHTML = jbr(kind === 'heart' ? STR[LANG].ad.before : STR[LANG].unlock.guide); document.getElementById('adB').innerHTML = jbr(D.adBody);
   var cl = document.getElementById('adClose'); cl.setAttribute('aria-label', D.adCloseAria);
-  var sc = document.getElementById('adScr'); sc.classList.add('on'); setInert(); cl.focus();
+  var db = document.getElementById('adDoneBtn'); db.hidden = true; db.textContent = D.adClose; document.getElementById('adGet').textContent = '';
+  var sc = document.getElementById('adScr'); sc.classList.add('on'); setInert(); cl.focus({ preventScroll: true });
   var nEl = document.getElementById('adN'); nEl.removeAttribute('aria-hidden');
-  var tick = function(){ if (AD.n <= 0){ AD.done = true; nEl.textContent = D.adDone; say(D.adDone); return; } nEl.textContent = D.adLeft(AD.n); AD.n--; AD.t = setTimeout(tick, 1000); };
+  var tick = function(){ if (AD.n <= 0){ AD.done = true; nEl.textContent = D.adDone; document.getElementById('adGet').textContent = kind === 'heart' ? D.adGetHeart : D.adGetGate(g); db.hidden = false; db.focus({ preventScroll: true }); say(D.adDone + (LANG === 'en' ? ' ' : '。') + document.getElementById('adGet').textContent); return; }   nEl.textContent = D.adLeft(AD.n); AD.n--; AD.t = setTimeout(tick, 1000); };
   nEl.setAttribute('aria-hidden', 'true');
   tick();
 }
@@ -2253,6 +2346,7 @@ function adDone(completed){ var k = AD.kind, g = AD.g; adEnd();
 }
 function adClose(){ if (AD.on) adDone(AD.done); }
 document.getElementById('adClose').addEventListener('click', adClose);
+document.getElementById('adDoneBtn').addEventListener('click', adClose);
 var HO_TIMER = null;
 function openHeartOut(){
   var O = STR[LANG].heartOut, s = document.getElementById('sHeartOut'), u = adUi(AD_STORE, 'heart', adNow()), h = '<div class="grab"></div>';
@@ -2263,7 +2357,7 @@ function openHeartOut(){
   h += '<button type="button" class="obtn" id="hoShop">' + esc(O.shop) + '</button>';
   s.innerHTML = h;
   var ab = document.getElementById('hoAd'); if (ab) ab.addEventListener('click', function(){ closeSheet(); adStart('heart'); });
-  document.getElementById('hoShop').addEventListener('click', function(){ closeSheet(); show('shop'); document.getElementById('shopBack').focus(); });
+  document.getElementById('hoShop').addEventListener('click', function(){ closeSheet(); show('shop'); document.getElementById('shopBack').focus({ preventScroll: true }); });
   clearInterval(HO_TIMER); HO_TIMER = setInterval(function(){ if (!s.classList.contains('on')){ clearInterval(HO_TIMER); return; } var p = document.getElementById('hoRegen'); if (p) p.innerHTML = jbr(O.regen(heartNextText())); if (HEARTS > 0){ clearInterval(HO_TIMER); closeSheet(); refreshWalletViews(); } }, 1000);
   SHEET_AFTER = function(){ if (SCREEN === 'game' && L.status(state) !== 'clear' && !HEART_IN_USE && !UNLIMITED_HEARTS && HEARTS === 0) show('home'); };
   openSheet('sHeartOut');
@@ -2279,7 +2373,7 @@ function buildShop(keep){
     '<div class="row" role="group" aria-label="' + esc(U.rowAria(U.hearts, UNLIMITED_HEARTS ? STR[LANG].heart.hudUnlimited : U.heartsVal(HEARTS))) + '"><span aria-hidden="true">' + esc(U.hearts) + '</span><span class="val" aria-hidden="true">' + ICON.heart(16, true) + (UNLIMITED_HEARTS ? '∞' : HEARTS + ' / ' + R.hearts.max) + '</span></div></div></div>';
   h += '<div class="grp"><div class="gl">' + esc(P.coinsGrp) + '</div><div class="box">';
   R.iap.products.filter(function(p){ return p.coins; }).forEach(function(p){
-    h += '<div class="row"><span class="nm"><span class="ln">' + ICON.cart(18) + esc(P.pack(p.coins + (p.bonus || 0))) + '</span>' + (p.bonus ? '<small>' + esc(P.packSub(p.coins, p.bonus)) + '</small>' : '') + '</span><button type="button" class="pr" data-buy="' + p.id + '" aria-label="' + esc(P.pack(p.coins + (p.bonus || 0)) + ' ¥' + p.priceJPY) + '">¥' + p.priceJPY + '</button></div>';
+    h += '<div class="row"><span class="nm"><span class="ln">' + ICON.cart(18) + esc(P.pack(p.coins + (p.bonus || 0))) + '</span>' + (p.bonus ? '<small>' + esc(STR[LANG].shop.bonus(p.bonus)) + '</small>' : '') + '</span><button type="button" class="pr" data-buy="' + p.id + '" aria-label="' + esc(P.pack(p.coins + (p.bonus || 0)) + ' ¥' + p.priceJPY) + '">¥' + p.priceJPY + '</button></div>';
   });
   h += '</div><p class="rnote2">' + jbr(P.minors) + '</p></div>';
   var un = R.iap.products.filter(function(p){ return p.type === 'nonConsumable'; })[0], rf = L.heartRefillOffer({ hearts: HEARTS, unlimited: UNLIMITED_HEARTS }, R, WALLET);
@@ -2289,35 +2383,42 @@ function buildShop(keep){
     (rf.note ? '<span class="rowNote">' + jbr(rf.note === 'full' ? P.full : P.short(rf.short)) + '</span>' : '');
   h += '</div></div>';
   h += restoreHtml('sh');
-  h += '<div class="grp"><div class="box">' + P.links.map(function(t){ return '<div class="row" aria-disabled="true"><span>' + esc(t) + '</span><span class="muted">' + esc(P.linkSoon) + '</span></div>'; }).join('') + '</div></div><div style="height:40px"></div>';
+  h += '<div class="grp"><div class="box">' + [P.coinsAbout].concat(P.links).map(function(t){   return '<div class="row" aria-disabled="true"><span>' + esc(t) + '</span><span class="muted">' + esc(P.linkSoon) + '</span></div>'; }).join('') + '</div></div><div style="height:40px"></div>';
   el.innerHTML = h; if (keep) el.scrollTop = top;
   el.querySelectorAll('[data-buy]').forEach(function(b){ b.addEventListener('click', function(){ openBuy(b.getAttribute('data-buy')); }); });
-  var rb = document.getElementById('shRefill'); if (rb) rb.addEventListener('click', function(){
-    var w = L.spendCoins(WALLET, rf.price); if (!w) return; WALLET = w; var r = L.heartShopRefill({ hearts: HEARTS, carryMs: HEART_CARRY }, R); HEARTS = r.hearts; HEART_CARRY = r.carryMs; buildShop(true); refreshWalletViews(); toast(P.refillDone); say(P.refillDone); var fb = document.getElementById('shRefill'); (fb && !fb.disabled ? fb : document.getElementById('shopBack')).focus(); });
+  var rb = document.getElementById('shRefill'); if (rb) rb.addEventListener('click', function(){ if (!rb.disabled) openRefill(rf.price); });
   wireRestore('sh');
 }
-function restoreHtml(p){ var Rs = STR[LANG].restore, r = SHOP_RES.restore;
+function openRefill(price){
+  var P = STR[LANG].shopScr, U = STR[LANG].unlock, s = document.getElementById('sRefill');
+  s.innerHTML = '<div class="grab"></div><h2 id="sRefillH">' + esc(P.refillQ(price)) + '</h2>' + balHtml() + '<p class="desc" id="sRefillB">' + jbr(P.refillSub) + '</p>' + (WALLET.paid > 0 ? '<p class="foot" id="sRefillP">' + jbr(U.confirmPaid) + '</p>' : '') +
+    '<div class="row2"><button type="button" class="obtn" data-close>' + esc(P.refillNo) + '</button><button type="button" class="pbtn" id="rGo">' + esc(P.refillGo) + '</button></div>';
+  document.getElementById('rGo').addEventListener('click', function(){ SHEET_AFTER = null; closeSheet(); doRefill(price); });
+  SHEET_AFTER = function(){ var fb = document.getElementById('shRefill'); (fb && !fb.disabled ? fb : document.getElementById('shopBack')).focus({ preventScroll: true }); };
+  openSheet('sRefill');
+}
+function doRefill(price){ var P = STR[LANG].shopScr; heartSync(); if (UNLIMITED_HEARTS || HEARTS >= R.hearts.max) return;
+    var rf = { price: price }, w = L.spendCoins(WALLET, rf.price); if (!w) return; WALLET = w; var r = L.heartShopRefill({ hearts: HEARTS, carryMs: HEART_CARRY }, R); HEARTS = r.hearts; HEART_CARRY = r.carryMs; buildShop(true); refreshWalletViews(); toast(P.refillDone); say(P.refillDone); var fb = document.getElementById('shRefill'); (fb && !fb.disabled ? fb : document.getElementById('shopBack')).focus({ preventScroll: true }); }
+function restoreHtml(p){ var Rs = STR[LANG].restore, r = SHOP_RES.restore && SHOP_RES.restoreAt === p ? SHOP_RES.restore : null;
   return '<div class="grp"><div class="gl">' + esc(STR[LANG].settingsScr.restoreGrp) + '</div><button type="button" class="wbtn" id="' + p + 'Restore">' + esc(Rs.button) + '</button><p class="rnote2">' + jbr(Rs.note) + '</p>' +
     '<div class="rres2" id="' + p + 'RRes" role="status">' + (r ? jbr(Rs[r]) + (r === 'success' ? '<small>' + jbr(Rs.successCoins) + '</small>' : '') + (r === 'failed' ? '<div class="rbtns"><button type="button" id="' + p + 'RClose">' + esc(Rs.close) + '</button><button type="button" id="' + p + 'RRetry">' + esc(Rs.retry) + '</button></div>' : '') : '') + '</div></div>'; }
 function wireRestore(p){
   var go = function(){
-    var k = QS('restoreres') === 'failed' && SHOP_RES.restore !== 'failed' ? 'failed' : UNLIMITED_HEARTS ? 'active' : UNLIMITED_OWNED ? 'success' : 'none';
+    var k = UNLIMITED_HEARTS ? 'active' : UNLIMITED_OWNED ? 'success' : 'none';
     if (k === 'success') UNLIMITED_HEARTS = true;
-    SHOP_RES.restore = k; if (p === 'sh') buildShop(true); else buildSettings(true); refreshWalletViews();
+    SHOP_RES.restore = k; SHOP_RES.restoreAt = p; if (p === 'sh') buildShop(true); else buildSettings(true); refreshWalletViews();
     var Rs = STR[LANG].restore; say(Rs[k] + (k === 'success' ? ' ' + Rs.successCoins : ''));
   };
   document.getElementById(p + 'Restore').addEventListener('click', go);
-  var rc = document.getElementById(p + 'RClose'); if (rc) rc.addEventListener('click', function(){ SHOP_RES.restore = null; if (p === 'sh') buildShop(true); else buildSettings(true); document.getElementById(p + 'Restore').focus(); });
+  var rc = document.getElementById(p + 'RClose'); if (rc) rc.addEventListener('click', function(){ SHOP_RES.restore = null; if (p === 'sh') buildShop(true); else buildSettings(true); document.getElementById(p + 'Restore').focus({ preventScroll: true }); });
   var rr = document.getElementById(p + 'RRetry'); if (rr) rr.addEventListener('click', go);
 }
 function openBuy(id){
   var P = STR[LANG].shopScr, D = STR[LANG].demo, p = R.iap.products.filter(function(x){ return x.id === id; })[0], nm = p.coins ? P.pack(p.coins + (p.bonus || 0)) : P.unlimited, s = document.getElementById('sBuy');
-  s.innerHTML = '<div class="grab"></div><div style="margin:16px 24px 0"><span class="dtag">' + esc(D.tag) + '</span></div><h2 id="sBuyH" style="margin-top:10px">' + esc(nm) + '　¥' + p.priceJPY + '</h2>' + (p.bonus ? '<p class="desc">' + esc(P.packSub(p.coins, p.bonus)) + '</p>' : '') +
+  s.innerHTML = '<div class="grab"></div><div style="margin:16px 24px 0"><span class="dtag">' + esc(D.tag) + '</span></div><h2 id="sBuyH" style="margin-top:10px">' + esc(nm) + (LANG === 'en' ? ' ¥' : '　¥') + p.priceJPY + '</h2>' + (p.bonus ? '<p class="desc">' + esc(STR[LANG].shop.bonus(p.bonus)) + '</p>' : '') +
     '<p class="desc">' + jbr(D.buyNote) + '</p><div class="row2"><button type="button" class="obtn" data-close>' + esc(D.cancel) + '</button><button type="button" class="pbtn" id="bGo">' + esc(D.buy) + '</button></div>';
   document.getElementById('bGo').addEventListener('click', function(){
-    var f = QS('buy'), msg;
-    if (f === 'fail') msg = P.failed; else if (f === 'pending') msg = P.pending;
-    else if (p.coins){ WALLET = L.grantPack(WALLET, p); msg = P.okCoins(p.coins + (p.bonus || 0)); }
+    var msg; if (p.coins){ WALLET = L.grantPack(WALLET, p); msg = P.okCoins(p.coins + (p.bonus || 0)); }
     else { UNLIMITED_HEARTS = true; UNLIMITED_OWNED = true; msg = P.okUnlimited; }
     buildShop(true); refreshWalletViews(); showResult(msg);
   });
@@ -2328,8 +2429,8 @@ function showResult(t){ var s = document.getElementById('sResult');
   openSheet('sResult'); say(t); }
 function buildSettings(keep){
   var T = STR[LANG].settingsScr, U = STR[LANG].ui, el = document.getElementById('setScroll'), top = el.scrollTop, h = '';
-  h += '<div class="grp"><div class="box">' + [T.music, T.sfx, T.haptics].map(function(k){ return '<div class="row" role="group" aria-label="' + esc(T.soonAria(k)) + '"><span aria-hidden="true">' + esc(k) + '</span><span class="rt" aria-hidden="true"><span class="muted">' + esc(U.soon) + '</span><span class="tg"></span></span></div>'; }).join('') +
-    '<button type="button" class="row" id="stTut"><span>' + esc(T.replayTut) + '</span><span class="chev" aria-hidden="true">›</span></button></div></div>';
+  h += '<div class="grp"><div class="gl">' + esc(T.soundGrp) + '</div><div class="box"><div class="row"><span style="font-size:15px;color:#5B5A56">' + jbr(T.sound) + '</span></div></div></div>';
+  h += '<div class="grp"><div class="box"><button type="button" class="row" id="stTut"><span>' + esc(T.replayTut) + '</span><span class="chev" aria-hidden="true">›</span></button></div></div>';
   h += '<div class="grp"><div class="gl" id="stLangL">' + esc(T.lang) + '</div><div class="box"><div class="seg" role="group" aria-labelledby="stLangL">' + ['ja', 'en'].map(function(k){ return '<button type="button" data-lang="' + k + '" lang="' + k + '" aria-pressed="' + (LANG === k) + '">' + T.langs[k] + '</button>'; }).join('') + '</div></div></div>';
   h += restoreHtml('st');
   h += '<div class="grp"><div class="gl">' + esc(T.aboutGrp) + '</div><div class="box">' +
@@ -2337,41 +2438,17 @@ function buildSettings(keep){
     [[T.madeBy, T.madeByVal], [T.version, T.versionVal]].map(function(r){ return '<div class="row" role="group" aria-label="' + esc(U.rowAria(r[0], r[1])) + '"><span aria-hidden="true">' + esc(r[0]) + '</span><span class="muted" aria-hidden="true">' + esc(r[1]) + '</span></div>'; }).join('') +
     '</div><p class="rnote2" id="stNoSave">' + jbr(T.noSave) + '</p></div><div style="height:40px"></div>';
   el.innerHTML = h; if (keep) el.scrollTop = top;
-  document.getElementById('stTut').addEventListener('click', function(){ TUT_DONE = false; play(1); });
+  document.getElementById('stTut').addEventListener('click', function(){ TUT_DONE = false; ['scrim', 'sheet', 'card', 'homeConfirm'].forEach(function(k){ document.getElementById(k).classList.remove('on'); }); setStage(1); show('game'); start(true); HEART_IN_USE = false; renderHearts(false); tutStart(); });
   el.querySelectorAll('[data-lang]').forEach(function(b){ b.addEventListener('click', function(){ var k = b.getAttribute('data-lang'); if (k === LANG) return;
-    var q = ['screen=settings', 'lang=' + k, 'cl=' + CLEARED, 'paid=' + WALLET.paid, 'free=' + WALLET.free, 'hearts=' + HEARTS]; if (UNLIMITED_HEARTS) q.push('unlimited=1');
-    location.search = '?' + q.join('&'); }); });
+    heartSync();
+    try { sessionStorage.setItem('tts_carry', JSON.stringify({ v: 1, at: Date.now(), wallet: WALLET, hearts: HEARTS, carry: HEART_CARRY, unlimited: UNLIMITED_HEARTS, owned: UNLIMITED_OWNED, ad: AD_STORE, cleared: CLEARED, tutDone: TUT_DONE, tutReward: TUT_REWARD_GIVEN, clearTotal: CLEAR_TOTAL, clearLast: CLEAR_LAST, stampDone: STAMP_DONE_SHOWN, prev: PREV_SCREEN })); } catch (e) {}
+    var hq = /[?&]hour=(\d{1,2})/.exec(QSTR), dq = /[?&]dt=large/.test(QSTR);
+    location.search = '?lang=' + k + (hq ? '&hour=' + hq[1] : '') + (dq ? '&dt=large' : ''); }); });
   wireRestore('st');
 }
 window.addEventListener('resize', fit); fit();
-setStage(Math.min(STAGES.length, +(QS('stage') || 1))); start(true);
-var Q0 = /[?&]screen=(title|home|my|game|shop|settings)/.exec(location.search); show(Q0 ? Q0[1] : 'title'); if (Q0 && (Q0[1] === 'shop' || Q0[1] === 'settings')) PREV_SCREEN = 'home';   if (SCREEN === 'game'){ heartStageStart(); if (STAGE_N === 1) tutStart(); }
-(function(){
-  var m = /[?&]restorepreview=(before|success|active|none|failed)/.exec(location.search); if (!m) return;
-  var k = m[1], T = STR[LANG].restore, box = document.createElement('div'); box.id = 'restorePreview'; box.className = 'abs'; box.lang = LANG; document.getElementById('app').appendChild(box);
-  var jb = function(t){ return LANG === 'ja' ? L.jaNoBreakHtml(t) : t; }, res = k === 'before' ? '' : jb(T[k]) + (k === 'success' ? '<small>' + jb(T.successCoins) + '</small>' : '');
-  box.innerHTML = '<button type="button" class="primary">' + T.button + '</button><p class="rnote">' + T.note + '</p>' + (res ? '<p class="rres" role="status">' + res + '</p>' : '') +
-    (k === 'failed' ? '<div class="rbtns"><button type="button">' + T.close + '</button><button type="button" class="primary">' + T.retry + '</button></div>' : '');
-  if (res) setTimeout(function(){ document.getElementById('live').textContent = T[k] + (k === 'success' ? ' ' + T.successCoins : ''); }, 300);
-})();
-(function(){
-  var m = /[?&]adpreview=(heart|unlock)/.exec(location.search); if (!m) return;
-  var kind = m[1], used = +((/[?&]adused=(\d+)/.exec(location.search) || [])[1] || 0), hq = /[?&]hour=(\d+)/.exec(location.search), now = hq ? new Date().setHours(+hq[1], 0, 0, 0) : Date.now(),   st = { day: L.adDayKey(now, RULES.ads.adResetHour), used: {} }; st.used[kind] = used;
-  var box = document.createElement('div'); box.id = 'adPreview'; box.className = 'abs'; box.lang = LANG; document.getElementById('app').appendChild(box);
-  function draw(){ var u = adUi(st, kind, now, R.gates.base);
-    box.innerHTML = (u.button ? '<button type="button" class="primary"' + (u.enabled ? '' : ' disabled aria-disabled="true"') + '>' + u.label + '</button>' : '') + (u.note ? '<p>' + (LANG === 'ja' ? L.jaNoBreakHtml(u.note) : u.note) + '</p>' : '') + (u.small ? '<p class="sm">' + (LANG === 'ja' ? L.jaNoBreakHtml(u.small) : u.small) + '</p>' : '') + (u.coinButton ? '<button type="button" class="coinBtn">' + u.coinButton + '</button>' : ''); }
-  var lastState = null; function say(u){ if (u.state && u.state !== lastState){ lastState = u.state; var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = u.note + (u.small ? ' ' + u.small : ''); }, 300); } }
-  var draw0 = draw; draw = function(){ draw0(); say(adUi(st, kind, now, R.gates.base)); };
-  window.TTS_setCoins = function(n){ WALLET = { paid: 0, free: n }; if (SCREEN === 'home') buildHome(); draw(); };
-  draw(); window.addEventListener('online', draw); window.addEventListener('offline', draw);
-})();
-window.TTS = { tap: onTap, adUi: adUi, stage: function(){ return STAGE_N; }, play: play, wallet: function(){ return WALLET; }, hearts: function(){ heartSync(); return HEARTS; },
-  setWallet: function(p, f){ WALLET = { paid: p, free: f }; refreshWalletViews(); }, setHearts: function(n){ HEARTS = n; HEART_CARRY = 0; HEART_MONO = performance.now(); refreshWalletViews(); }, openUnlock: openUnlock, openConfirm: openConfirm, openHeartOut: openHeartOut,
-  openBuy: openBuy, adStart: adStart, adOn: function(){ return AD.on; }, gateEls: function(){ return gateEls; }, showJam: showJam, setCleared: function(n){ CLEARED = n; for (var i = 1; i <= n; i++) CLEARED_SET[i] = true; },
-  setStage: function(n){ setStage(n); start(true); }, adStore: function(){ return AD_STORE; }, setAdUsed: function(k, n){ AD_STORE.used[k] = n; }, state: function(){ return state; }, canMove: function(id){ return L.canMove(state, id); }, status: function(){ return L.status(state); },
-  solution: function(){ return L.solve(state).moves; }, idle: function(){ return pending === 0; }, celebrated: function(){ return celebrated; }, restart: start, reducedMotion: RM, seatInfo: function(){ return SEAT_INFO; },
-  screen: function(){ return SCREEN; }, go: function(n){ if (n === 'game') play(); else show(n); }, cleared: function(){ return CLEARED; }, homeConfirm: function(){ return HC_ON; }, setClear: function(id, n){ renderClear({ id: id, n: n || 10 }); }, clearShown: function(){ return CLEAR_SHOWN; }, tut: function(){ return { on: TUT.on, step: TUT.step, busy: !!TUT.busy, target: TUT.target && TUT.target.id }; },
-  taxiDone: function(){ return Object.keys(taxiRun).every(function(k){ return taxiRun[k].done; }); } };
+setStage(1); start(true);
+var Q0 = CARRY ? [null, 'settings'] : null; show(Q0 ? Q0[1] : 'title'); if (CARRY && /^(title|home|my)$/.test(CARRY.prev)){ PREV_SCREEN = CARRY.prev; backAria(); }   if (Q0 && !CARRY && (Q0[1] === 'shop' || Q0[1] === 'settings')) PREV_SCREEN = 'home';   if (SCREEN === 'game'){ heartStageStart(); if (STAGE_N === 1) tutStart(); }
 })();
 </script>
 </body>
