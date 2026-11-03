@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Take to the sky デモ v0.3</title>
+<title>Take to the sky デモ v0.7</title>
 <style>
 :root{--paper:#F6F5F1;--ink:#1F1F1D;--graphite:#5B5A56;--sky:#2B5C8A;--band:#E6EFF6;--room:#EEF3F8;--gate:#E4ECF4;--runway:#E6E3DC;--edge:#CFCBC3;--sign:#24272B;--signText:#F2C94C;--taxi:#D9B44A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -71,6 +71,7 @@ body{display:flex;align-items:flex-start;justify-content:center;font-family:-app
 #scrim.on{opacity:1;pointer-events:auto}
 #sheet{left:0;width:390px;bottom:0;background:#fff;border-radius:24px 24px 0 0;padding:24px 16px 50px;transform:translateY(110%);transition:transform .25s ease}
 #sheet.on{transform:none}
+#sheet .tclose{display:block;margin:8px auto 0;min-width:96px;min-height:44px;padding:0 16px;border:0;background:none;color:var(--sky);font:inherit;font-size:16px;font-weight:700;cursor:pointer} /* m10 の「閉じる」（文字のボタン、当たり44pt以上。CD v0.6） */
 #card{left:16px;width:358px;top:250px;background:#fff;border-radius:24px;padding:32px 16px 16px;text-align:center;opacity:0;pointer-events:none}
 #card.on{opacity:1;pointer-events:auto}
 h2{margin:0 0 8px;font-size:20px;font-weight:700}
@@ -79,10 +80,14 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #card .sub{font-size:17px;word-break:auto-phrase}
 #cardEn{margin:0 0 4px;font-size:20px;font-weight:700;color:var(--sky)}
 #cardEn:empty{display:none}
-#stampMsg{margin:14px 24px 0;text-align:center;opacity:0;min-height:44px}
-#stampHead{margin:0;font-size:17px;font-weight:700;color:var(--sky);line-height:24px}
+/* スタンプカード完成：7日目が押されたときだけ、シートの上に1回だけ出す札（CD v0.6）。閉じるとカードと4時の行だけに戻る */
+#stampDone{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.72);border-radius:inherit}
+#stampDone[hidden]{display:none}
+#stampDone .dc{width:326px;background:#fff;border-radius:20px;border:1px solid var(--edge);box-shadow:0 8px 24px rgba(31,31,29,.16);padding:24px 0 16px;text-align:center}
+#stampDone .obtn{width:278px}
+#stampHead{margin:0 24px;font-size:22px;font-weight:700;color:var(--sky);line-height:28px}
 #stampDay{margin:10px 24px 0;text-align:center;font-size:12px;line-height:17px;color:var(--graphite)}
-#stampSub{margin:2px 0 0;font-size:13px;color:var(--graphite);line-height:18px}
+#stampSub{margin:6px 24px 0;font-size:14px;color:var(--graphite);line-height:20px}
 #hGreet{position:absolute;left:24px;right:24px;top:104px;font-size:15px;line-height:20px;color:var(--graphite)}
 #hGreet:empty{display:none}
 #restorePreview{left:24px;right:24px;top:520px;z-index:60;background:#fff;border-radius:16px;padding:12px;box-shadow:0 4px 16px rgba(31,31,29,.15)}
@@ -96,11 +101,13 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #adPreview .primary[disabled]{background:#CFCBC3;color:#5B5A56;cursor:default}
 #adPreview .coinBtn{display:block;width:100%;height:48px;margin-top:10px;border-radius:14px;background:#fff;border:1px solid #CFCBC3;color:var(--ink);font:inherit;font-size:15px;font-weight:600}
 #adPreview p.sm{font-size:12px}
+.sent{display:inline-block} /* 日本語の改行は「。」のあとだけ（CD m09c） */
+.nb{white-space:nowrap} /* 「コイン{d}枚」は1つのかたまり */
 #adPreview p{margin:8px 0 0;font-size:13px;line-height:18px;color:var(--graphite);text-align:center}
 .primary{display:block;width:100%;height:56px;border:0;border-radius:16px;background:var(--sky);color:#fff;font:inherit;font-size:17px;font-weight:700;cursor:pointer}
 #card .primary{height:64px}
 .primary:active{transform:scale(.98)}
-#credit{left:0;right:0;top:826px;text-align:center;font-size:10px;color:#8C8A84;letter-spacing:.02em}
+#credit{left:0;right:0;top:822px;text-align:center;font-size:12px;line-height:16px;color:#5B5A56;letter-spacing:.02em} /* CD v0.3.12：#5B5A56・12px（コントラスト4.5:1以上） */
 /* ---- 空港の飾り（v0.3。静止・読み上げなし・タップを通す） ---- */
 .decor{left:0;top:0;width:390px;height:844px;pointer-events:none;overflow:visible}
 #roomTitle{left:24px;top:155px;height:24px;padding:0 10px 0 8px;border-radius:5px;background:var(--sign);color:var(--signText);font-size:14px;line-height:24px;display:flex;align-items:center;gap:5px;letter-spacing:.04em}
@@ -132,13 +139,13 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .bigbtn:active{transform:scale(.98)}
 #tStart{left:24px;top:730px;width:342px;height:56px}
 .fade0{opacity:0}
-.credit2{position:absolute;left:0;right:0;top:812px;text-align:center;font-size:10px;color:#8C8A84;letter-spacing:.02em}
+.credit2{position:absolute;left:0;right:0;top:808px;text-align:center;font-size:12px;line-height:16px;color:#5B5A56;letter-spacing:.02em}
 /* ホーム */
 #hHud{position:absolute;left:16px;top:61px;height:28px;display:flex;align-items:center;gap:6px}
 .hearts{display:flex;gap:2px}
-.cap{display:flex;align-items:center;height:28px;padding:0 8px;border-radius:14px;background:#fff;border:1px solid var(--edge);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;margin-left:4px}
+.cap{display:flex;align-items:center;height:40px;box-sizing:border-box;padding:0 10px;border-radius:20px;background:#fff;border:1px solid var(--edge);font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;margin-left:4px}
 .cap svg{flex:none;display:block}
-.cap .dv{width:1px;height:16px;background:var(--edge);margin:0 7px}
+.cap .dv{width:1px;height:20px;background:var(--edge);margin:0 7px}
 .cap span{margin-left:3px}
 .ex{display:inline-block;height:18px;padding:0 6px;border-radius:9px;border:1px dashed #8C8A84;font-size:10px;line-height:16px;color:var(--graphite);font-weight:600;white-space:nowrap}
 #hRouteT{position:absolute;left:24px;top:168px;font-size:17px;font-weight:700;line-height:22px}
@@ -183,6 +190,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .bp .d.today{background:#E6EFF6;border:2px solid var(--sky)}
 .bp .d.d7{grid-column:span 2}
 .bp .d .t{position:absolute;left:0;right:0;top:4px;font-size:12px;font-weight:700;color:var(--graphite);line-height:18px}
+.bp.en .d .t{white-space:nowrap;letter-spacing:-.2px} /* 英語の「Day 3 · Today」を1行に */
 .bp .d.done .t{color:var(--ink)}
 .bp .d .s{position:absolute;left:50%;top:50px;transform:translate(-50%,-50%)}
 .bp .d .p{position:absolute;left:0;right:0;top:72px;font-size:15px;font-weight:700;color:var(--graphite);line-height:20px;font-variant-numeric:tabular-nums}
@@ -235,6 +243,8 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #tutGhost{pointer-events:none}
 .tutRing{fill:none;stroke:#FFFFFF;stroke-width:3}
 .tutRing.tutDash{stroke-width:2;stroke-dasharray:4 4;opacity:.7}
+.tutFlow{animation:tutFlow .9s linear infinite}
+@keyframes tutFlow{to{stroke-dashoffset:-11}}
 .tutPulse{animation:tutPulse 1.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
 @keyframes tutPulse{0%,100%{opacity:1}50%{opacity:.55}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
@@ -245,17 +255,17 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   <div id="band" class="abs"></div>
   <svg id="decorSky" class="abs decor" viewBox="0 0 390 844" aria-hidden="true"></svg>
   <button id="homeBtn" class="abs" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.6 12 4l8 6.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.2 9.4V19a1 1 0 0 0 1 1h3.3v-5.2h3V20h3.3a1 1 0 0 0 1-1V9.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
-  <div id="stagePill" class="abs">ステージ 1</div>
+  <div id="stagePill" class="abs">ステージ1</div>
   <div id="gHearts" class="abs" role="img"></div>
   <button id="heartTip" class="abs" type="button"></button>
-  <button id="restart" class="abs">最初から</button>
-  <div id="nextLbl" class="abs">次</div>
+  <button id="restart" class="abs" data-t="restart">やり直す</button>
+  <div id="nextLbl" class="abs" data-t="next">次</div>
   <div id="dots" class="abs">…</div>
-  <div id="waitLbl" class="abs">待っている人</div>
+  <div id="waitLbl" class="abs" data-t="waiting">待っている人</div>
   <div id="waitNum" class="abs">0人</div>
   <div id="room" class="abs"></div>
   <svg id="decorRoom" class="abs decor" viewBox="0 0 390 844" aria-hidden="true"></svg>
-  <div id="roomTitle" class="abs"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M2.5 19h19v2h-19zM22.07 9.64c-.21-.8-1.04-1.28-1.84-1.06L14.92 10l-6.9-6.43-1.93.51 4.14 7.17-4.97 1.33-1.97-1.54-1.45.39 2.59 4.49 16.57-4.43c.81-.23 1.28-1.05 1.07-1.85z"/></svg>搭乗口</div>
+  <div id="roomTitle" class="abs"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M2.5 19h19v2h-19zM22.07 9.64c-.21-.8-1.04-1.28-1.84-1.06L14.92 10l-6.9-6.43-1.93.51 4.14 7.17-4.97 1.33-1.97-1.54-1.45.39 2.59 4.49 16.57-4.43c.81-.23 1.28-1.05 1.07-1.85z"/></svg><span data-t="boardingArea">搭乗口</span></div>
   <div id="roomCount" class="abs">20/20</div>
   <div id="gates"></div>
   <div id="runway" class="abs"></div>
@@ -264,7 +274,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
   <div id="seats"></div>
   <div id="paxLayer"></div>
   <div id="whyTag" class="abs" lang="ja" aria-hidden="true"></div>
-  <div id="credit" class="abs">Reach High Studio　デモ v0.3</div>
+  <div id="credit" class="abs" data-t="credit">Reach High Studio　デモ v0.7</div>
   <svg id="fx" class="abs" viewBox="0 0 390 844"></svg>
   <div id="scrim" class="abs"></div>
   <div id="confetti" class="abs"></div>
@@ -275,9 +285,9 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     <button id="cardNext" class="primary" data-act="next"></button>
   </div>
   <div id="sheet" class="abs" role="dialog" aria-modal="true">
-    <h2>動かせる飛行機がありません</h2>
-    <p class="sub">最初からやり直せます</p>
-    <button class="primary" data-act="retry">もう一度</button>
+    <h2 data-t="stuckHead">ここで渋滞みたい。作戦を立て直そうか</h2>
+    <button class="primary" data-act="retry" data-t="tryAgain">やり直す</button>
+    <button type="button" class="tclose" id="jamClose" data-t="jamClose">閉じる</button>
   </div>
   <div id="homeConfirm" class="abs" role="alertdialog" aria-modal="true" aria-labelledby="hcQ" aria-describedby="hcBody hcNote">
     <p id="hcQ"></p><p id="hcBody"></p><p id="hcNote"></p>
@@ -294,78 +304,79 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     </div>
   </div>
   <!-- v0.3.2：扉絵・ホーム・マイページ。見た目は screens_v02 の採用案 A。数値の例は「表示例」と示す -->
-  <section id="scrTitle" class="screen" aria-label="扉絵">
+  <section id="scrTitle" class="screen" aria-label="扉絵" data-ta="titleAria">
     <svg class="scene" id="tScene" viewBox="0 0 390 844" aria-hidden="true"></svg>
     <div class="ttl" id="tL1" style="top:99px">Take to</div>
     <div class="ttl" id="tL2" style="top:147px">the sky</div>
     <h1 class="sr">Take to the sky</h1>
     <div class="subttl" id="tSub"></div>
-    <button class="ibtn tfade" id="tInfo" style="left:288px;top:41px" aria-label="このアプリについて"></button>
-    <button class="ibtn tfade" id="tGear" style="left:332px;top:41px" aria-label="設定（準備中）" aria-disabled="true"></button>
-    <button class="bigbtn tfade" id="tStart">スタート</button>
-    <div class="credit2 tfade">Reach High Studio　デモ v0.3</div>
+    <button class="ibtn tfade" id="tInfo" style="left:288px;top:41px" aria-label="このアプリについて" data-ta="about"></button>
+    <button class="ibtn tfade" id="tGear" style="left:332px;top:41px" aria-label="設定（準備中）" data-ta="settingsSoon" aria-disabled="true"></button>
+    <button class="bigbtn tfade" id="tStart" data-t="start">スタート</button>
+    <div class="credit2 tfade" data-t="credit">Reach High Studio　デモ v0.7</div>
   </section>
-  <section id="scrHome" class="screen" aria-label="ホーム">
+  <section id="scrHome" class="screen" aria-label="ホーム" data-ta="home">
     <svg class="scene" id="hScene" viewBox="0 0 390 844" aria-hidden="true"></svg>
-    <h1 class="sr">ホーム</h1>
+    <h1 class="sr" data-t="home">ホーム</h1>
     <p id="hGreet"></p>
     <div id="hHud" role="img"></div>
-    <button class="ibtn" id="hGear" style="left:330px;top:53px" aria-label="設定（準備中）" aria-disabled="true"></button>
-    <div id="hRouteT">飛行ルート</div>
+    <button class="ibtn" id="hGear" style="left:330px;top:53px" aria-label="設定（準備中）" data-ta="settingsSoon" aria-disabled="true"></button>
+    <div id="hRouteT" data-t="route">飛行ルート</div>
     <div id="hRouteN"></div>
     <div id="hRouteA" class="sr"></div>
     <div class="hcards">
-      <button class="hcard" id="hStamp" aria-haspopup="dialog"><span class="ic" id="icStamp"></span><span class="lb">スタンプ</span><span class="sb">3日目（表示例）</span></button>
-      <button class="hcard" id="hMy"><span class="ic" id="icMy"></span><span class="lb">マイページ</span><span class="sb">記録と持ち物</span></button>
-      <button class="hcard" id="hShop" aria-disabled="true" aria-label="ショップ（準備中）"><span class="ic" id="icShop"></span><span class="lb">ショップ</span><span class="sb">準備中</span></button>
+      <button class="hcard" id="hStamp" aria-haspopup="dialog"><span class="ic" id="icStamp"></span><span class="lb" data-t="stamps">スタンプ</span><span class="sb" data-t="day3sample">3日目（表示例）</span></button>
+      <button class="hcard" id="hMy"><span class="ic" id="icMy"></span><span class="lb" data-t="profile">マイページ</span><span class="sb" data-t="logItems">記録と持ち物</span></button>
+      <button class="hcard" id="hShop" aria-disabled="true" aria-label="ショップ（準備中）" data-ta="shopSoon"><span class="ic" id="icShop"></span><span class="lb" data-t="shop">ショップ</span><span class="sb" data-t="soon">準備中</span></button>
     </div>
-    <div id="hNote"><div id="hNoteT"></div><button id="hReplay">ステージ 1 を遊ぶ</button></div>
-    <button class="bigbtn" id="hPlay"><span>プレイ</span><span id="hPlayN">ステージ 1</span></button>
+    <div id="hNote"><div id="hNoteT"></div><button id="hReplay" data-t="playStage1">ステージ1を遊ぶ</button></div>
+    <button class="bigbtn" id="hPlay"><span data-t="play">プレイ</span><span id="hPlayN">ステージ1</span></button>
   </section>
-  <section id="scrMy" class="screen" aria-label="マイページ">
-    <div class="nav"><button class="back" id="myBack" aria-label="戻る（ホームへ）"><svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>戻る</button><h1>マイページ</h1></div>
+  <section id="scrMy" class="screen" aria-label="マイページ" data-ta="profile">
+    <div class="nav"><button class="back" id="myBack" aria-label="戻る（ホームへ）" data-ta="backHome"><svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="back">戻る</span></button><h1 data-t="profile">マイページ</h1></div>
     <div class="scroll" id="myScroll">
-      <div class="grp"><div class="gl">記録</div>
+      <div class="grp"><div class="gl" data-t="flightLog">記録</div>
         <div class="box stats">
-          <div class="stat"><div class="k">クリアしたステージ</div><div class="n" id="myCleared">0<small>ステージ</small></div></div>
-          <div class="stat"><div class="k">次のステージ</div><div class="n" id="myNext">1</div></div>
+          <div class="stat"><div class="k" data-t="stagesCleared">クリアしたステージ</div><div class="n" id="myCleared">0</div></div>
+          <div class="stat"><div class="k" data-t="nextStage">次のステージ</div><div class="n" id="myNext">1</div></div>
         </div>
-        <div class="mynote">このデモで遊んだ結果です。</div>
+        <div class="mynote" data-t="myResults">このデモで遊んだ結果だよ</div>
       </div>
-      <div class="grp"><div class="gl">持ち物<span class="ex">表示例（デモ）</span></div>
+      <div class="grp"><div class="gl"><span data-t="items">持ち物</span><span class="ex" data-t="sampleDemo">表示例（デモ）</span></div>
         <div class="box">
-          <div class="row" role="group" aria-label="買ったコイン（表示例）：120"><span>買ったコイン</span><span class="val" aria-hidden="true"><span id="myCart"></span>120</span></div>
-          <div class="row" role="group" aria-label="もらったコイン（表示例）：340"><span>もらったコイン</span><span class="val" aria-hidden="true"><span id="myGift"></span>340</span></div>
-          <div class="row" role="group" aria-label="ハート（表示例）：5つ中4つ"><span>ハート</span><span class="val" aria-hidden="true"><span id="myHearts" class="hearts"></span>4 / 5</span></div>
-          <div class="row" aria-disabled="true" aria-label="ショップ（準備中）"><span style="color:var(--graphite)">ショップ</span><span class="muted">準備中</span></div>
+          <div class="row" role="group" id="myRowPaid"><span data-t="paidCoins">買ったコイン</span><span class="val" aria-hidden="true"><span id="myCart"></span><span id="myPaid">120</span></span></div>
+          <div class="row" role="group" id="myRowFree"><span data-t="freeCoins">もらったコイン</span><span class="val" aria-hidden="true"><span id="myGift"></span><span id="myFree">340</span></span></div>
+          <div class="row" role="group" id="myRowHearts"><span data-t="hearts">ハート</span><span class="val" aria-hidden="true"><span id="myHearts" class="hearts"></span>4 / 5</span></div>
+          <div class="row" aria-disabled="true" aria-label="ショップ（準備中）" data-ta="shopSoon"><span style="color:var(--graphite)" data-t="shop">ショップ</span><span class="muted" data-t="soon">準備中</span></div>
         </div>
-        <div class="mynote">コインとハートは、まだゲームに入っていません。数字は見た目の例です。</div>
+        <div class="mynote" data-t="notInGame">コインとハートは、まだゲームに入っていないよ。数字は見た目の例だよ</div>
       </div>
-      <div class="grp"><div class="gl">スタンプカード<span class="ex">表示例（デモ）</span></div>
+      <div class="grp"><div class="gl"><span data-t="stampCard">スタンプカード</span><span class="ex" data-t="sampleDemo">表示例（デモ）</span></div>
         <div id="myBp"></div>
-        <div class="mynote">毎日最初に開いたとき、自動で押されます。休んだ日があっても、続きから押せます。</div>
+        <div class="mynote" data-t="stampHow">毎日最初に開いたとき、自動で押されるよ。休んだ日があっても、続きから押せるよ</div>
       </div>
-      <div class="grp"><div class="gl">記録の保存</div>
-        <div class="box para"><p>記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。</p><p>このデモでは保存しません。ページを閉じると最初に戻ります。</p></div>
+      <div class="grp"><div class="gl" data-t="saving">記録の保存</div>
+        <div class="box para"><p data-t="icloud">記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。</p><p data-t="noSave">このデモでは保存しません。ページを閉じると最初に戻ります。</p></div>
       </div>
-      <div class="mycredit">Take to the sky<br>Reach High Studio　デモ v0.3</div>
+      <div class="mycredit">Take to the sky<br><span data-t="credit">Reach High Studio　デモ v0.7</span></div>
     </div>
   </section>
   <div class="scrim2" id="sScrim"></div>
   <div class="sheet2" id="sStamp" role="dialog" aria-modal="true" aria-labelledby="sStampH">
     <div class="grab"></div>
-    <h2 id="sStampH">スタンプカード <span class="ex" style="vertical-align:middle">表示例（デモ）</span></h2>
-    <p class="desc">毎日最初に開いたとき、自動で押されます。<br>休んだ日があっても、続きから押せます。</p>
+    <h2 id="sStampH"><span data-t="stampCard">スタンプカード</span> <span class="ex" style="vertical-align:middle" data-t="sampleDemo">表示例（デモ）</span></h2>
+    <p class="desc" data-tbr="stampHow">毎日最初に開いたとき、自動で押されるよ。<br>休んだ日があっても、続きから押せるよ</p>
     <div id="sBp"></div>
-    <div id="stampMsg" role="group"><p id="stampHead" lang="en"></p><p id="stampSub"></p></div>
-    <p id="stampDay" aria-hidden="true"></p><p class="foot">7日目のあとは、新しいカードになります。</p>
-    <button class="obtn" data-close>閉じる</button>
+    <p id="stampDay" aria-hidden="true"></p>
+    <p class="foot" data-t="newCard">7日目のあとは、新しいカードになるよ</p>
+    <button class="obtn" data-close data-t="close">閉じる</button>
+    <div id="stampDone" role="group" aria-labelledby="stampHead stampSub" hidden><div class="dc"><p id="stampHead" lang="en"></p><p id="stampSub"></p><button type="button" class="obtn" id="stampDoneClose" data-t="close">閉じる</button></div></div>
   </div>
   <div class="sheet2" id="sAbout" role="dialog" aria-modal="true" aria-labelledby="sAboutH">
     <div class="grab"></div>
-    <h2 id="sAboutH">このアプリについて</h2>
-    <p class="desc">Take to the sky<br>制作：Reach High Studio<br>デモ v0.3（ステージ 1 だけ遊べます）</p>
-    <button class="obtn" data-close>閉じる</button>
+    <h2 id="sAboutH" data-t="about">このアプリについて</h2>
+    <p class="desc">Take to the sky<br><span data-t="madeBy">制作：Reach High Studio</span><br><span data-t="demoVer">デモ v0.7（ステージ1だけ遊べるよ）</span></p>
+    <button class="obtn" data-close data-t="close">閉じる</button>
   </div>
   <div id="toast" role="status" aria-live="polite"></div>
   <div id="live" class="sr" aria-live="polite"></div>
@@ -683,7 +694,57 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     st.used[kind] = (st.used[kind] || 0) + 1; return st;
   }
 
-  return { createGame: createGame, canMove: canMove, legalMoves: legalMoves, tap: tap, isClear: isClear,
+  // ---- ホームのあいさつ（CD v0.3.12）：朝 5:00〜10:59／昼 11:00〜15:59／夕 16:00〜18:59／夜 19:00〜4:59
+  function greetBand(hour) {
+    var h = ((hour % 24) + 24) % 24;
+    return h >= 5 && h < 11 ? 'morning' : h >= 11 && h < 16 ? 'day' : h >= 16 && h < 19 ? 'evening' : 'night';
+  }
+  // 前回開いてから4時間以上あいたときだけ（日付が変わっただけでは出さない）。3日以上は「おかえり」、14日以上は続きのステージつき。初めては出す
+  function greetKind(lastMs, nowMs, hour) {
+    var H = 3600000, gap = lastMs ? nowMs - lastMs : Infinity;
+    if (lastMs && gap >= 14 * 24 * H) return 'back14';
+    if (lastMs && gap >= 3 * 24 * H) return 'back';
+    return !lastMs || gap >= 4 * H ? greetBand(hour) : null;
+  }
+  // ---- 日本語の文の改行（CD m09c）：改行は「。」のあとだけ。「コイン{d}枚」は1つのかたまり（コインと数のあいだで切らない）
+  function escHtml(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function jaNoBreakHtml(text) {
+    var parts = String(text).match(/[^。]+。?/g) || [];
+    return parts.map(function (p) {
+      var h = escHtml(p).replace(/コイン\d+枚/g, function (m) { return '<span class="nb">' + m + '</span>'; });
+      return '<span class="sent">' + h + '</span>';
+    }).join('');
+  }
+  // ---- 読み上げのラベルをつなぐ：日本語は「。」、英語は「. 」
+  function ariaJoin(parts, lang) {
+    var list = parts.filter(function (x) { return x; });
+    if (lang === 'en') return list.map(function (x) { return x.replace(/[.\s]+$/, ''); }).join('. ') + '.';
+    return list.map(function (x) { return x.replace(/。$/, ''); }).join('。');
+  }
+
+  // ---- 読み上げの文（CD v0.6 レビュー）。画面の文字とは別
+  var SIZE_LBL = { ja: { S: '小さい', M: '中くらいの', L: '大きい' }, en: { S: 'small', M: 'medium', L: 'large' } };
+  var DIR_LBL = { ja: { up: '上向き', down: '下向き', left: '左向き', right: '右向き' }, en: { up: 'up', down: 'down', left: 'left', right: 'right' } };
+  function capFirst(t) { return t.charAt(0).toUpperCase() + t.slice(1); } // 文頭の1文字だけ大文字
+  // 飛行機：日本語「赤の丸、小さい飛行機（4席）、上向き」／英語「Red circle, small plane (4 seats), facing up」
+  function planeAria(color, size, dir, seats, lang) {
+    if (lang === 'en') return capFirst(color.en) + ', ' + SIZE_LBL.en[size] + ' plane (' + seats + ' seats), facing ' + DIR_LBL.en[dir];
+    return color.ja + '、' + SIZE_LBL.ja[size] + '飛行機（' + seats + '席）、' + DIR_LBL.ja[dir];
+  }
+  // ゲート：日本語「A1、空き」／英語「A1, open」。機が入っているときは番号だけ（機の読み上げは機のほう）
+  function gateAria(g, open, lang) { var no = 'A' + (g + 1); return open ? no + (lang === 'en' ? ', open' : '、空き') : no; }
+  // スタンプカード：n 日目までのコイン（7日目は +30、ほかは +10。カードの数字と同じ）
+  function stampCoins(n) { return n === 7 ? 30 : 10; }
+  function stampAria(n, lang) {
+    if (lang === 'en') return ['Stamp card (sample): ' + n + ' of 7 days stamped', 'Today is day ' + n + ', ' + stampCoins(n) + ' earned coins'];
+    return ['スタンプカード（表示例）：7日のうち' + n + '日分が押してあるよ', '今日は' + n + '日目、もらったコイン' + stampCoins(n) + '枚'];
+  }
+  // 盤面の端（外側の1周）にいないマス。チュートリアル③の例の機に使う
+  function isInnerCell(s, col, row) { return col > 0 && row > 0 && col < s.cols - 1 && row < s.rows - 1; }
+  // 完成の札（Frequent flyer!）は、7日目が押されたときだけ、1回だけ
+  function stampDoneShown(day, alreadyShown) { return day === 7 && !alreadyShown; }
+
+  return { greetBand: greetBand, greetKind: greetKind, jaNoBreakHtml: jaNoBreakHtml, ariaJoin: ariaJoin, planeAria: planeAria, gateAria: gateAria, stampCoins: stampCoins, stampAria: stampAria, stampDoneShown: stampDoneShown, isInnerCell: isInnerCell, createGame: createGame, canMove: canMove, legalMoves: legalMoves, tap: tap, isClear: isClear,
            isStuck: isStuck, status: status, solve: solve, randomClearRate: randomClearRate, mulberry32: mulberry32,
            planeById: planeById, hasMatch: hasMatch, DIRS: DIRS,
            moveRange: moveRange, isPerfectClear: isPerfectClear, pickClear: pickClear, quitNeedsConfirm: quitNeedsConfirm, saveProgress: saveProgress, restoreProgress: restoreProgress, heartRegen: heartRegen, guardedNow: guardedNow, adButtonState: adButtonState, heartSpend: heartSpend, heartGain: heartGain, heartClearRefund: heartClearRefund, heartAdOffered: heartAdOffered, heartAdReward: heartAdReward, heartShopRefill: heartShopRefill, unlockCapState: unlockCapState, clearReward: clearReward, applyRevocation: applyRevocation, spendCoins: spendCoins, grantPack: grantPack, unlimitedOffers: unlimitedOffers, unlimitedEnd: unlimitedEnd, adDayKey: adDayKey, adToday: adToday, adCounter: adCounter, adFinish: adFinish };
@@ -702,6 +763,7 @@ var RM = (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').ma
 var COLOR = {}; R.colors.forEach(function(c){ COLOR[c.id] = c; });
 var SIZE_JA = { S: '小さい', M: '中くらいの', L: '大きい' };
 var DIR_JA = { up: '上向き', down: '下向き', left: '左向き', right: '右向き' };
+function planeAria(c, size, dir){ return L.planeAria(c, size, dir, R.seats[size], LANG); } // 飛行機の読み上げ（logic.js、テストつき）。英語は rules.json の en（CD v0.6 レビュー）
 var DIR_DEG = { up: 0, right: 90, down: 180, left: -90 };
 var app = document.getElementById('app');
 var SVGNS = 'http://www.w3.org/2000/svg';
@@ -719,7 +781,9 @@ var TAXI_Y = 474;
 function cellCenter(c, r){ return { x: RW.x + CELL.w * (c + .5), y: RW.y + CELL.h * (r + .5) }; }
 function gateCenter(g){ return { x: GATE_X(g) + GATE_W / 2, y: GATE_Y + 46 }; }
 function slotCenter(i){ var c = i % R.boardingArea.cols, r = Math.floor(i / R.boardingArea.cols); return { x: 115 + 40 * c, y: 211 + 44 * r }; }
-function queueCenter(q){ return { x: 46 + 30 * Math.min(q, R.waitingLine.visible), y: 121 }; }
+var QX0 = 46, QDX = 30; // 待ち列の1人目の中心と間隔。「次」／Next の札の幅だけ1人目を右へずらす（英語で Next が隠れないように。CD v0.6）
+function queueFit(){ var w = document.getElementById('nextLbl').offsetWidth || 0, x0 = Math.max(46, 16 + w + 4 + 11); QDX = Math.min(30, (265 - 11 - x0) / (R.waitingLine.visible - 1)); QX0 = x0; } // 右端（…の手前 265）に収める
+function queueCenter(q){ return { x: QX0 + QDX * Math.min(q, R.waitingLine.visible), y: 121 }; }
 var STAGE_PLANE = {}; S.planes.forEach(function(p){ STAGE_PLANE[p.id] = p; });
 
 // ---- 空港の飾り（v0.3）。動かない・意味を持たせない・読み上げない ----
@@ -788,14 +852,14 @@ function build(){
   gateEls = []; planeEls = {}; paxEls = [];
   for (var g = 0; g < R.gates.base; g++){
     var d = document.createElement('div'); d.className = 'gate abs'; d.style.left = GATE_X(g) + 'px';
-    d.innerHTML = '<span class="no">A'+(g+1)+'</span><span class="cnt"></span><span class="empty">空き</span>';
+    d.innerHTML = '<span class="no" aria-hidden="true">A'+(g+1)+'</span><span class="cnt" aria-hidden="true"></span><span class="empty" aria-hidden="true">' + STR[LANG].ui.gateOpen + '</span>'; d.setAttribute('role', 'img'); d.setAttribute('aria-label', L.gateAria(g, true, LANG));
     gatesEl.appendChild(d); gateEls.push(d);
   }
   S.planes.forEach(function(p){
     var c = COLOR[p.color], len = R.planeLengthPt.runway[p.size];
     var e = document.createElement('div'); e.className = 'plane abs'; e.style.width = len + 'px'; e.style.height = len + 'px';
     e.setAttribute('role', 'button');
-    e.setAttribute('aria-label', c.ja + '、' + SIZE_JA[p.size] + '飛行機（' + R.seats[p.size] + '席）、' + DIR_JA[p.dir]);
+    e.setAttribute('aria-label', planeAria(c, p.size, p.dir));
     e.innerHTML = '<div class="hit"></div><div class="pop"><div class="body">' + planeBody(c.hex) + '</div><div class="sym">' + planeSym(c.symbol) + '</div></div>';
     // 席数バッジ：飛行機より上の別の層。見た目（.seat）と当たり（.seathit）を分ける。位置は layoutSeats() で決める
     var sb = document.createElement('div'); sb.className = 'seat'; sb.setAttribute('aria-hidden', 'true');
@@ -938,14 +1002,14 @@ function updateCounts(){
   var inSlot = 0, inQ = 0;
   paxWhere.forEach(function(w){ if (w === 'slot') inSlot++; else if (w === 'queue') inQ++; });
   document.getElementById('roomCount').textContent = inSlot + '/' + R.boardingArea.capacity;
-  document.getElementById('waitNum').textContent = inQ + '人';
+  document.getElementById('waitNum').textContent = STR[LANG].ui.waitN(inQ);
   document.getElementById('dots').style.visibility = inQ > R.waitingLine.visible ? '' : 'hidden';
   document.getElementById('nextLbl').style.visibility = inQ ? '' : 'hidden';
 }
 function showGate(g){
   var el = gateEls[g], id = visGate[g], pv = id ? PV[id] : null;
   el.querySelector('.cnt').textContent = pv && pv.arrived ? pv.filled + '/' + pv.seats : '';
-  el.querySelector('.empty').style.display = pv ? 'none' : '';
+  el.querySelector('.empty').style.display = pv ? 'none' : ''; el.setAttribute('aria-label', L.gateAria(g, !pv, LANG));
 }
 function allocGate(id){
   var g = visGate.indexOf(null);
@@ -1195,10 +1259,12 @@ var STR = {
       steps: [
         '乗客と同じ色の飛行機をタップできるよ',
         'ゲートに入ると乗客が乗り込むよ。数字は乗れる人数だよ',
-        '前がふさがった飛行機は動かせないよ。先に別の飛行機を動かして道を開けられるよ',
-        '満席になると離陸するよ。搭乗口の乗客がいなくなればクリア'
+        '飛行機は前にだけ進むよ。横や下を向いていても、前が空いていれば外を回ってゲートへ行けるよ', // CD v0.6 の文（確定）。動きは movePath のとおり
+        '前がふさがった飛行機は動かせないよ。先に別の飛行機を動かして道をあけられるよ',
+        '満席になると離陸するよ。待っている乗客がみんな乗ればクリア'
       ],
       note1: '〇の飛行機をタップすると次に進むよ', // ①だけ、本文の下の行に
+      note3: '〇の飛行機をタップしてみてね', // ③（タップできる機があるときだけ）
       next: '次へ', start: 'はじめる', skip: 'スキップ', sep: '。',
       stepLabel: function(n, all){ return n + ' / ' + all; },
       stepAria: function(n, all){ return 'ステップ ' + n + '/' + all; },
@@ -1220,11 +1286,11 @@ var STR = {
         milestone: { big: function(n){ return n + ' flights flown.'; }, small: function(n){ return n + '便目も、いい空だったね'; } }
       } },
     board: { tone: 'guide', full: 'みんな乗ったよ', takeoff: '離陸どうぞ', vo: '満席、離陸どうぞ' }, // 札は「!」なし。読み上げは離陸のとき1回だけ
-    stamp: { tone: 'guide', head: 'Have a nice trip.', sub: '良い旅を。スタンプが1つ増えたよ', // 見出しは英語（lang=en）。1つのスタンプは「.」（CD）。カード完成の Frequent flyer! だけ「!」
+    stamp: { tone: 'guide', head: 'Have a nice trip.', sub: '良い旅を。スタンプが1つ増えたよ', // m16。CD v0.3.12 でスタンプのシートからは外した（今は画面に出ない）。カード完成の Frequent flyer! だけ「!」
       dayChange: 'スタンプは、朝4時に新しい日になるよ', tonight: '今夜の分も、今日のスタンプに入っているよ', // CD 確定。カードの下に小さく（読み上げはカードの一部）。tonight は 0:00〜3:59 に今日のスタンプがもう押してあるときだけ。広告のことは書かない
       doneHead: 'Frequent flyer!', doneSub: '搭乗券がいっぱいに。いい旅の記録だね' }, // スタンプカード完成（オーナー決定 v0.3）
     title: { tone: 'guide', welcome: 'ようこそ、空の玄関口へ', vo: 'Take to the sky。ようこそ、空の玄関口へ' }, // 扉絵のひとこと。初回だけ
-    greet: { tone: 'guide', // ホームのあいさつ。朝5〜10時／昼10〜17時／夕17〜21時／夜21〜5時。その日最初の起動か、前回から4時間以上あいたときだけ
+    greet: { tone: 'guide', // ホームのあいさつ（CD v0.3.12）。朝5:00〜10:59／昼11:00〜15:59／夕16:00〜18:59／夜19:00〜4:59。前回から4時間以上あいたときだけ（日付が変わっただけでは出さない）。L.greetKind
       morning: 'おはよう。ゲートはもう開いてるよ', day: 'こんにちは。ひと便、飛ばしていく？', evening: 'おつかれさま。夕方の便も出せるよ', night: '夜の便も出ているよ。のんびりどうぞ',
       back: 'おかえり。滑走路は整えてあるよ', // 3日以上あいたとき。あいさつより優先。日数や連続記録には触れない
       back14: function(n){ return 'おかえり。続きはステージ' + n + 'からだよ'; } }, // 14日以上
@@ -1239,18 +1305,35 @@ var STR = {
     home: { tone: 'guide', label: 'ホーム', // やめる確認（CD 確定）。右「続ける」が主ボタン・最初のフォーカス、左は失う側（枠だけ・ふつうの文字色、赤にしない）。外をタップ／下へスワイプ＝続ける
       q: 'ホームに戻る？', body: 'ここでやめると、使ったハート1つは戻らないよ', unlocked: '開けた枠も元に戻るよ', go: 'ホームに戻る', stay: '続ける',
       retryQ: 'やり直す？', retryBody: '使ったハートは戻らず、新しくハートを1つ使うよ', retryGo: 'やり直す',
-      unlimited: 'ハートは無制限だから減らないよ。開けた枠も元に戻るよ' }, // ハート無制限：枠を開けたときだけ確認を出す
+      unlimited: 'ハートは無制限だから減らないよ。開けた枠も元に戻るよ' }, // m18/m18b（CD 確定）。ハート無制限：枠を開けたときだけ確認を出す
     heart: { tone: 'guide', tip: 'ステージを始めるとハートを1つ使うよ。クリアすると戻ってくるよ', // チュートリアルのあと1回だけ、ハートの下にふきだし（約5秒かタップで閉じる）。ヘルプにも同じ一文。無制限の人には出さない
       back: 'ハートが戻ったよ', inUse: '使用中', // back はクリアの読み上げの中で1回だけ
       resume: '続きから遊べるよ', restoreFail: '前回の続きを戻せなかったので、ハートが1つ減ったよ', // restoreFail は戻せなかったときだけ、ホームで1回
       hud: function(n, u){ return 'ハート 5つ中' + n + 'つ' + (u ? '、1つ使用中' : ''); }, hudUnlimited: 'ハート無制限' },
     shop: { tone: 'official', bonus: function(n){ return '+' + n; } }, // ボーナスは事実だけ（「+30」）。「％お得」や取り消し線の値段は使わない。ショップの画面はデモにない
     restore: { tone: 'official', // 購入の復元（CD 確定 v1.7 前の分）。商品名は「ハート無制限」／"Unlimited Hearts"（英語は文中でも頭文字を大文字）。結果は画面に出して VoiceOver で1回読む。赤や警告のアイコンは使わない。ショップの画面はデモにない
-      button: '購入を復元', note: '復元できるのは、ハート無制限です。', // button は要確認
-      success: '購入を復元しました。ハート無制限が使えます。', successCoins: 'コインは復元できません。', // 要確認（日本語は CD ガイド／QA 報告 v1.7 待ち）
-      active: 'ハート無制限は、すでに使えます。', none: '復元できる購入はありませんでした。', failed: '復元できませんでした。', // 要確認
-      retry: 'もう一度試す', close: '閉じる', // 要確認
-      pending: ['button', 'success', 'successCoins', 'active', 'none', 'failed', 'retry', 'close'] },
+      button: '購入を復元', note: '復元できるのは、ハート無制限です。', // m20（CD 確定 v0.3.12、です・ます）
+      success: '購入を復元しました。ハート無制限が使えます。', successCoins: 'コインとハート全回復は、復元の対象外です。',
+      active: 'ハート無制限は、すでに使えます。', none: '復元できる購入はありませんでした。購入したときと同じApple Accountでサインインしているか、ご確認ください。',
+      failed: '購入を復元できませんでした。インターネットの接続を確認して、もう一度お試しください。',
+      retry: 'もう一度試す', close: '閉じる',
+      pending: [] },
+    ui: { // 画面に固定の文字と読み上げのラベル（CD v0.3.12）。HTML の data-t／data-ta から入れる
+      titleAria: '扉絵', about: 'このアプリについて', settingsSoon: '設定（準備中）', start: 'スタート', credit: 'Reach High Studio　デモ v0.7',
+      home: 'ホーム', route: '飛行ルート', stamps: 'スタンプ', day3sample: '3日目（表示例）', profile: 'マイページ', logItems: '記録と持ち物', shop: 'ショップ', soon: '準備中', shopSoon: 'ショップ（準備中）',
+      playStage1: 'ステージ1を遊ぶ', play: 'プレイ', back: '戻る', backHome: '戻る（ホームへ）', flightLog: '記録', stagesCleared: 'クリアしたステージ', nextStage: '次のステージ',
+      myResults: 'このデモで遊んだ結果だよ', items: '持ち物', sample: '表示例', sampleDemo: '表示例（デモ）', paidCoins: '買ったコイン', freeCoins: 'もらったコイン', hearts: 'ハート',
+      notInGame: 'コインとハートは、まだゲームに入っていないよ。数字は見た目の例だよ', stampCard: 'スタンプカード', stampHow: ['毎日最初に開いたとき、自動で押されるよ。', '休んだ日があっても、続きから押せるよ'],
+      saving: '記録の保存', icloud: '記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。', noSave: 'このデモでは保存しません。ページを閉じると最初に戻ります。', // 保存の説明だけ です・ます（CD）
+      newCard: '7日目のあとは、新しいカードになるよ', close: '閉じる', madeBy: '制作：Reach High Studio', demoVer: 'デモ v0.7（ステージ1だけ遊べるよ）',
+      restart: 'やり直す', stuckHead: 'ここで渋滞みたい。作戦を立て直そうか', tryAgain: 'やり直す', waiting: '待っている人', next: '次', boardingArea: '搭乗口', gateOpen: '空き', jamClose: '閉じる', // 「搭乗口」は待合の札だけ。A1〜A4 は「ゲート」
+      waitN: function(n){ return n + '人'; }, routeN: function(n){ return n + 'ステージ クリア'; }, nextN: function(n){ return '次は ' + n; }, stageN: function(n){ return 'ステージ' + n; },
+      routeAria: function(c, n){ return '飛行ルート：' + c + 'ステージ クリア、次はステージ' + n; }, playAria: function(n){ return 'プレイ、ステージ' + n; }, stageSoonAria: function(n){ return 'ステージ' + n + '（準備中）'; },
+      stageSoon: function(n){ return 'ステージ' + n + 'は準備中だよ。このデモはステージ1だけだよ'; }, shopToast: 'ショップは準備中だよ（デモ）', settingsToast: '設定は準備中だよ（デモ）',
+      hudAria: function(w){ return L.ariaJoin(['表示例', 'ハート 5つ中4つ', '買ったコイン' + w.paid + '枚、もらったコイン' + w.free + '枚'], 'ja'); }, coinVal: function(n){ return n + '枚'; },
+      rowAria: function(k, v){ return k + '（表示例）：' + v; }, heartsVal: '5つ中4つ', stageUnit: 'ステージ',
+      bp: { top: '搭乗券', f: ['便', 'ゲート', '特典', '日付'], coins: 'コイン', day: function(n){ return n + '日目'; }, today: '・今日', todayOnly: false, stamp: '出発', sum: function(n){ return '今日は' + n + '日目　もらったコイン +' + L.stampCoins(n); },
+        aria: function(n){ return L.stampAria(n, 'ja'); } } }, // 読み上げの文は logic.js（CD v0.6 レビュー、テストつき）
   },
   en: { // 英語は CD の最終版（オーナーが CD に一任）。アポストロフィは U+2019。文頭だけ大文字、ピリオドは本文と注記だけ、「!」なし
     tut: {
@@ -1258,10 +1341,12 @@ var STR = {
       steps: [
         'Tap a plane that matches a passenger’s color.',
         'When a plane pulls into a gate, passengers hop on. The number shows how many seats it has.',
+        'Planes only move forward. Facing sideways or down? With a clear path, they taxi around to a gate.', // CD v0.6 (final)
         'A plane can’t move if something’s in its way. Move another plane first to clear the path.',
         'Full planes take off. Board everyone who’s waiting to clear the stage.'
       ],
       note1: 'Tap the circled plane to continue.',
+      note3: 'Tap the circled plane to try it.',
       next: 'Next', start: 'Let’s go', skip: 'Skip', sep: ' ',
       stepLabel: function(n, all){ return n + ' / ' + all; },
       stepAria: function(n, all){ return 'Step ' + n + ' of ' + all; },
@@ -1296,19 +1381,43 @@ var STR = {
       unlockCap: 'That’s all the unlock ads for today. You can also unlock it with coins.', unlockCapShort: function(d){ return 'That’s all the unlock ads for today. ' + (d === 1 ? '1 more coin' : d + ' more coins') + ' to unlock it.'; }, earnByClearing: 'You earn coins by clearing stages.', coinUnlock: function(n){ return 'Unlock for ' + n + (n === 1 ? ' coin' : ' coins'); }, noFill: 'No ad is ready right now. Try again in a little while.', offline: 'Connect to the internet to watch an ad.' },
     home: { tone: 'guide', label: 'Home', q: 'Head home?', body: 'If you stop now, the heart you used won’t come back.', unlocked: 'Opened spots will reset too.', go: 'Go home', stay: 'Keep playing',
       retryQ: 'Restart?', retryBody: 'The heart you used won’t come back, and restarting uses 1 more.', retryGo: 'Restart',
-      unlimited: 'You have Unlimited Hearts, so you won’t lose one. Opened spots will reset too.', provisional: ['unlimited'] }, // CD 確定（unlimited だけ仮。ガイドに英語なし）
+      unlimited: 'Your hearts are unlimited, so none are used. Opened spots will reset too.' }, // CD 確定（m18/m18b v0.3.12）
     heart: { tone: 'guide', tip: 'Starting a stage uses 1 heart. Clear it and you’ll get it back.', back: 'Your heart is back.', inUse: 'in use',
-      resume: 'You can pick up where you left off.', restoreFail: 'We couldn’t restore your last game, so you lost 1 heart.',
-      hud: function(n, u){ return 'Hearts: ' + n + ' of 5' + (u ? ', 1 in use' : ''); }, hudUnlimited: 'Unlimited Hearts', provisional: ['tip', 'back', 'inUse', 'resume', 'restoreFail', 'hud'] },
+      resume: 'Pick up where you left off.', restoreFail: 'We couldn’t restore your last stage, so 1 heart was used.',
+      hud: function(n, u){ return 'Hearts: ' + n + ' of 5' + (u ? ', 1 in use' : ''); }, hudUnlimited: 'Unlimited Hearts' }, // CD 確定 v0.3.12
     shop: { tone: 'official', bonus: function(n){ return '+' + n + ' bonus'; } },
-    restore: { tone: 'official', button: 'Restore Purchases', note: 'Only Unlimited Hearts can be restored.',
-      success: 'Purchases restored. Unlimited Hearts is active.', successCoins: 'Coins can’t be restored.', active: 'Unlimited Hearts is already active.',
-      none: 'There’s nothing to restore.', failed: 'Couldn’t restore purchases.', retry: 'Try again', close: 'Close',
-      pending: ['button', 'successCoins', 'none', 'failed'] }, // 要確認：successCoins の文は CD ガイド／QA 報告 v1.7 待ち、button・none・failed は未定 // 英語は仮（ガイドに英語なし）
+    restore: { tone: 'official', button: 'Restore purchases', note: 'Only Unlimited Hearts can be restored.', // m20（CD 確定 v0.3.12）
+      success: 'Purchases restored. Unlimited Hearts is active.', successCoins: 'Coins and full heart refills can’t be restored.', active: 'Unlimited Hearts is already active.',
+      none: 'No purchases to restore. Make sure you’re signed in with the Apple Account you used to buy.', failed: 'We couldn’t restore your purchases. Check your internet connection and try again.', retry: 'Try Again', close: 'Close',
+      pending: [] },
+    ui: {
+      titleAria: 'Title screen', about: 'About this app', settingsSoon: 'Settings (coming soon)', start: 'Start', credit: 'Reach High Studio　Demo v0.7',
+      home: 'Home', route: 'Flight route', stamps: 'Stamps', day3sample: 'Day 3 (sample)', profile: 'Profile', logItems: 'Log and items', shop: 'Shop', soon: 'Coming soon', shopSoon: 'Shop (coming soon)',
+      playStage1: 'Play stage 1', play: 'Play', back: 'Back', backHome: 'Back to home', flightLog: 'Flight log', stagesCleared: 'Stages cleared', nextStage: 'Next stage',
+      myResults: 'Your results from this demo.', items: 'Items', sample: 'Sample', sampleDemo: 'Sample (demo)', paidCoins: 'Purchased coins', freeCoins: 'Earned coins', hearts: 'Hearts',
+      notInGame: 'Coins and hearts aren’t in the game yet. The numbers are just samples.', stampCard: 'Stamp card', stampHow: ['You get a stamp the first time you open the app each day.', 'Missed a day? Pick up where you left off.'],
+      saving: 'Saving your progress', icloud: 'Your progress is saved to your iCloud automatically. No sign-in or sign-up is needed.', noSave: 'This demo doesn’t save. Closing the page starts it over.',
+      newCard: 'After day 7, you’ll get a new card.', close: 'Close', madeBy: 'Made by Reach High Studio', demoVer: 'Demo v0.7 (stage 1 only)',
+      restart: 'Restart', stuckHead: 'Looks like a traffic jam. Time for a new plan.', tryAgain: 'Try again', waiting: 'Waiting', next: 'Next', boardingArea: 'Boarding area', gateOpen: 'Open', jamClose: 'Close',
+      waitN: function(n){ return String(n); }, routeN: function(n){ return n === 1 ? '1 stage cleared' : n + ' stages cleared'; }, nextN: function(n){ return 'Next: ' + n; }, stageN: function(n){ return 'Stage ' + n; },
+      routeAria: function(c, n){ return 'Flight route: ' + (c === 1 ? '1 stage cleared' : c + ' stages cleared') + '. Next: stage ' + n; }, playAria: function(n){ return 'Play, stage ' + n; }, stageSoonAria: function(n){ return 'Stage ' + n + ' (coming soon)'; },
+      stageSoon: function(n){ return 'Stage ' + n + ' is coming soon. This demo has stage 1 only.'; }, shopToast: 'The shop is coming soon (demo).', settingsToast: 'Settings are coming soon (demo).',
+      hudAria: function(w){ return L.ariaJoin(['Sample', 'Hearts: 4 of 5', 'Purchased coins: ' + w.paid + ', earned coins: ' + w.free], 'en'); }, coinVal: function(n){ return String(n); },
+      rowAria: function(k, v){ return k + ' (sample): ' + v; }, heartsVal: '4 of 5', stageUnit: '',
+      bp: { top: null, f: null, coins: 'coins', day: function(n){ return 'Day ' + n; }, today: 'Today', todayOnly: true, stamp: 'FLOWN', sum: function(n){ return 'Day ' + n + ' today · Earned coins +' + L.stampCoins(n); }, // 英語の今日の枠は「Today」だけ（CD v0.6）
+        aria: function(n){ return L.stampAria(n, 'en'); } } },
   }
 };
 var WHY = STR[LANG].why;
+(function(){ var U = STR[LANG].ui; document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-t]').forEach(function(e){ var v = U[e.getAttribute('data-t')]; v = Array.isArray(v) ? v.join(LANG === 'en' ? ' ' : '') : v; if (LANG === 'ja') e.innerHTML = L.jaNoBreakHtml(v); else e.textContent = v; }); // 日本語は「。」のあとだけで改行
+  document.querySelectorAll('[data-ta]').forEach(function(e){ e.setAttribute('aria-label', U[e.getAttribute('data-ta')]); });
+  queueFit();
+  document.getElementById('stagePill').textContent = U.stageN(1); document.getElementById('hPlayN').textContent = U.stageN(1);
+  document.querySelectorAll('[data-tbr]').forEach(function(e){ e.innerHTML = U[e.getAttribute('data-tbr')].join('<br>'); });
+})();
 // ---- t115u：ゲーム中のホームボタンと、もどる前の確認 ----
+var SAMPLE_WALLET = /[?&]adpreview=unlock/.test(location.search) ? { paid: 0, free: +((/[?&]adcoins=(\d+)/.exec(location.search) || [])[1] || 120) } : { paid: 120, free: 340 }; // 表示例のコイン。解除の広告の見本では adcoins と同じ数（d＝値段−この数）
 var UNLIMITED_HEARTS = /[?&]unlimited=1/.test(location.search); // ハート無制限を持っている人（?unlimited=1）
 var HEARTS = Math.min(5, +((/[?&]hearts=(\d+)/.exec(location.search) || [])[1] || 5)), HEART_IN_USE = false; // ?hearts=N。ステージ開始で1つ「使用中」、クリアで戻る、途中でやめると戻らない（デモの中だけ）
 (function(){
@@ -1496,9 +1605,10 @@ function checkEnd(){
   if (pending > 0) return;
   var st = L.status(state);
   if (st === 'clear') maybeCelebrate(0);
-  else if (st === 'stuck'){ document.getElementById('scrim').classList.add('on'); document.getElementById('sheet').classList.add('on'); document.getElementById('live').textContent = '動かせる飛行機がありません'; }
+  else if (st === 'stuck'){ document.getElementById('scrim').classList.add('on'); document.getElementById('sheet').classList.add('on'); document.getElementById('live').textContent = STR[LANG].ui.stuckHead; }
 }
 document.querySelectorAll('[data-act="retry"]').forEach(function(b){ b.addEventListener('click', start); });
+document.getElementById('jamClose').addEventListener('click', function(){ document.getElementById('scrim').classList.remove('on'); document.getElementById('sheet').classList.remove('on'); document.getElementById('restart').focus({ preventScroll: true }); }); // 閉じると盤面に戻る（「最初から」でやり直せる）
 // デモはステージ1のみ。「次のステージへ」はホームへ戻り、飛行ルートを1つ進める（本番では次のステージを読み込む）
 document.querySelectorAll('[data-act="next"]').forEach(function(b){ b.addEventListener('click', function(){ CLEARED = Math.max(CLEARED, 1); show('home'); }); });
 document.getElementById('restart').addEventListener('click', function(){ homeConfirmOpen('retry'); }); // ステージの途中の「最初から」も同じ確認
@@ -1588,20 +1698,22 @@ function taxi(id, size, x0, x1, cy, delay){
   requestAnimationFrame(f); return st;
 }
 // --- 印（アイコン）
+// コインのアイコン（オーナー決定 ②：2色 Deep Gold＋Light Gold。CD の仕様＝design_review/coins_v2/coin_v2_{cart,gift}.svg、リポジトリでは shared/icons/coin_{cart,gift}.svg。円 #8A6614 ふちなし r=12、マーク #FAEDC4、形はそのまま。カート＝買ったコイン、プレゼント＝もらったコイン。読み上げなし。大きさ 16/20/24pt、HUD のカプセル（高さ40）は 20pt）
+var COIN = { disc: '#8A6614', mark: '#FAEDC4' };
 var ICON = {
   gear: '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#5B5A56"><g stroke-width="3.2" stroke-linecap="butt">' + [0,45,90,135,180,225,270,315].map(function(a){ var r = a * Math.PI / 180; return '<line x1="' + (12 + Math.cos(r) * 7.2) + '" y1="' + (12 + Math.sin(r) * 7.2) + '" x2="' + (12 + Math.cos(r) * 11) + '" y2="' + (12 + Math.sin(r) * 11) + '"/>'; }).join('') + '</g><circle cx="12" cy="12" r="8.2" stroke-width="2.2"/><circle cx="12" cy="12" r="3" stroke-width="1.8"/></g></svg>',
   info: '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="#5B5A56" stroke-width="1.8"/><rect x="10.9" y="10" width="2.2" height="7.5" rx="1" fill="#5B5A56"/><circle cx="12" cy="7" r="1.4" fill="#5B5A56"/></svg>',
-  cart: function(z){ return '<svg width="' + z + '" height="' + z + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#AE7E1F"/><g transform="translate(0.2,-0.9)"><path d="M8.2 8.8 H18.4 L17.0 14.0 H9.5 Z" fill="#1F1F1D" stroke="#1F1F1D" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.4 6.8 H7.3 L9.6 15.6 H16.8" fill="none" stroke="#1F1F1D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.4" cy="17.8" r="1.4" fill="#1F1F1D"/><circle cx="16.0" cy="17.8" r="1.4" fill="#1F1F1D"/></g></svg>'; },
-  gift: function(z){ return '<svg width="' + z + '" height="' + z + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#AE7E1F"/><g fill="#1F1F1D"><ellipse cx="10.0" cy="7.1" rx="2.1" ry="1.35" transform="rotate(35 10.0 7.1)"/><ellipse cx="14.0" cy="7.1" rx="2.1" ry="1.35" transform="rotate(-35 14.0 7.1)"/><rect x="5.8" y="8.6" width="5.4" height="2.8" rx="0.9"/><rect x="12.8" y="8.6" width="5.4" height="2.8" rx="0.9"/><rect x="6.8" y="12.2" width="4.4" height="6.0" rx="1.0"/><rect x="12.8" y="12.2" width="4.4" height="6.0" rx="1.0"/></g></svg>'; },
+  cart: function(z){ return '<svg width="' + z + '" height="' + z + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="' + COIN.disc + '"/><g transform="translate(0.2,-0.9)"><path d="M8.2 8.8 H18.4 L17.0 14.0 H9.5 Z" fill="' + COIN.mark + '" stroke="' + COIN.mark + '" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.4 6.8 H7.3 L9.6 15.6 H16.8" fill="none" stroke="' + COIN.mark + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.4" cy="17.8" r="1.4" fill="' + COIN.mark + '"/><circle cx="16.0" cy="17.8" r="1.4" fill="' + COIN.mark + '"/></g></svg>'; },
+  gift: function(z){ return '<svg width="' + z + '" height="' + z + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="' + COIN.disc + '"/><g fill="' + COIN.mark + '"><ellipse cx="10.0" cy="7.1" rx="2.1" ry="1.35" transform="rotate(35 10.0 7.1)"/><ellipse cx="14.0" cy="7.1" rx="2.1" ry="1.35" transform="rotate(-35 14.0 7.1)"/><rect x="5.8" y="8.6" width="5.4" height="2.8" rx="0.9"/><rect x="12.8" y="8.6" width="5.4" height="2.8" rx="0.9"/><rect x="6.8" y="12.2" width="4.4" height="6.0" rx="1.0"/><rect x="12.8" y="12.2" width="4.4" height="6.0" rx="1.0"/></g></svg>'; },
   heart: function(z, full){ var d = 'M8 14.2C3.2 10.9 1 8.5 1 5.6 1 3.4 2.7 1.8 4.8 1.8c1.3 0 2.5.7 3.2 1.8.7-1.1 1.9-1.8 3.2-1.8 2.1 0 3.8 1.6 3.8 3.8 0 2.9-2.2 5.3-7 8.6z';
     return '<svg width="' + z + '" height="' + z + '" viewBox="0 0 16 16" aria-hidden="true"><path d="' + d + '" fill="' + (full ? '#E5484D' : 'none') + '" stroke="' + (full ? '#E5484D' : A.muted) + '" stroke-width="' + (full ? 0 : 1.3) + '" stroke-linejoin="round"/></svg>'; },
   boarding: '<svg width="40" height="24" viewBox="0 0 40 24" aria-hidden="true"><rect x="1" y="1" width="38" height="22" rx="4" fill="none" stroke="#5B5A56" stroke-width="2"/><circle cx="24" cy="0" r="3" fill="#fff"/><circle cx="24" cy="24" r="3" fill="#fff"/><g stroke="#5B5A56" stroke-width="1.5"><line x1="24" y1="5" x2="24" y2="7.5"/><line x1="24" y1="10" x2="24" y2="12.5"/><line x1="24" y1="15" x2="24" y2="17.5"/></g><g stroke="#5B5A56" stroke-width="2"><line x1="6" y1="8" x2="18" y2="8"/><line x1="6" y1="15" x2="12" y2="15"/></g><circle cx="32" cy="12" r="4.5" fill="#2B5C8A"/></svg>',
   log: '<svg width="26" height="24" viewBox="0 0 26 24" aria-hidden="true"><rect x="3" y="1" width="20" height="22" rx="3" fill="none" stroke="#5B5A56" stroke-width="2"/><path d="' + sceneryD(11) + '" fill="#2B5C8A" transform="translate(13 7.5) rotate(-12)"/><g stroke="#5B5A56" stroke-width="2" stroke-linecap="round"><line x1="8" y1="14" x2="18" y2="14"/><line x1="8" y1="18.5" x2="15" y2="18.5"/></g></svg>',
   bag: '<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="8" width="20" height="15" rx="3" fill="none" stroke="#5B5A56" stroke-width="2"/><path d="M7 8 A5 6 0 0 1 17 8" fill="none" stroke="#5B5A56" stroke-width="2"/></svg>'
 };
-function depStamp(ang){ // 出発のスタンプ（Sky の二重の輪・細身の機・「出発」）
+function depStamp(ang){ // 出発のスタンプ（Sky の二重の輪・細身の機・「出発」／英語は FLOWN）。aria-hidden のまま
   return '<svg width="56" height="56" viewBox="-28 -28 56 56" aria-hidden="true"><g transform="rotate(' + ang + ')"><circle r="25" fill="none" stroke="#2B5C8A" stroke-width="2"/><circle r="20" fill="none" stroke="#2B5C8A" stroke-width="1"/>' +
-    '<path d="' + sceneryD(14) + '" fill="#2B5C8A" transform="translate(0 -9)"/><text x="0" y="11" text-anchor="middle" font-size="12" font-weight="700" fill="#2B5C8A">出発</text></g></svg>';
+    '<path d="' + sceneryD(14) + '" fill="#2B5C8A" transform="translate(0 -9)"/>' + (LANG === 'en' ? '<text x="0" y="11" text-anchor="middle" font-size="10" font-weight="700" fill="#2B5C8A" textLength="29" lengthAdjust="spacingAndGlyphs">FLOWN</text>' : '<text x="0" y="11" text-anchor="middle" font-size="12" font-weight="700" fill="#2B5C8A">出発</text>') + '</g></svg>'; // 英語は FLOWN（10pt 太字、内側の輪に収める。CD v0.6）
 }
 function stampDayLines(){ // カードの下の小さな行（CD 確定）。0:00〜3:59 で今日のスタンプが押してあるときは「今夜の分も…」を足す（?hour=H で試せる）
   var S = STR[LANG].stamp, hq = /[?&]hour=(\d+)/.exec(location.search), h = hq ? (+hq[1]) % 24 : new Date().getHours(), out = [S.dayChange];
@@ -1611,15 +1723,15 @@ function stampDayLines(){ // カードの下の小さな行（CD 確定）。0:0
 function stampResetHour(){ return RULES.loginBonus.loginResetHour; } // rules.json stamps.dayResetHourFrom＝loginBonus.loginResetHour（同じ値を読む）
 var STAMP_TODAY_TAKEN = true; // デモ：スタンプの画面を開いた時点で今日の分は押してある
 function boardingPass(today){ // 搭乗券（#145・#146）。値はすべて表示例
-  var f = [[16, '便', 'FLIGHT', 'TTS 007'], [116, '搭乗口', 'GATE', 'A1'], [184, '特典', 'BONUS', '90<small>コイン</small>'], [275, '日付', 'DATE', '11/03']];
-  var h = '<div class="bp" role="img" aria-label="スタンプカード（表示例）：7日中' + today + '日目まで押してあります。今日は' + today + '日目、もらったコイン10。' + stampDayLines().join('。') + '"><div class="top"><span class="en">BOARDING PASS</span><span class="ja">搭乗券</span><span class="r">TAKE TO THE SKY</span></div><div class="flds">';
-  f.forEach(function(q){ h += '<div class="f" style="left:' + q[0] + 'px"><div class="l1">' + q[1] + '</div><div class="l2">' + q[2] + '</div><div class="v">' + q[3] + '</div></div>'; });
+  var B = STR[LANG].ui.bp, jf = B.f || [], f = [[16, jf[0], 'FLIGHT', 'TTS 007'], [116, jf[1], 'GATE', 'A1'], [184, jf[2], 'BONUS', '90<small>' + B.coins + '</small>'], [275, jf[3], 'DATE', '11/03']]; // 英語では日本語の行を出さない（CD v0.3.12）
+  var h = '<div class="bp' + (B.top ? '' : ' en') + '" role="img" aria-label="' + L.ariaJoin(B.aria(today).concat(stampDayLines()), LANG) + '"><div class="top"><span class="en">BOARDING PASS</span>' + (B.top ? '<span class="ja">' + B.top + '</span>' : '') + '<span class="r">TAKE TO THE SKY</span></div><div class="flds">'; // 読み上げは日本語「。」、英語「. 」でつなぐ
+  f.forEach(function(q){ h += '<div class="f" style="left:' + q[0] + 'px">' + (q[1] ? '<div class="l1">' + q[1] + '</div>' : '') + '<div class="l2">' + q[2] + '</div><div class="v">' + q[3] + '</div></div>'; });
   h += '</div><div class="perf"></div><span class="notch" style="left:-10px"></span><span class="notch" style="right:-10px"></span><div class="grid">';
   for (var n = 1; n <= 7; n++){
     var done = n <= today, cls = 'd' + (done ? ' done' : '') + (n === today ? ' today' : '') + (n === 7 ? ' d7' : '');
-    h += '<div class="' + cls + '"><div class="t">' + n + '日目' + (n === today ? '・今日' : '') + '</div><div class="s">' + (done ? depStamp([-6, 6, -4][(n - 1) % 3]) : ICON.gift(20)) + '</div><div class="p">' + (n === 7 ? '+30' : '+10') + '</div></div>';
+    h += '<div class="' + cls + '"><div class="t">' + (n === today ? (B.todayOnly ? B.today : B.day(n) + B.today) : B.day(n)) + '</div><div class="s">' + (done ? depStamp([-6, 6, -4][(n - 1) % 3]) : ICON.gift(20)) + '</div><div class="p">' + (n === 7 ? '+30' : '+10') + '</div></div>';
   }
-  return h + '</div><div class="sum">今日は' + today + '日目　もらったコイン +10</div></div>';
+  return h + '</div><div class="sum">' + B.sum(today) + '</div></div>';
 }
 // --- 扉絵
 function buildTitle(){
@@ -1662,7 +1774,7 @@ function routeSvg(next){
   xs.forEach(function(x, i){
     var st = first + i, y = yof(x);
     if (st < next) s += '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#2B5C8A"/><text x="' + x + '" y="' + (y + 27) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#1F1F1D">' + st + '</text>';
-    else if (st === next) s += '<circle cx="' + x + '" cy="' + y + '" r="24" fill="#FFFFFF" stroke="#2B5C8A" stroke-width="2"/>' + sceneryPlane(x, y, 28, 0, '#2B5C8A') + '<text x="' + x + '" y="' + (y + 45) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#2B5C8A">次は ' + st + '</text>';
+    else if (st === next) s += '<circle cx="' + x + '" cy="' + y + '" r="24" fill="#FFFFFF" stroke="#2B5C8A" stroke-width="2"/>' + sceneryPlane(x, y, 28, 0, '#2B5C8A') + '<text x="' + x + '" y="' + (y + 45) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#2B5C8A">' + STR[LANG].ui.nextN(st) + '</text>';
     else s += '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#FFFFFF" stroke="' + A.muted + '" stroke-width="1.5"/><text x="' + x + '" y="' + (y + 27) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#5B5A56">' + st + '</text>';
   });
   return '<g id="hRoute">' + s + '</g>';
@@ -1674,22 +1786,26 @@ function buildHome(){
   document.getElementById('hScene').innerHTML = s;
   var hud = document.getElementById('hHud'), hs = '';
   for (var i = 0; i < 5; i++) hs += ICON.heart(16, i < 4);
-  hud.innerHTML = '<span class="hearts" aria-hidden="true">' + hs + '</span><span class="cap" aria-hidden="true">' + ICON.cart(16) + '<span>120</span><span class="dv"></span>' + ICON.gift(16) + '<span>340</span></span><span class="ex" aria-hidden="true">表示例</span>';
-  hud.setAttribute('aria-label', '表示例：ハート 5つ中4つ、買ったコイン120、もらったコイン340');
+  var U = STR[LANG].ui, W = SAMPLE_WALLET;
+  hud.innerHTML = '<span class="hearts" aria-hidden="true">' + hs + '</span><span class="cap" aria-hidden="true">' + ICON.cart(20) + '<span>' + W.paid + '</span><span class="dv"></span>' + ICON.gift(20) + '<span>' + W.free + '</span></span><span class="ex" aria-hidden="true">' + U.sample + '</span>';
+  hud.setAttribute('aria-label', U.hudAria(W));
   document.getElementById('hGear').innerHTML = ICON.gear;
   document.getElementById('icStamp').innerHTML = ICON.boarding; document.getElementById('icMy').innerHTML = ICON.log; document.getElementById('icShop').innerHTML = ICON.bag;
-  document.getElementById('hRouteN').textContent = CLEARED + 'ステージ クリア';
-  document.getElementById('hRouteA').textContent = '飛行ルート：' + CLEARED + 'ステージ クリア、次はステージ ' + next;
+  document.getElementById('hRouteN').textContent = U.routeN(CLEARED);
+  document.getElementById('hRouteA').textContent = U.routeAria(CLEARED, next);
   var play = document.getElementById('hPlay'), ready = next <= DEMO_LAST_STAGE;
-  document.getElementById('hPlayN').textContent = 'ステージ ' + next;
-  play.setAttribute('aria-label', ready ? 'プレイ、ステージ ' + next : 'ステージ ' + next + '（準備中）');
+  document.getElementById('hPlayN').textContent = U.stageN(next);
+  play.setAttribute('aria-label', ready ? U.playAria(next) : U.stageSoonAria(next));
   if (ready) play.removeAttribute('aria-disabled'); else play.setAttribute('aria-disabled', 'true');
   document.getElementById('hNote').style.display = ready ? 'none' : 'block';
-  document.getElementById('hNoteT').textContent = 'ステージ ' + next + ' は準備中です。このデモはステージ 1 だけです。';
+  document.getElementById('hNoteT').textContent = U.stageSoon(next);
 }
 // --- マイページ（モックなし。設定のモックの作りに合わせて作った）
 function buildMy(){
-  document.getElementById('myCleared').innerHTML = CLEARED + '<small>ステージ</small>';
+  var U = STR[LANG].ui, W = SAMPLE_WALLET;
+  document.getElementById('myCleared').innerHTML = CLEARED + (U.stageUnit ? '<small>' + U.stageUnit + '</small>' : '');
+  document.getElementById('myPaid').textContent = W.paid; document.getElementById('myFree').textContent = W.free;
+  document.getElementById('myRowPaid').setAttribute('aria-label', U.rowAria(U.paidCoins, U.coinVal(W.paid))); document.getElementById('myRowFree').setAttribute('aria-label', U.rowAria(U.freeCoins, U.coinVal(W.free))); document.getElementById('myRowHearts').setAttribute('aria-label', U.rowAria(U.hearts, U.heartsVal));
   document.getElementById('myNext').textContent = CLEARED + 1;
   document.getElementById('myCart').innerHTML = ICON.cart(16); document.getElementById('myGift').innerHTML = ICON.gift(16);
   var hs = ''; for (var i = 0; i < 5; i++) hs += ICON.heart(14, i < 4); document.getElementById('myHearts').innerHTML = hs;
@@ -1715,11 +1831,8 @@ var GREET = (function(){
   try { last = +localStorage.getItem('tts_last_open') || 0; seen = !!localStorage.getItem('tts_seen_title'); localStorage.setItem('tts_last_open', String(now)); localStorage.setItem('tts_seen_title', '1'); } catch (e) {}
   var aw = /[?&]away=(\d+)/.exec(q); if (aw) last = now - (+aw[1]) * 24 * H;
   var hq = /[?&]hour=(\d+)/.exec(q), h = hq ? (+hq[1]) % 24 : new Date().getHours();
-  var band = h >= 5 && h < 10 ? 'morning' : h >= 10 && h < 17 ? 'day' : h >= 17 && h < 21 ? 'evening' : 'night';
-  var gap = last ? now - last : Infinity, dayKey = function(t){ var d = new Date(t - RULES.loginBonus.loginResetHour * H); return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); }; // 1日の区切りは午前4時
-  var away = last && gap >= 14 * 24 * H ? 'back14' : last && gap >= 3 * 24 * H ? 'back' : null;
-  var greet = !away && (!last || gap >= 4 * H || dayKey(last) !== dayKey(now)) ? band : null;
-  return { kind: away || greet, firstLaunch: !seen || /[?&]first=1/.test(q), used: false };
+  var gq = /[?&]gap=(\d+)/.exec(q); if (gq) last = now - (+gq[1]) * 60000; // ?gap=分 で前回からの時間を試せる
+  return { kind: L.greetKind(last, now, h), firstLaunch: !seen || /[?&]first=1/.test(q), used: false }; // 帯と4時間の決まりは logic.js（テストつき）
 })();
 function greetText(){ var G = STR[LANG].greet; return GREET.kind === 'back14' ? G.back14(CLEARED + 1) : GREET.kind ? G[GREET.kind] : ''; }
 function show(name){
@@ -1735,40 +1848,46 @@ function show(name){
     GREET.used = true; }
   if (name === 'my'){ buildMy(); document.getElementById('myScroll').scrollTop = 0; }
   setInert();
-  var live = document.getElementById('live'); live.textContent = { title: GREET.firstLaunch ? STR[LANG].title.vo : 'Take to the sky', home: STR[LANG].home.label + (homeLine ? (LANG === 'en' ? '. ' : '。') + homeLine : ''), my: 'マイページ', game: 'ステージ1' }[name];
+  var live = document.getElementById('live'); live.textContent = { title: GREET.firstLaunch ? STR[LANG].title.vo : 'Take to the sky', home: STR[LANG].home.label + (homeLine ? (LANG === 'en' ? '. ' : '。') + homeLine : ''), my: STR[LANG].ui.profile, game: STR[LANG].ui.stageN(1) }[name];
 }
 function play(){ show('game'); start(); tutStart(); }
-function stampScene(){ // 押したスタンプが着地して 0.2s 後に、言葉を 0.25s でフェードイン。動きを減らす設定では同時にクロスフェード
-  var st = document.querySelector('#sBp .d.today .s svg'), m = document.getElementById('stampMsg');
-  var S = STR[LANG].stamp, done = STAMP_DAY === 7; // 最後のスタンプ（7日目）で完成の見出し
-  document.getElementById('stampHead').textContent = done ? S.doneHead : S.head;
-  var sub = document.getElementById('stampSub'); sub.textContent = done ? S.doneSub : S.sub; sub.lang = LANG; m.style.opacity = 0;
-  var lv = document.getElementById('live'); lv.innerHTML = ''; setTimeout(function(){ lv.innerHTML = '<span lang="en">' + (done ? S.doneHead : S.head) + '</span> ' + sub.textContent; }, 50); // 見出しと小さい行を1回読む
-  if (!st) { m.style.opacity = 1; return; }
-  if (RM){ [st, m].forEach(function(el){ el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, fill: 'forwards' }); }); m.style.opacity = 1; return; }
-  var press = st.animate([{ opacity: 0, transform: 'scale(1.6)' }, { opacity: 1, transform: 'scale(.94)', offset: .8 }, { opacity: 1, transform: 'scale(1)' }], { duration: 320, delay: 250, easing: 'ease-in', fill: 'backwards' });
-  press.finished.then(function(){ m.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, delay: 200, easing: 'ease-out', fill: 'forwards' }); setTimeout(function(){ m.style.opacity = 1; }, 460); });
+var STAMP_DONE_SHOWN = false; // 完成の札はページを開いているあいだ1回だけ
+function stampScene(){ // 押したスタンプが着地して 0.2s 後に完成の札（7日目のときだけ）。動きを減らす設定ではフェードだけ
+  var st = document.querySelector('#sBp .d.today .s svg'), dn = document.getElementById('stampDone');
+  var S = STR[LANG].stamp, done = L.stampDoneShown(STAMP_DAY, STAMP_DONE_SHOWN); // 7日目が押されたときだけ、1回
+  dn.hidden = true;
+  if (!done){ if (st && !RM) st.animate([{ opacity: 0, transform: 'scale(1.6)' }, { opacity: 1, transform: 'scale(.94)', offset: .8 }, { opacity: 1, transform: 'scale(1)' }], { duration: 320, delay: 250, easing: 'ease-in', fill: 'backwards' }); return; }
+  STAMP_DONE_SHOWN = true;
+  document.getElementById('stampHead').textContent = S.doneHead;
+  var sub = document.getElementById('stampSub'); sub.textContent = S.doneSub; sub.lang = LANG;
+  var showDone = function(){ dn.hidden = false; if (!RM) dn.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, easing: 'ease-out' });
+    document.getElementById('stampDoneClose').focus({ preventScroll: true });
+    var lv = document.getElementById('live'); lv.innerHTML = ''; setTimeout(function(){ lv.innerHTML = '<span lang="en">' + S.doneHead + '</span> ' + sub.textContent; }, 50); }; // 完成の見出しと小さい行を1回読む
+  if (!st || RM){ showDone(); return; }
+  st.animate([{ opacity: 0, transform: 'scale(1.6)' }, { opacity: 1, transform: 'scale(.94)', offset: .8 }, { opacity: 1, transform: 'scale(1)' }], { duration: 320, delay: 250, easing: 'ease-in', fill: 'backwards' }).finished.then(function(){ setTimeout(showDone, 200); });
 }
+function stampDoneClose(){ var dn = document.getElementById('stampDone'); if (dn.hidden) return false; dn.hidden = true; document.querySelector('#sStamp [data-close]').focus({ preventScroll: true }); return true; }
+document.getElementById('stampDoneClose').addEventListener('click', function(e){ e.stopPropagation(); stampDoneClose(); });
 function openSheet(id){ Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); }); // シートが開いているときは滑走しない
   document.getElementById('sScrim').classList.add('on'); var s = document.getElementById(id); s.classList.add('on'); setInert(); s.querySelector('[data-close]').focus();
   if (!RM) s.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 250, easing: 'ease-out' }); }
-function closeSheet(){ document.querySelectorAll('.sheet2.on').forEach(function(s){ s.classList.remove('on'); }); document.getElementById('sScrim').classList.remove('on'); setInert(); }
+function closeSheet(){ document.getElementById('stampDone').hidden = true; document.querySelectorAll('.sheet2.on').forEach(function(s){ s.classList.remove('on'); }); document.getElementById('sScrim').classList.remove('on'); setInert(); }
 var STAMP_DAY = Math.min(7, Math.max(1, +((/[?&]stamps=(\d)/.exec(location.search) || [])[1] || 3))); // ?stamps=7 で完成の場面
 document.getElementById('sBp').innerHTML = boardingPass(STAMP_DAY); document.getElementById('stampDay').innerHTML = stampDayLines().map(function(t){ return '<span>' + t + '</span>'; }).join('<br>'); document.getElementById('stampDay').lang = LANG;
 buildTitle();
 document.getElementById('tStart').addEventListener('click', function(){ show('home'); });
 document.getElementById('tInfo').addEventListener('click', function(){ openSheet('sAbout'); });
-document.getElementById('tGear').addEventListener('click', function(){ toast('設定は準備中です（デモ）'); });
-document.getElementById('hGear').addEventListener('click', function(){ toast('設定は準備中です（デモ）'); });
-document.getElementById('hShop').addEventListener('click', function(){ toast('ショップは準備中です（デモ）'); });
+document.getElementById('tGear').addEventListener('click', function(){ toast(STR[LANG].ui.settingsToast); });
+document.getElementById('hGear').addEventListener('click', function(){ toast(STR[LANG].ui.settingsToast); });
+document.getElementById('hShop').addEventListener('click', function(){ toast(STR[LANG].ui.shopToast); });
 document.getElementById('hStamp').addEventListener('click', function(){ openSheet('sStamp'); stampScene(); });
 document.getElementById('hMy').addEventListener('click', function(){ show('my'); document.getElementById('myBack').focus(); });
 document.getElementById('myBack').addEventListener('click', function(){ show('home'); document.getElementById('hMy').focus(); });
-document.getElementById('hPlay').addEventListener('click', function(){ if (CLEARED + 1 <= DEMO_LAST_STAGE) play(); else toast('ステージ ' + (CLEARED + 1) + ' は準備中です'); });
+document.getElementById('hPlay').addEventListener('click', function(){ if (CLEARED + 1 <= DEMO_LAST_STAGE) play(); else toast(STR[LANG].ui.stageSoon(CLEARED + 1)); });
 document.getElementById('hReplay').addEventListener('click', play);
 document.getElementById('sScrim').addEventListener('click', closeSheet);
 document.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', closeSheet); });
-document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeSheet(); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape'){ if (!stampDoneClose()) closeSheet(); } });
 // ---- t110u：チュートリアル（ステージ1の初回だけ。?tutorial=1 でいつも、?tutorial=0 で出さない）----
 var TUT_Q = (/[?&]tutorial=([01])/.exec(location.search) || [])[1];
 var TUT_DONE = false; // このデモでは保存しない（ページを閉じると、また初回になる）
@@ -1813,6 +1932,27 @@ function tutBlockPair(){ // ③ 前をふさがれた機と、その前の機（
   });
   return best;
 }
+function tutForwardPlane(){ // ③の機（CD v0.6）：盤面の端にいない・横か下を向いている・今動ける（動かしても解ける）機。なければ点線の道だけ
+  var g = state.gates.indexOf(null), edgeOk = /[?&]tut3edge=1/.test(location.search); // ?tut3edge=1：端の機でもタップできる案（比べる用）
+  var best = null, still = null;
+  state.planes.forEach(function(p){
+    if (p.status !== 'runway' || p.dir === 'up') return;
+    var inner = L.isInnerCell(state, p.col, p.row), ok = g >= 0 && L.canMove(state, p.id) === 'ok';
+    var solvable = ok && !!(L.solve(L.tap(state, p.id).state, 50000).moves);
+    var score = (inner ? 8 : 0) + (p.dir === 'down' ? 1 : 0) + (L.hasMatch(state, p.color) ? 2 : 0);
+    if (solvable && (inner || edgeOk)){ if (!best || score > best.score) best = { id: p.id, gate: g, score: score, tap: true }; }
+    else if (inner && (!still || score > still.score)) still = { id: p.id, gate: g >= 0 ? g : 0, score: score, tap: false }; // 動けない：点線の道だけ
+  });
+  return best || still;
+}
+function tutRoute(id, gate, flow){ // movePath の道を白の破線（6/5）＋矢じりで。flow＝破線をゲートの向きへ流す（動きを減らす設定やタップできないときは止めた点線）
+  var pts = movePath(L.planeById(state, id), gate), n = pts.length, a = pts[n - 2], b = pts[n - 1];
+  var tx = b.x - a.x, ty = b.y - a.y, tl = Math.hypot(tx, ty) || 1; tx /= tl; ty /= tl;
+  var hx = b.x - tx * 11, hy = b.y - ty * 11, nx = -ty * 6, ny = tx * 6;
+  var d = 'M' + pts.slice(0, n - 1).map(function(q){ return q.x + ' ' + q.y; }).join(' L') + ' L' + hx + ' ' + hy;
+  return '<path' + (flow ? ' class="tutFlow"' : '') + ' d="' + d + '" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="' + (flow ? '6 5' : '2 5') + '"/>' +
+         '<path d="M' + b.x + ' ' + b.y + ' L' + (hx + nx) + ' ' + (hy + ny) + ' L' + (hx - nx) + ' ' + (hy - ny) + ' Z" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round"/>';
+}
 function tutShouldShow(){ return TUT_Q === '1' || (TUT_Q !== '0' && !TUT_DONE); }
 function tutStart(){
   if (!tutShouldShow()) return;
@@ -1851,13 +1991,17 @@ function tutDraw(animate){
   } else if (st === 1){
     var room = { x: 12, y: 143, w: 366, h: 328, rx: 16 }, g1 = tutGateRect(TUT.first.gate); // 搭乗口の枠も角丸16（ゲートの列の枠とそろえる）
     holes.push(room); marks += rect(room) + rect(g1);
-  } else if (st === 2){
+  } else if (st === 2){ // 案：前にしか進めない・滑走路の外を回ってゲートへ（上向き以外で今動ける機を選び、通る道を白の破線で見せる）
+    var fw = TUT.fw = tutForwardPlane();
+    if (fw){ var rr = tutPlaneRing(fw.id); holes.push(rr, tutSeatHole(fw.id), tutGateRect(fw.gate)); marks += ring(rr, fw.tap ? 'pulse' : '') + rect(tutGateRect(fw.gate)) + tutRoute(fw.id, fw.gate, fw.tap && !RM);
+      if (fw.tap) TUT.target = { id: fw.id, ring: rr }; }
+  } else if (st === 3){
     var bp = tutBlockPair();
     if (bp){ // 動かす機：白3pt・点滅・矢印 ／ ふさがれた機：白2pt 破線4/4・不透明度0.7・点滅なし・矢印なし
       var rb = tutPlaneRing(bp.blocked), rf = tutPlaneRing(bp.front), fg = state.gates.indexOf(null);
       holes.push(rf, rb, tutSeatHole(bp.front), tutSeatHole(bp.blocked)); marks += ring(rb, 'dash') + ring(rf, 'pulse') + (fg >= 0 && L.canMove(state, bp.front) === 'ok' ? tutArrow(rf, fg) : '');
     }
-  } else if (st === 3){
+  } else if (st === 4){
     var gs = { x: 22, y: GATE_Y - 6, w: 346, h: 89, rx: 16 }, cnt = tutRectOf(document.getElementById('roomCount'), 6);
     cnt.rx = 10; holes.push(gs, cnt); marks += rect(cnt) + rect(gs);
   }
@@ -1871,10 +2015,11 @@ function tutDraw(animate){
   document.getElementById('tutStep').textContent = TUT_COPY.stepLabel(st + 1, TUT_TEXT.length);
   document.getElementById('tutStep').setAttribute('aria-label', TUT_COPY.stepAria(st + 1, TUT_TEXT.length));
   tutSetText(document.getElementById('tutText'), TUT_TEXT[st]);
-  document.getElementById('tutDo').textContent = st === 0 ? TUT_COPY.note1 : '';
+  var tapStep = !!TUT.target, note = st === 0 ? TUT_COPY.note1 : (tapStep ? TUT_COPY.note3 : ''); // ①と③（タップできる機があるとき）は〇の機のタップで進む
+  document.getElementById('tutDo').textContent = note;
   var next = document.getElementById('tutNext'), tapB = document.getElementById('tutTap');
-  next.hidden = st === 0; next.textContent = st === TUT_TEXT.length - 1 ? TUT_COPY.start : TUT_COPY.next;
-  if (st === 0){ var pl = L.planeById(state, TUT.first.id); tapB.style.display = ''; tapB.textContent = TUT_COPY.tapLabel(COLOR[pl.color], pl.size); }
+  next.hidden = tapStep; next.textContent = st === TUT_TEXT.length - 1 ? TUT_COPY.start : TUT_COPY.next;
+  if (tapStep){ var pl = L.planeById(state, TUT.target.id); tapB.style.display = ''; tapB.textContent = TUT_COPY.tapLabel(COLOR[pl.color], pl.size); }
   else tapB.style.display = 'none';
   tutLayout(holes);
   tutHoles(holes, animate && !RM);
@@ -1889,8 +2034,8 @@ function tutDraw(animate){
     mg.animate([{ opacity: 0 }, { opacity: 1 }], { duration: TUT_MOTION.holeMs, easing: 'ease-in-out' });
   }
   var live = document.getElementById('live'); live.textContent = ''; // 各段の始めに札の本文を読み上げる
-  setTimeout(function(){ live.textContent = TUT_COPY.stepAria(st + 1, TUT_TEXT.length) + (LANG === 'en' ? '. ' : '。') + TUT_TEXT[st] + (st === 0 ? TUT_COPY.sep + TUT_COPY.note1 : ''); }, 30);
-  (st === 0 ? tapB : next).focus({ preventScroll: true });
+  setTimeout(function(){ live.textContent = TUT_COPY.stepAria(st + 1, TUT_TEXT.length) + (LANG === 'en' ? '. ' : '。') + TUT_TEXT[st] + (note ? TUT_COPY.sep + note : ''); }, 30);
+  (tapStep ? tapB : next).focus({ preventScroll: true });
 }
 function tutHoles(to, animate){ // 暗幕の穴。前の段の穴から 0.3s easeInOut で動く（数がちがう分は中心から広がる／中心へ縮む）
   var g = document.getElementById('tutHoleG'), from = TUT.holesNow || [], n = Math.max(from.length, to.length), seq = (TUT.holeSeq = (TUT.holeSeq || 0) + 1);
@@ -1923,15 +2068,18 @@ function tutFadeTrails(){ // 飛行機雲などの名残を 0.3s で消す（③
 }
 function tutGo(step){
   if (TUT.busy) return; TUT.busy = true;
-  var pre = step === 2 ? tutWaitIdle().then(tutFadeTrails) : Promise.resolve(); // ③の札は、離陸の動きが終わってから
+  var pre = step === 2 || step === 3 ? tutWaitIdle().then(tutFadeTrails) : Promise.resolve(); // ③の札は離陸の動きが終わってから。④は③で動かした機がゲートに着いてから
   pre.then(function(){ TUT.busy = false; if (!TUT.on) return; TUT.step = step; tutDraw(true); });
 }
 document.getElementById('tut').addEventListener('click', function(e){
-  if (!TUT.on || TUT.step !== 0 || TUT.busy || e.target.closest('#tutCard')) return;
+  if (!TUT.on || !TUT.target || TUT.busy || e.target.closest('#tutCard')) return;
   var a = app.getBoundingClientRect(), x = (e.clientX - a.left) / BOARD_K, y = (e.clientY - a.top) / BOARD_K, r = TUT.target.ring;
   if (Math.hypot(x - r.x, y - r.y) <= r.r) tutTapTarget();
 });
-function tutTapTarget(){ if (TUT.on && TUT.step === 0 && !TUT.busy && onTap(TUT.target.id)){ TUT.step = 1; tutDraw(true); } }
+function tutTapTarget(){ if (!TUT.on || !TUT.target || TUT.busy || !onTap(TUT.target.id)) return;
+  if (TUT.step === 0){ TUT.step = 1; tutDraw(true); }
+  else { var cur = TUT.step; TUT.target = null; document.getElementById('tutMarks').innerHTML = ''; tutHoles([{ x: 0, y: GATE_Y - 8, w: 390, h: 852 - GATE_Y, rx: 0 }], !RM); // 動いている間は、ゲートと滑走路をまとめて明るく document.getElementById('tutDo').textContent = ''; // ③：〇の機が外を回ってゲートへ行くのを見せてから④へ
+    TUT.busy = true; tutWaitIdle().then(function(){ TUT.busy = false; if (TUT.on && TUT.step === cur) tutGo(cur + 1); }); } }
 document.getElementById('tutTap').addEventListener('click', tutTapTarget);
 document.getElementById('tutNext').addEventListener('click', function(){ if (TUT.busy) return; if (TUT.step >= TUT_TEXT.length - 1) tutEnd(); else tutGo(TUT.step + 1); });
 // 枠線（2pt）はキーボードやスイッチで動かしているときだけ
@@ -1959,7 +2107,7 @@ function adUi(store, kind, nowMs){
 (function(){
   var m = /[?&]restorepreview=(before|success|active|none|failed)/.exec(location.search); if (!m) return;
   var k = m[1], T = STR[LANG].restore, box = document.createElement('div'); box.id = 'restorePreview'; box.className = 'abs'; box.lang = LANG; document.getElementById('app').appendChild(box);
-  var res = k === 'before' ? '' : T[k] + (k === 'success' ? '<small>' + T.successCoins + '</small>' : '');
+  var jb = function(t){ return LANG === 'ja' ? L.jaNoBreakHtml(t) : t; }, res = k === 'before' ? '' : jb(T[k]) + (k === 'success' ? '<small>' + jb(T.successCoins) + '</small>' : ''); // 日本語は「。」のあとで改行
   box.innerHTML = '<button type="button" class="primary">' + T.button + '</button><p class="rnote">' + T.note + '</p>' + (res ? '<p class="rres" role="status">' + res + '</p>' : '') +
     (k === 'failed' ? '<div class="rbtns"><button type="button">' + T.close + '</button><button type="button" class="primary">' + T.retry + '</button></div>' : '');
   if (res) setTimeout(function(){ document.getElementById('live').textContent = T[k] + (k === 'success' ? ' ' + T.successCoins : ''); }, 300); // 1回だけ
@@ -1970,10 +2118,10 @@ function adUi(store, kind, nowMs){
   var kind = m[1], used = +((/[?&]adused=(\d+)/.exec(location.search) || [])[1] || 0), hq = /[?&]hour=(\d+)/.exec(location.search), now = hq ? new Date().setHours(+hq[1], 0, 0, 0) : Date.now(), /* ?hour=H でその時刻に */ st = { day: L.adDayKey(now, RULES.ads.adResetHour), used: {} }; st.used[kind] = used;
   var box = document.createElement('div'); box.id = 'adPreview'; box.className = 'abs'; box.lang = LANG; document.getElementById('app').appendChild(box);
   function draw(){ var u = adUi(st, kind, now);
-    box.innerHTML = (u.button ? '<button type="button" class="primary"' + (u.enabled ? '' : ' disabled aria-disabled="true"') + '>' + u.label + '</button>' : '') + (u.note ? '<p>' + u.note + '</p>' : '') + (u.small ? '<p class="sm">' + u.small + '</p>' : '') + (u.coinButton ? '<button type="button" class="coinBtn">' + u.coinButton + '</button>' : ''); }
+    box.innerHTML = (u.button ? '<button type="button" class="primary"' + (u.enabled ? '' : ' disabled aria-disabled="true"') + '>' + u.label + '</button>' : '') + (u.note ? '<p>' + (LANG === 'ja' ? L.jaNoBreakHtml(u.note) : u.note) + '</p>' : '') + (u.small ? '<p class="sm">' + (LANG === 'ja' ? L.jaNoBreakHtml(u.small) : u.small) + '</p>' : '') + (u.coinButton ? '<button type="button" class="coinBtn">' + u.coinButton + '</button>' : ''); }
   var lastState = null; function say(u){ if (u.state && u.state !== lastState){ lastState = u.state; var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = u.note + (u.small ? ' ' + u.small : ''); }, 300); } } // 文と小さな一文を1回読む。足りるようになったら読み直す
   var draw0 = draw; draw = function(){ draw0(); say(adUi(st, kind, now)); };
-  window.TTS_setCoins = function(n){ AD_COINS = n; draw(); }; // 確認用：コインが増えたら「足りる」へ切り替え
+  window.TTS_setCoins = function(n){ AD_COINS = n; SAMPLE_WALLET = { paid: 0, free: n }; if (SCREEN === 'home') buildHome(); draw(); }; // 確認用：コインが増えたら「足りる」へ切り替え（上の持っているコインも同じ数に）
   draw(); window.addEventListener('online', draw); window.addEventListener('offline', draw); // つながれば自動で戻る
 })();
 window.TTS = { tap: onTap, adUi: adUi, state: function(){ return state; }, canMove: function(id){ return L.canMove(state, id); }, status: function(){ return L.status(state); },
