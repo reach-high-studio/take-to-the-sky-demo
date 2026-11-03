@@ -78,6 +78,102 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 .seathit{position:absolute;pointer-events:auto;cursor:pointer}
 .seat.off{opacity:0}
 .seathit.off{pointer-events:none}
+/* ---- v0.3.2：扉絵・ホーム・マイページ（screens_v02 の採用案 A「朝の空港」） ---- */
+.screen{position:absolute;left:0;top:0;width:390px;height:844px;z-index:50;background:var(--paper);overflow:hidden;display:none}
+.screen.on{display:block}
+.screen svg.scene{position:absolute;left:0;top:0;width:390px;height:844px;pointer-events:none;overflow:visible}
+.ibtn{position:absolute;width:44px;height:44px;border:0;padding:0;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--graphite)}
+.ibtn[aria-disabled="true"]{cursor:default}
+.ttl{position:absolute;left:0;right:0;text-align:center;font-family:-apple-system,"SF Pro Display","Inter",sans-serif;font-size:40px;font-weight:700;letter-spacing:-.5px;line-height:48px;color:var(--ink)}
+.subttl{position:absolute;left:0;right:0;top:203px;text-align:center;font-size:15px;color:var(--graphite);line-height:20px}
+.bigbtn{position:absolute;border:0;border-radius:16px;background:var(--sky);color:#fff;font:inherit;font-size:20px;font-weight:700;cursor:pointer}
+.bigbtn:active{transform:scale(.98)}
+#tStart{left:24px;top:730px;width:342px;height:56px}
+.fade0{opacity:0}
+.credit2{position:absolute;left:0;right:0;top:812px;text-align:center;font-size:10px;color:#8C8A84;letter-spacing:.02em}
+/* ホーム */
+#hHud{position:absolute;left:16px;top:61px;height:28px;display:flex;align-items:center;gap:6px}
+.hearts{display:flex;gap:2px}
+.cap{display:flex;align-items:center;height:28px;padding:0 8px;border-radius:14px;background:#fff;border:1px solid var(--edge);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;margin-left:4px}
+.cap svg{flex:none;display:block}
+.cap .dv{width:1px;height:16px;background:var(--edge);margin:0 7px}
+.cap span{margin-left:3px}
+.ex{display:inline-block;height:18px;padding:0 6px;border-radius:9px;border:1px dashed #8C8A84;font-size:10px;line-height:16px;color:var(--graphite);font-weight:600;white-space:nowrap}
+#hRouteT{position:absolute;left:24px;top:168px;font-size:17px;font-weight:700;line-height:22px}
+#hRouteN{position:absolute;right:24px;top:170px;font-size:13px;color:var(--graphite);line-height:18px;font-variant-numeric:tabular-nums}
+.hcards{position:absolute;left:16px;top:511px;width:358px;height:88px;display:flex;gap:12px}
+.hcard{flex:1;position:relative;height:88px;border-radius:16px;background:#fff;border:1px solid var(--edge);font:inherit;color:var(--ink);cursor:pointer;padding:0}
+.hcard .ic{position:absolute;left:0;right:0;top:16px;height:24px;display:flex;justify-content:center}
+.hcard .lb{position:absolute;left:0;right:0;top:45px;font-size:15px;font-weight:700;line-height:20px}
+.hcard .sb{position:absolute;left:0;right:0;top:66px;font-size:12px;color:var(--graphite);line-height:16px}
+.hcard[aria-disabled="true"]{cursor:default;background:#FBFAF7}
+.hcard[aria-disabled="true"] .lb{color:var(--graphite)}
+#hPlay{left:16px;top:730px;width:358px;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+#hPlay[aria-disabled="true"]{background:#E6E3DC;color:var(--graphite);cursor:default}
+#hNote{position:absolute;left:16px;right:16px;top:640px;text-align:center;font-size:13px;color:var(--graphite);line-height:18px;display:none}
+#hNote button{margin-top:8px;height:44px;padding:0 20px;border-radius:12px;border:1.5px solid var(--sky);background:#fff;color:var(--sky);font:inherit;font-size:15px;font-weight:700;cursor:pointer}
+/* シート（スタンプカード・このアプリについて） */
+.scrim2{position:absolute;left:0;top:0;width:390px;height:844px;background:rgba(31,31,29,.35);z-index:60;display:none}
+.sheet2{position:absolute;left:0;bottom:0;width:390px;background:var(--paper);border-radius:24px 24px 0 0;z-index:61;display:none;padding:0 0 34px}
+.scrim2.on,.sheet2.on{display:block}
+.sheet2 .grab{width:36px;height:5px;border-radius:3px;background:var(--edge);margin:8px auto 0}
+.sheet2 h2{margin:20px 24px 0;font-size:20px;line-height:26px}
+.sheet2 .desc{margin:6px 24px 0;font-size:13px;line-height:20px;color:var(--graphite)}
+.sheet2 .foot{margin:12px 24px 0;font-size:12px;line-height:20px;color:var(--graphite)}
+.obtn{display:block;width:342px;height:48px;margin:16px 24px 0;border-radius:12px;border:1.5px solid var(--sky);background:#fff;color:var(--sky);font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+/* 搭乗券 */
+.bp{position:relative;width:358px;margin:14px 16px 0;background:#fff;border:1px solid var(--edge);border-radius:16px;overflow:hidden}
+.bp .top{height:52px;background:var(--sky);color:#fff;position:relative}
+.bp .top .en{position:absolute;left:16px;top:9px;font-family:"Inter",-apple-system,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;color:rgba(255,255,255,.8);line-height:14px}
+.bp .top .ja{position:absolute;left:16px;top:24px;font-size:17px;font-weight:700;line-height:22px}
+.bp .top .r{position:absolute;right:16px;top:19px;font-family:"Inter",-apple-system,sans-serif;font-size:12px;font-weight:600;letter-spacing:1.5px;line-height:14px}
+.bp .flds{position:relative;height:80px}
+.bp .f{position:absolute;top:8px}
+.bp .f .l1{font-size:12px;color:var(--graphite);line-height:16px}
+.bp .f .l2{font-family:"Inter",-apple-system,sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;color:var(--graphite);line-height:16px}
+.bp .f .v{font-family:"SF Mono","Noto Sans Mono","DejaVu Sans Mono",monospace;font-size:20px;font-weight:600;line-height:28px;margin-top:4px;white-space:nowrap}
+.bp .f .v small{font-family:-apple-system,"Noto Sans CJK JP",sans-serif;font-size:12px;font-weight:400;color:var(--graphite);margin-left:3px}
+.bp .perf{position:relative;height:1px;margin:0 14px;border-top:1.5px dashed var(--edge)}
+.bp .notch{position:absolute;top:123px;width:18px;height:18px;border-radius:50%;background:var(--paper);border:1px solid var(--edge)}
+.bp .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:16px 8px 0 8px}
+.bp .d{position:relative;height:96px;border-radius:12px;border:1px solid var(--edge);background:var(--paper);text-align:center}
+.bp .d.done{background:#fff}
+.bp .d.today{background:#E6EFF6;border:2px solid var(--sky)}
+.bp .d.d7{grid-column:span 2}
+.bp .d .t{position:absolute;left:0;right:0;top:4px;font-size:12px;font-weight:700;color:var(--graphite);line-height:18px}
+.bp .d.done .t{color:var(--ink)}
+.bp .d .s{position:absolute;left:50%;top:50px;transform:translate(-50%,-50%)}
+.bp .d .p{position:absolute;left:0;right:0;top:72px;font-size:15px;font-weight:700;color:var(--graphite);line-height:20px;font-variant-numeric:tabular-nums}
+.bp .d.done .p{color:var(--ink)}
+.bp .d.d7 .p{font-size:17px}
+.bp .sum{padding:14px 16px 14px;font-size:13px;font-weight:700;line-height:18px}
+/* マイページ（モックなし。設定のモックの作りに合わせた） */
+#scrMy{background:var(--paper)}
+.nav{position:absolute;left:0;top:47px;width:390px;height:44px;z-index:2;background:var(--paper)}
+.nav .back{position:absolute;left:4px;top:0;height:44px;padding:0 12px;border:0;background:none;color:var(--sky);font:inherit;font-size:17px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.nav h1{margin:0;position:absolute;left:0;right:0;top:0;line-height:44px;text-align:center;font-size:17px;font-weight:700;pointer-events:none}
+.scroll{position:absolute;left:0;top:91px;width:390px;height:753px;overflow-y:auto;padding-bottom:40px}
+.grp{margin:20px 16px 0}
+.grp .gl{display:flex;align-items:center;justify-content:space-between;margin:0 8px 6px;font-size:13px;font-weight:700;color:var(--graphite);line-height:18px}
+.box{background:#fff;border:1px solid var(--edge);border-radius:12px;overflow:hidden}
+.row{position:relative;min-height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:15px;line-height:20px}
+.row + .row{border-top:1px solid #E6E3DC}
+.row .val{font-weight:700;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
+.row .muted{color:var(--graphite);font-weight:400;font-size:13px}
+.stats{display:flex}
+.stat{flex:1;padding:12px 16px 12px}
+.stat + .stat{border-left:1px solid #E6E3DC}
+.stat .k{font-size:12px;color:var(--graphite);line-height:16px}
+.stat .n{font-size:28px;font-weight:700;line-height:36px;font-variant-numeric:tabular-nums;font-family:-apple-system,"SF Pro Rounded",sans-serif}
+.stat .n small{font-size:13px;font-weight:600;margin-left:2px;color:var(--graphite)}
+.mynote{margin:8px 8px 0;font-size:12px;line-height:18px;color:var(--graphite)}
+#scrMy .bp{margin:0;width:358px}
+.para{padding:12px 16px;font-size:13px;line-height:20px}
+.para p{margin:0}
+.para p + p{margin-top:6px;color:var(--graphite)}
+.mycredit{margin:28px 0 0;text-align:center;font-size:12px;line-height:18px;color:var(--graphite)}
+#toast{position:absolute;left:50%;top:668px;transform:translateX(-50%);z-index:80;max-width:340px;padding:10px 16px;border-radius:12px;background:rgba(31,31,29,.88);color:#fff;font-size:13px;line-height:18px;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap}
+#toast.on{opacity:1}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
 </head>
@@ -116,6 +212,79 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
     <p class="sub">最初からやり直せます</p>
     <button class="primary" data-act="retry">もう一度</button>
   </div>
+  <!-- v0.3.2：扉絵・ホーム・マイページ。見た目は screens_v02 の採用案 A。数値の例は「表示例」と示す -->
+  <section id="scrTitle" class="screen" aria-label="扉絵">
+    <svg class="scene" id="tScene" viewBox="0 0 390 844" aria-hidden="true"></svg>
+    <div class="ttl" id="tL1" style="top:99px">Take to</div>
+    <div class="ttl" id="tL2" style="top:147px">the sky</div>
+    <h1 class="sr">Take to the sky</h1>
+    <div class="subttl" id="tSub">飛行機へ、全員搭乗！</div>
+    <button class="ibtn tfade" id="tInfo" style="left:288px;top:41px" aria-label="このアプリについて"></button>
+    <button class="ibtn tfade" id="tGear" style="left:332px;top:41px" aria-label="設定（準備中）" aria-disabled="true"></button>
+    <button class="bigbtn tfade" id="tStart">スタート</button>
+    <div class="credit2 tfade">Reach High Studio　デモ v0.3</div>
+  </section>
+  <section id="scrHome" class="screen" aria-label="ホーム">
+    <svg class="scene" id="hScene" viewBox="0 0 390 844" aria-hidden="true"></svg>
+    <h1 class="sr">ホーム</h1>
+    <div id="hHud" role="img"></div>
+    <button class="ibtn" id="hGear" style="left:330px;top:53px" aria-label="設定（準備中）" aria-disabled="true"></button>
+    <div id="hRouteT">飛行ルート</div>
+    <div id="hRouteN"></div>
+    <div id="hRouteA" class="sr"></div>
+    <div class="hcards">
+      <button class="hcard" id="hStamp" aria-haspopup="dialog"><span class="ic" id="icStamp"></span><span class="lb">スタンプ</span><span class="sb">3日目（表示例）</span></button>
+      <button class="hcard" id="hMy"><span class="ic" id="icMy"></span><span class="lb">マイページ</span><span class="sb">記録と持ち物</span></button>
+      <button class="hcard" id="hShop" aria-disabled="true" aria-label="ショップ（準備中）"><span class="ic" id="icShop"></span><span class="lb">ショップ</span><span class="sb">準備中</span></button>
+    </div>
+    <div id="hNote"><div id="hNoteT"></div><button id="hReplay">ステージ 1 を遊ぶ</button></div>
+    <button class="bigbtn" id="hPlay"><span>プレイ</span><span id="hPlayN">ステージ 1</span></button>
+  </section>
+  <section id="scrMy" class="screen" aria-label="マイページ">
+    <div class="nav"><button class="back" id="myBack" aria-label="戻る（ホームへ）"><svg width="12" height="20" viewBox="0 0 12 20" aria-hidden="true"><path d="M10 2 L2 10 L10 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>戻る</button><h1>マイページ</h1></div>
+    <div class="scroll" id="myScroll">
+      <div class="grp"><div class="gl">記録</div>
+        <div class="box stats">
+          <div class="stat"><div class="k">クリアしたステージ</div><div class="n" id="myCleared">0<small>ステージ</small></div></div>
+          <div class="stat"><div class="k">次のステージ</div><div class="n" id="myNext">1</div></div>
+        </div>
+        <div class="mynote">このデモで遊んだ結果です。</div>
+      </div>
+      <div class="grp"><div class="gl">持ち物<span class="ex">表示例（デモ）</span></div>
+        <div class="box">
+          <div class="row" role="group" aria-label="買ったコイン（表示例）：120"><span>買ったコイン</span><span class="val" aria-hidden="true"><span id="myCart"></span>120</span></div>
+          <div class="row" role="group" aria-label="もらったコイン（表示例）：340"><span>もらったコイン</span><span class="val" aria-hidden="true"><span id="myGift"></span>340</span></div>
+          <div class="row" role="group" aria-label="ハート（表示例）：5つ中4つ"><span>ハート</span><span class="val" aria-hidden="true"><span id="myHearts" class="hearts"></span>4 / 5</span></div>
+          <div class="row" aria-disabled="true" aria-label="ショップ（準備中）"><span style="color:var(--graphite)">ショップ</span><span class="muted">準備中</span></div>
+        </div>
+        <div class="mynote">コインとハートは、まだゲームに入っていません。数字は見た目の例です。</div>
+      </div>
+      <div class="grp"><div class="gl">スタンプカード<span class="ex">表示例（デモ）</span></div>
+        <div id="myBp"></div>
+        <div class="mynote">毎日最初に開いたとき、自動で押されます。休んだ日があっても、続きから押せます。</div>
+      </div>
+      <div class="grp"><div class="gl">記録の保存</div>
+        <div class="box para"><p>記録は、お使いの iCloud に自動で保存されます。ログインや登録はありません。</p><p>このデモでは保存しません。ページを閉じると最初に戻ります。</p></div>
+      </div>
+      <div class="mycredit">Take to the sky<br>Reach High Studio　デモ v0.3</div>
+    </div>
+  </section>
+  <div class="scrim2" id="sScrim"></div>
+  <div class="sheet2" id="sStamp" role="dialog" aria-modal="true" aria-labelledby="sStampH">
+    <div class="grab"></div>
+    <h2 id="sStampH">スタンプカード <span class="ex" style="vertical-align:middle">表示例（デモ）</span></h2>
+    <p class="desc">毎日最初に開いたとき、自動で押されます。<br>休んだ日があっても、続きから押せます。</p>
+    <div id="sBp"></div>
+    <p class="foot">7日目のあとは、新しいカードになります。<br>1日の区切りは午前4時です。</p>
+    <button class="obtn" data-close>閉じる</button>
+  </div>
+  <div class="sheet2" id="sAbout" role="dialog" aria-modal="true" aria-labelledby="sAboutH">
+    <div class="grab"></div>
+    <h2 id="sAboutH">このアプリについて</h2>
+    <p class="desc">Take to the sky<br>制作：Reach High Studio<br>デモ v0.3（ステージ 1 だけ遊べます）</p>
+    <button class="obtn" data-close>閉じる</button>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
   <div id="live" class="sr" aria-live="polite"></div>
 </div>
 <script>// Take to the sky — ゲームの中心ルール（DOM なし・純粋関数）。Swift 版へ移すときの手本。
@@ -488,7 +657,7 @@ function updateDashes(){
   });
 }
 function maybeSeatHint(){ // 数字だけの札が初めて出たとき、下の案内に1回だけ出す
-  if (!SEAT_HINT_DUE) return; SEAT_HINT_DUE = false; SEAT_HINT_SHOWN = true;
+  if (!SEAT_HINT_DUE || SCREEN !== 'game') return; SEAT_HINT_DUE = false; SEAT_HINT_SHOWN = true;
   hint(SEAT_HINT_TEXT); hintTimer = setTimeout(function(){ hint(HINT); }, SEAT_HINT_MS);
 }
 function planeLen(id){ return R.planeLengthPt.runway[STAGE_PLANE[id].size]; }
@@ -840,15 +1009,245 @@ function checkEnd(){
   else if (st === 'stuck'){ document.getElementById('scrim').classList.add('on'); document.getElementById('sheet').classList.add('on'); document.getElementById('live').textContent = '動かせる飛行機がありません'; }
 }
 document.querySelectorAll('[data-act="retry"]').forEach(function(b){ b.addEventListener('click', start); });
-// デモはステージ1のみ。本番では次のステージを読み込む。
-document.querySelectorAll('[data-act="next"]').forEach(function(b){ b.addEventListener('click', start); });
+// デモはステージ1のみ。「次のステージへ」はホームへ戻り、飛行ルートを1つ進める（本番では次のステージを読み込む）
+document.querySelectorAll('[data-act="next"]').forEach(function(b){ b.addEventListener('click', function(){ CLEARED = Math.max(CLEARED, 1); show('home'); }); });
 document.getElementById('restart').addEventListener('click', start);
+// ======== v0.3.2：扉絵・ホーム・マイページ（screens_v02 の採用案 A「朝の空港」。動きは CD 動きの仕様 v1.4） ========
+var SCREEN = 'title', CLEARED = 0, DEMO_LAST_STAGE = 1;   // 記録はこのページを開いているあいだだけ（デモでは保存しない）
+var A = { skyT: '#D7E6F2', skyB: '#E6EFF6', sun: '#F3E4D8', ground: '#E9E4D8', term: '#DCD9D2', muted: '#77746E', low: '#EEF4F9' };
+var SCR = { title: document.getElementById('scrTitle'), home: document.getElementById('scrHome'), my: document.getElementById('scrMy') };
+// --- 絵の部品（SVG の文字列）
+function stratus(cx, cy, w){ // 層雲（#140）：横長の角丸の帯を2〜3段ずらす。上の段 #FFFFFF・下の段 #EEF4F9
+  var h = w * .18, x0 = cx - w / 2, off = 16, b;
+  if (w >= 96) b = [[x0 + off, cy, w * .55, '#FFFFFF'], [x0, cy + h, w * .86, '#FFFFFF'], [x0 + off * 1.25, cy + 2 * h, w - off * 1.25, A.low]];
+  else b = [[x0 + off, cy, w - off, '#FFFFFF'], [x0, cy + h, w - off, A.low]];
+  return b.reverse().map(function(q){ return '<rect x="' + q[0] + '" y="' + q[1] + '" width="' + q[2] + '" height="' + h + '" rx="' + h / 2 + '" fill="' + q[3] + '"/>'; }).join('');
+}
+function sceneryD(Lp){ // SceneryPlane（#141）：胴 8:1・後退翼の1色シルエット。機首は +x
+  var h = Lp / 16, P = [[.5*Lp,0],[.44*Lp,-h*.75],[.36*Lp,-h],[.08*Lp,-h],[-.12*Lp,-.46*Lp],[-.21*Lp,-.46*Lp],[-.07*Lp,-h],[-.36*Lp,-h],[-.45*Lp,-.17*Lp],[-.5*Lp,-.17*Lp],[-.47*Lp,-h*.6],[-.5*Lp,0]];
+  var low = P.slice(1, -1).reverse().map(function(p){ return [p[0], -p[1]]; });
+  return 'M' + P.concat(low).map(function(p){ return p[0].toFixed(2) + ' ' + p[1].toFixed(2); }).join(' L') + ' Z';
+}
+function sceneryPlane(cx, cy, size, ang, col){ return '<path d="' + sceneryD(size) + '" fill="' + col + '" stroke="' + col + '" stroke-width="1" stroke-linejoin="round" transform="translate(' + cx + ' ' + cy + ') rotate(' + ang + ')"/>'; }
+var HOP = [[0,-3],[1,0],[-1,-2],[0,0],[2,-1],[-2,0]];
+function paxRow(colorId, x0, y, step, size, n){ // 乗客は1人ずつ少しずらす（跳ねている途中の1コマ。t62u）
+  var c = COLOR[colorId], s = '', w = size * 26 / 32;
+  for (var i = 0; i < n; i++){ var cx = x0 + i * step + HOP[i % 6][0], cy = y + HOP[i % 6][1];
+    s += '<svg x="' + (cx - w / 2) + '" y="' + (cy - size / 2) + '" width="' + w + '" height="' + size + '" viewBox="0 0 26 32">' + paxSvg(c).replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '') + '</svg>'; }
+  return s;
+}
+function skyRect(id, y1){ return '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + A.skyT + '"/><stop offset="1" stop-color="' + A.skyB + '"/></linearGradient></defs><rect x="0" y="0" width="390" height="' + y1 + '" fill="url(#' + id + ')"/>'; }
+function groundBand(y, h, dashY){
+  var s = '<rect x="-8" y="' + y + '" width="406" height="' + h + '" rx="8" fill="' + A.ground + '"/>';
+  for (var x = 20; x < 370; x += 24) s += '<rect x="' + x + '" y="' + (dashY - 1.5) + '" width="' + Math.min(14, 370 - x) + '" height="3" fill="#FFFFFF"/>';
+  return s;
+}
+// 動きの線（t76u で残す。CD 動きの仕様 v1.4）：40pt の機が基準。上下 5pt、尾の先から 6pt 後ろ、上 24pt・下 16pt、幅 1.5pt、端は丸、
+// 色は機の色、不透明度 0.45×v、機の側 1.0 → 遠い端 0 のグラデーション、破線 10/6（下の線は位相 8pt ずらす）、速さ×0.6 で後ろへ流れる。
+// Reduce Motion：長さ 60%（14・10pt）、不透明度 0.35、実線。v＜0.08 では描かない。読み上げなし
+var TAXI_SEQ = 0;
+function taxiPlaneSvg(id, col, size){
+  var k = size / 40, xs = -size / 2 - 6 * k, g = '';
+  [[-5 * k, 'u'], [5 * k, 'l']].forEach(function(q){
+    g += '<linearGradient id="' + id + q[1] + 'g" gradientUnits="userSpaceOnUse" x1="' + xs + '" y1="0" x2="' + (xs - 24 * k) + '" y2="0"><stop offset="0" stop-color="' + col + '" stop-opacity="1"/><stop offset="1" stop-color="' + col + '" stop-opacity="0"/></linearGradient>';
+  });
+  return '<g id="' + id + '" transform="translate(-60 0)"><defs>' + g + '</defs>' +
+    '<line id="' + id + 'u" x1="' + xs + '" y1="' + (-5 * k) + '" x2="' + xs + '" y2="' + (-5 * k) + '" stroke="url(#' + id + 'ug)" stroke-width="' + 1.5 * k + '" stroke-linecap="round" opacity="0"/>' +
+    '<line id="' + id + 'l" x1="' + xs + '" y1="' + (5 * k) + '" x2="' + xs + '" y2="' + (5 * k) + '" stroke="url(#' + id + 'lg)" stroke-width="' + 1.5 * k + '" stroke-linecap="round" opacity="0"/>' +
+    '<path d="' + sceneryD(size) + '" fill="' + col + '" stroke="' + col + '" stroke-width="1" stroke-linejoin="round"/></g>';
+}
+function setLines(id, size, v, phase, rm){
+  var k = size / 40, xs = -size / 2 - 6 * k;
+  [['u', 24 * k, 14 * k, 0], ['l', 16 * k, 10 * k, 8 * k]].forEach(function(q){
+    var ln = document.getElementById(id + q[0]), gr = document.getElementById(id + q[0] + 'g');
+    var Lx = rm ? q[2] : q[1] * v, op = rm ? .35 : .45 * v;
+    if (!rm && v < .08){ ln.setAttribute('opacity', 0); return; }
+    ln.setAttribute('x2', xs - Lx); gr.setAttribute('x2', xs - Lx); ln.setAttribute('opacity', op.toFixed(3));
+    if (rm) ln.removeAttribute('stroke-dasharray');
+    else { ln.setAttribute('stroke-dasharray', (10 * k) + ' ' + (6 * k)); ln.setAttribute('stroke-dashoffset', (-(phase + q[3])).toFixed(2)); }
+  });
+}
+// 滑走：2.4s、timingCurve(0.45, 0, 0.25, 1)。v＝その時点の速さ（最大を1に正規化）
+var TC = [0.45, 0, 0.25, 1];
+function bz(a, b, s){ return 3 * (1 - s) * (1 - s) * s * a + 3 * (1 - s) * s * s * b + s * s * s; }
+function dbz(a, b, s){ return 3 * (1 - s) * (1 - s) * a + 6 * (1 - s) * s * (b - a) + 3 * s * s * (1 - b); }
+function tcAt(t){ var lo = 0, hi = 1, s = t; for (var i = 0; i < 30; i++){ s = (lo + hi) / 2; if (bz(TC[0], TC[2], s) < t) lo = s; else hi = s; }
+  return { p: bz(TC[1], TC[3], s), d: dbz(TC[1], TC[3], s) / Math.max(1e-6, dbz(TC[0], TC[2], s)) }; }
+var TC_MAX = (function(){ var m = 0; for (var i = 0; i <= 400; i++) m = Math.max(m, tcAt(i / 400).d); return m; })();
+var taxiRun = {}; // id → { stop() }
+function taxi(id, size, x0, x1, cy, delay){
+  var g = document.getElementById(id), T = 2400, seq = ++TAXI_SEQ, phase = 0, last = null, t0 = null;
+  if (taxiRun[id]) taxiRun[id].stop();
+  var st = { done: false, stop: function(){ st.done = true; g.setAttribute('transform', 'translate(' + x1 + ' ' + cy + ')'); setLines(id, size, 0, 0, false); } };
+  taxiRun[id] = st;
+  if (RM){ // 滑走せず、止まる位置に 0.2s のクロスフェードで出る
+    g.setAttribute('transform', 'translate(' + x1 + ' ' + cy + ')'); setLines(id, size, 0, 0, true);
+    g.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: delay, fill: 'backwards' }); st.done = true; return st;
+  }
+  g.setAttribute('transform', 'translate(' + x0 + ' ' + cy + ')'); setLines(id, size, 0, 0, false);
+  function f(now){
+    if (st.done) return;
+    if (t0 === null) t0 = now + delay;
+    var t = Math.max(0, Math.min(1, (now - t0) / T)), q = tcAt(t), v = t >= 1 ? 0 : q.d / TC_MAX;
+    var speed = q.d * (x1 - x0) / T * 1000; // pt/s
+    if (last !== null && now > t0) phase += speed * .6 * (now - last) / 1000;
+    last = now;
+    g.setAttribute('transform', 'translate(' + (x0 + (x1 - x0) * q.p).toFixed(2) + ' ' + cy + ')'); setLines(id, size, v, phase, false);
+    if (t < 1) requestAnimationFrame(f); else st.done = true;
+  }
+  requestAnimationFrame(f); return st;
+}
+// --- 印（アイコン）
+var ICON = {
+  gear: '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="#5B5A56"><g stroke-width="3.2" stroke-linecap="butt">' + [0,45,90,135,180,225,270,315].map(function(a){ var r = a * Math.PI / 180; return '<line x1="' + (12 + Math.cos(r) * 7.2) + '" y1="' + (12 + Math.sin(r) * 7.2) + '" x2="' + (12 + Math.cos(r) * 11) + '" y2="' + (12 + Math.sin(r) * 11) + '"/>'; }).join('') + '</g><circle cx="12" cy="12" r="8.2" stroke-width="2.2"/><circle cx="12" cy="12" r="3" stroke-width="1.8"/></g></svg>',
+  info: '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="#5B5A56" stroke-width="1.8"/><rect x="10.9" y="10" width="2.2" height="7.5" rx="1" fill="#5B5A56"/><circle cx="12" cy="7" r="1.4" fill="#5B5A56"/></svg>',
+  cart: function(z){ return '<svg width="' + z + '" height="' + z + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#AE7E1F"/><g transform="translate(0.2,-0.9)"><path d="M8.2 8.8 H18.4 L17.0 14.0 H9.5 Z" fill="#1F1F1D" stroke="#1F1F1D" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.4 6.8 H7.3 L9.6 15.6 H16.8" fill="none" stroke="#1F1F1D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10.4" cy="17.8" r="1.4" fill="#1F1F1D"/><circle cx="16.0" cy="17.8" r="1.4" fill="#1F1F1D"/></g></svg>'; },
+  gift: function(z){ return '<svg width="' + z + '" height="' + z + '" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#AE7E1F"/><g fill="#1F1F1D"><ellipse cx="10.0" cy="7.1" rx="2.1" ry="1.35" transform="rotate(35 10.0 7.1)"/><ellipse cx="14.0" cy="7.1" rx="2.1" ry="1.35" transform="rotate(-35 14.0 7.1)"/><rect x="5.8" y="8.6" width="5.4" height="2.8" rx="0.9"/><rect x="12.8" y="8.6" width="5.4" height="2.8" rx="0.9"/><rect x="6.8" y="12.2" width="4.4" height="6.0" rx="1.0"/><rect x="12.8" y="12.2" width="4.4" height="6.0" rx="1.0"/></g></svg>'; },
+  heart: function(z, full){ var d = 'M8 14.2C3.2 10.9 1 8.5 1 5.6 1 3.4 2.7 1.8 4.8 1.8c1.3 0 2.5.7 3.2 1.8.7-1.1 1.9-1.8 3.2-1.8 2.1 0 3.8 1.6 3.8 3.8 0 2.9-2.2 5.3-7 8.6z';
+    return '<svg width="' + z + '" height="' + z + '" viewBox="0 0 16 16" aria-hidden="true"><path d="' + d + '" fill="' + (full ? '#E5484D' : 'none') + '" stroke="' + (full ? '#E5484D' : A.muted) + '" stroke-width="' + (full ? 0 : 1.3) + '" stroke-linejoin="round"/></svg>'; },
+  boarding: '<svg width="40" height="24" viewBox="0 0 40 24" aria-hidden="true"><rect x="1" y="1" width="38" height="22" rx="4" fill="none" stroke="#5B5A56" stroke-width="2"/><circle cx="24" cy="0" r="3" fill="#fff"/><circle cx="24" cy="24" r="3" fill="#fff"/><g stroke="#5B5A56" stroke-width="1.5"><line x1="24" y1="5" x2="24" y2="7.5"/><line x1="24" y1="10" x2="24" y2="12.5"/><line x1="24" y1="15" x2="24" y2="17.5"/></g><g stroke="#5B5A56" stroke-width="2"><line x1="6" y1="8" x2="18" y2="8"/><line x1="6" y1="15" x2="12" y2="15"/></g><circle cx="32" cy="12" r="4.5" fill="#2B5C8A"/></svg>',
+  log: '<svg width="26" height="24" viewBox="0 0 26 24" aria-hidden="true"><rect x="3" y="1" width="20" height="22" rx="3" fill="none" stroke="#5B5A56" stroke-width="2"/><path d="' + sceneryD(11) + '" fill="#2B5C8A" transform="translate(13 7.5) rotate(-12)"/><g stroke="#5B5A56" stroke-width="2" stroke-linecap="round"><line x1="8" y1="14" x2="18" y2="14"/><line x1="8" y1="18.5" x2="15" y2="18.5"/></g></svg>',
+  bag: '<svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="8" width="20" height="15" rx="3" fill="none" stroke="#5B5A56" stroke-width="2"/><path d="M7 8 A5 6 0 0 1 17 8" fill="none" stroke="#5B5A56" stroke-width="2"/></svg>'
+};
+function depStamp(ang){ // 出発のスタンプ（Sky の二重の輪・細身の機・「出発」）
+  return '<svg width="56" height="56" viewBox="-28 -28 56 56" aria-hidden="true"><g transform="rotate(' + ang + ')"><circle r="25" fill="none" stroke="#2B5C8A" stroke-width="2"/><circle r="20" fill="none" stroke="#2B5C8A" stroke-width="1"/>' +
+    '<path d="' + sceneryD(14) + '" fill="#2B5C8A" transform="translate(0 -9)"/><text x="0" y="11" text-anchor="middle" font-size="12" font-weight="700" fill="#2B5C8A">出発</text></g></svg>';
+}
+function boardingPass(today){ // 搭乗券（#145・#146）。値はすべて表示例
+  var f = [[16, '便', 'FLIGHT', 'TTS 007'], [116, '搭乗口', 'GATE', 'A1'], [184, '特典', 'BONUS', '90<small>コイン</small>'], [275, '日付', 'DATE', '11/03']];
+  var h = '<div class="bp" role="img" aria-label="スタンプカード（表示例）：7日中' + today + '日目まで押してあります。今日は' + today + '日目、もらったコイン10"><div class="top"><span class="en">BOARDING PASS</span><span class="ja">搭乗券</span><span class="r">TAKE TO THE SKY</span></div><div class="flds">';
+  f.forEach(function(q){ h += '<div class="f" style="left:' + q[0] + 'px"><div class="l1">' + q[1] + '</div><div class="l2">' + q[2] + '</div><div class="v">' + q[3] + '</div></div>'; });
+  h += '</div><div class="perf"></div><span class="notch" style="left:-10px"></span><span class="notch" style="right:-10px"></span><div class="grid">';
+  for (var n = 1; n <= 7; n++){
+    var done = n <= today, cls = 'd' + (done ? ' done' : '') + (n === today ? ' today' : '') + (n === 7 ? ' d7' : '');
+    h += '<div class="' + cls + '"><div class="t">' + n + '日目' + (n === today ? '・今日' : '') + '</div><div class="s">' + (done ? depStamp([-6, 6, -4][(n - 1) % 3]) : ICON.gift(20)) + '</div><div class="p">' + (n === 7 ? '+30' : '+10') + '</div></div>';
+  }
+  return h + '</div><div class="sum">今日は' + today + '日目　もらったコイン +10</div></div>';
+}
+// --- 扉絵
+function buildTitle(){
+  var hz = 573, s = skyRect('tSky', hz) + '<circle cx="305" cy="423" r="50" fill="' + A.sun + '"/>' + stratus(74, 377, 104) + stratus(328, 495, 80) + stratus(180, 461, 64) +
+    '<rect x="24" y="527" width="126" height="46" fill="' + A.term + '"/><rect x="36" y="539" width="102" height="12" fill="' + A.skyB + '"/><rect x="120" y="495" width="12" height="32" fill="' + A.term + '"/><rect x="110" y="481" width="32" height="14" fill="' + A.term + '"/>' +
+    groundBand(581, 48, 605);
+  var dir = { x: Math.cos(-14 * Math.PI / 180), y: Math.sin(-14 * Math.PI / 180) };
+  s += '<g id="tFly"><line id="tTrail" x1="115" y1="459.1" x2="265.2" y2="425.4" stroke="#FFFFFF" stroke-width="3"/><g id="tFlyP">' + sceneryPlane(0, 0, 44, -14, '#2B5C8A') + '</g></g>';
+  s += '<g id="tPax" class="tfade">' + paxRow('red', 188, 559, 26, 22, 4) + '</g>' + taxiPlaneSvg('tTaxi', COLOR.red.hex, 40);
+  document.getElementById('tScene').innerHTML = s;
+  document.getElementById('tInfo').innerHTML = ICON.info; document.getElementById('tGear').innerHTML = ICON.gear;
+  buildTitle.dir = dir;
+}
+function playTitle(){
+  var fadeEls = SCR.title.querySelectorAll('.tfade'), P = document.getElementById('tFlyP'), tr = document.getElementById('tTrail');
+  var end = { x: 285, y: 421 }, dir = buildTitle.dir, D = 150;
+  function flyAt(u){ var x = end.x - (1 - u) * D * dir.x, y = end.y - (1 - u) * D * dir.y; P.setAttribute('transform', 'translate(' + x.toFixed(2) + ' ' + y.toFixed(2) + ')'); tr.setAttribute('x2', (x - 19.8 * dir.x).toFixed(2)); tr.setAttribute('y2', (y - 19.8 * dir.y + 4.4 * 0).toFixed(2)); }
+  if (RM){ // 動きを減らす：すべて止まった形で 0.2s のクロスフェード
+    flyAt(1); SCR.title.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 }); taxi('tTaxi', 40, -30, 305, 605, 0); return;
+  }
+  ['tL1', 'tL2'].forEach(function(id, i){ document.getElementById(id).animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }], { duration: 520, delay: i * 60, easing: 'cubic-bezier(.34,1.32,.64,1)', fill: 'backwards' }); });
+  document.getElementById('tSub').animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: 210, fill: 'backwards' });
+  fadeEls.forEach(function(e){ e.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200, delay: 300, fill: 'backwards' }); });
+  // 空の機：飛行機雲を引いて1回だけ上昇（1.6s easeInOut）
+  var t0 = null; flyAt(0); P.style.opacity = 0;
+  (function f(now){ if (SCREEN !== 'title') return; if (t0 === null) t0 = now; var u = Math.min(1, (now - t0) / 1600), e = u < .5 ? 2 * u * u : 1 - Math.pow(-2 * u + 2, 2) / 2;
+    flyAt(e); P.style.opacity = Math.min(1, u * 6); tr.style.opacity = Math.min(1, u * 6); if (u < 1) requestAnimationFrame(f); })(performance.now());
+  // 地上の機：ロゴが出てから 0.4s 後に1回だけ滑走（くり返さない）
+  taxi('tTaxi', 40, -30, 305, 605, 580 + 400);
+}
+// --- ホーム
+function routeSvg(next){
+  var first = Math.max(1, next - 2), xs = [0, 1, 2, 3, 4].map(function(i){ return 44 + 302 * i / 4; }), base = 287, ni = next - first;
+  var yof = function(x){ return base - 40 * Math.sin(Math.PI * (x - 24) / 342); };
+  var pts = function(a, b){ var p = []; for (var i = 0; i <= 60; i++){ var x = a + (b - a) * i / 60; p.push(x.toFixed(1) + ' ' + yof(x).toFixed(1)); } return 'M' + p.join(' L'); };
+  var s = '';
+  if (ni > 0) s += '<path d="' + pts(xs[0], xs[ni]) + '" fill="none" stroke="#2B5C8A" stroke-width="2"/>';
+  s += '<path d="' + pts(xs[ni], xs[4]) + '" fill="none" stroke="' + A.muted + '" stroke-width="2" stroke-dasharray="6 6"/>';
+  xs.forEach(function(x, i){
+    var st = first + i, y = yof(x);
+    if (st < next) s += '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#2B5C8A"/><text x="' + x + '" y="' + (y + 27) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#1F1F1D">' + st + '</text>';
+    else if (st === next) s += '<circle cx="' + x + '" cy="' + y + '" r="24" fill="#FFFFFF" stroke="#2B5C8A" stroke-width="2"/>' + sceneryPlane(x, y, 28, 0, '#2B5C8A') + '<text x="' + x + '" y="' + (y + 45) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#2B5C8A">次は ' + st + '</text>';
+    else s += '<circle cx="' + x + '" cy="' + y + '" r="6" fill="#FFFFFF" stroke="' + A.muted + '" stroke-width="1.5"/><text x="' + x + '" y="' + (y + 27) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#5B5A56">' + st + '</text>';
+  });
+  return '<g id="hRoute">' + s + '</g>';
+}
+function buildHome(){
+  var gy = 447, next = CLEARED + 1;
+  var s = skyRect('hSky', gy) + stratus(315, 211, 64) + stratus(168, 403, 64) + routeSvg(next) + groundBand(gy, 40, gy + 20) +
+    paxRow('blue', 40, gy - 14, 24, 20, 3) + taxiPlaneSvg('hTaxi', COLOR.blue.hex, 40);
+  document.getElementById('hScene').innerHTML = s;
+  var hud = document.getElementById('hHud'), hs = '';
+  for (var i = 0; i < 5; i++) hs += ICON.heart(16, i < 4);
+  hud.innerHTML = '<span class="hearts" aria-hidden="true">' + hs + '</span><span class="cap" aria-hidden="true">' + ICON.cart(16) + '<span>120</span><span class="dv"></span>' + ICON.gift(16) + '<span>340</span></span><span class="ex" aria-hidden="true">表示例</span>';
+  hud.setAttribute('aria-label', '表示例：ハート 5つ中4つ、買ったコイン120、もらったコイン340');
+  document.getElementById('hGear').innerHTML = ICON.gear;
+  document.getElementById('icStamp').innerHTML = ICON.boarding; document.getElementById('icMy').innerHTML = ICON.log; document.getElementById('icShop').innerHTML = ICON.bag;
+  document.getElementById('hRouteN').textContent = CLEARED + 'ステージ クリア';
+  document.getElementById('hRouteA').textContent = '飛行ルート：' + CLEARED + 'ステージ クリア、次はステージ ' + next;
+  var play = document.getElementById('hPlay'), ready = next <= DEMO_LAST_STAGE;
+  document.getElementById('hPlayN').textContent = 'ステージ ' + next;
+  play.setAttribute('aria-label', ready ? 'プレイ、ステージ ' + next : 'ステージ ' + next + '（準備中）');
+  if (ready) play.removeAttribute('aria-disabled'); else play.setAttribute('aria-disabled', 'true');
+  document.getElementById('hNote').style.display = ready ? 'none' : 'block';
+  document.getElementById('hNoteT').textContent = 'ステージ ' + next + ' は準備中です。このデモはステージ 1 だけです。';
+}
+// --- マイページ（モックなし。設定のモックの作りに合わせて作った）
+function buildMy(){
+  document.getElementById('myCleared').innerHTML = CLEARED + '<small>ステージ</small>';
+  document.getElementById('myNext').textContent = CLEARED + 1;
+  document.getElementById('myCart').innerHTML = ICON.cart(16); document.getElementById('myGift').innerHTML = ICON.gift(16);
+  var hs = ''; for (var i = 0; i < 5; i++) hs += ICON.heart(14, i < 4); document.getElementById('myHearts').innerHTML = hs;
+  document.getElementById('myBp').innerHTML = boardingPass(3);
+}
+// --- 画面の切り替え
+var toastTimer = null;
+function toast(t){ var e = document.getElementById('toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(function(){ e.classList.remove('on'); }, 1800); }
+function setInert(){ // 画面やシートが出ているあいだ、後ろのものは読み上げ・タップの対象から外す
+  var sheetOn = document.querySelector('.sheet2.on');
+  Array.prototype.forEach.call(app.children, function(c){
+    if (c.classList.contains('sheet2') || c.id === 'toast' || c.id === 'live' || c.classList.contains('scrim2')) { if (c.classList.contains('sheet2')) c.inert = !c.classList.contains('on'); return; }
+    if (c.classList.contains('screen')) c.inert = !!sheetOn || SCR[SCREEN] !== c;
+    else c.inert = SCREEN !== 'game';
+  });
+}
+function show(name){
+  SCREEN = name;
+  Object.keys(SCR).forEach(function(k){ SCR[k].classList.toggle('on', k === name); });
+  Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); });
+  if (name === 'title'){ playTitle(); }
+  if (name === 'home'){ buildHome(); taxi('hTaxi', 40, -30, 294, 467, 150); }   // ホームは開くたびに1回滑走
+  if (name === 'my'){ buildMy(); document.getElementById('myScroll').scrollTop = 0; }
+  setInert();
+  var live = document.getElementById('live'); live.textContent = { title: 'Take to the sky', home: 'ホーム', my: 'マイページ', game: 'ステージ1' }[name];
+}
+function play(){ show('game'); start(); }
+function openSheet(id){ Object.keys(taxiRun).forEach(function(k){ if (!taxiRun[k].done) taxiRun[k].stop(); }); // シートが開いているときは滑走しない
+  document.getElementById('sScrim').classList.add('on'); var s = document.getElementById(id); s.classList.add('on'); setInert(); s.querySelector('[data-close]').focus();
+  if (!RM) s.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 250, easing: 'ease-out' }); }
+function closeSheet(){ document.querySelectorAll('.sheet2.on').forEach(function(s){ s.classList.remove('on'); }); document.getElementById('sScrim').classList.remove('on'); setInert(); }
+document.getElementById('sBp').innerHTML = boardingPass(3);
+buildTitle();
+document.getElementById('tStart').addEventListener('click', function(){ show('home'); });
+document.getElementById('tInfo').addEventListener('click', function(){ openSheet('sAbout'); });
+document.getElementById('tGear').addEventListener('click', function(){ toast('設定は準備中です（デモ）'); });
+document.getElementById('hGear').addEventListener('click', function(){ toast('設定は準備中です（デモ）'); });
+document.getElementById('hShop').addEventListener('click', function(){ toast('ショップは準備中です（デモ）'); });
+document.getElementById('hStamp').addEventListener('click', function(){ openSheet('sStamp'); });
+document.getElementById('hMy').addEventListener('click', function(){ show('my'); document.getElementById('myBack').focus(); });
+document.getElementById('myBack').addEventListener('click', function(){ show('home'); document.getElementById('hMy').focus(); });
+document.getElementById('hPlay').addEventListener('click', function(){ if (CLEARED + 1 <= DEMO_LAST_STAGE) play(); else toast('ステージ ' + (CLEARED + 1) + ' は準備中です'); });
+document.getElementById('hReplay').addEventListener('click', play);
+document.getElementById('sScrim').addEventListener('click', closeSheet);
+document.querySelectorAll('[data-close]').forEach(function(b){ b.addEventListener('click', closeSheet); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') closeSheet(); });
 function fit(){ var k = Math.min(window.innerWidth / 390, window.innerHeight / 844); app.style.transform = 'scale(' + k + ')'; BOARD_K = k; layoutSeats(); maybeSeatHint(); }
 window.addEventListener('resize', fit); fit();
 start();
+// 最初の画面は扉絵。?screen=home / my / game で直接開ける（確認用）
+var Q0 = /[?&]screen=(title|home|my|game)/.exec(location.search); show(Q0 ? Q0[1] : 'title');
 // 録画・確認用
 window.TTS = { tap: onTap, state: function(){ return state; }, status: function(){ return L.status(state); },
-  solution: function(){ return L.solve(state).moves; }, idle: function(){ return pending === 0; }, celebrated: function(){ return celebrated; }, restart: start, reducedMotion: RM, seatInfo: function(){ return SEAT_INFO; } };
+  solution: function(){ return L.solve(state).moves; }, idle: function(){ return pending === 0; }, celebrated: function(){ return celebrated; }, restart: start, reducedMotion: RM, seatInfo: function(){ return SEAT_INFO; },
+  screen: function(){ return SCREEN; }, go: function(n){ if (n === 'game') play(); else show(n); }, cleared: function(){ return CLEARED; },
+  taxiDone: function(){ return Object.keys(taxiRun).every(function(k){ return taxiRun[k].done; }); } };
 })();
 </script>
 </body>
