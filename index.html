@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Take to the sky デモ v0.11</title>
+<title>Take to the sky デモ v0.11.1</title>
 <style>
 :root{--paper:#F6F5F1;--ink:#1F1F1D;--graphite:#5B5A56;--sky:#2B5C8A;--band:#E6EFF6;--room:#EEF3F8;--gate:#E4ECF4;--runway:#E6E3DC;--edge:#CFCBC3;--sign:#24272B;--signText:#F2C94C;--taxi:#D9B44A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -291,8 +291,9 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
 .vdeck .rail{position:absolute;left:0;right:0;bottom:24px;height:28px;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,.3));border-top:3px solid #fff}
 .vdeck .post{position:absolute;bottom:24px;width:2px;height:28px;background:rgba(255,255,255,.85)}
 .vdeck .floor{position:absolute;left:0;right:0;bottom:0;height:24px;background:#F4F7FA;border-top:2px solid #C9D6E6}
-.vdeck .fw{position:absolute;width:46px;height:46px}
-.vdeck.xfly>.fw:not(.xtra),.vdeck.xfly>.tr{visibility:hidden}
+.vdeck .fw{position:absolute;width:46px;height:46px;z-index:1}
+.vdeck .tr{z-index:1}
+.vdeck .p,.vdeck .rail,.vdeck .post,.vdeck .floor{z-index:2}
 .vdeck .fp{width:100%;height:100%;color:#fff;filter:drop-shadow(0 2px 3px rgba(30,58,110,.18))}
 .vdeck .tr{position:absolute;height:3px;border-radius:2px}
 .vdeck.wave .arm{animation:dkwave .7s ease-in-out infinite}
@@ -391,7 +392,7 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
   <div id="paxLayer"></div>
   <div id="whyTag" class="abs" lang="ja" aria-hidden="true"></div>
   <div id="waitTag" class="abs" aria-hidden="true"></div>
-  <div id="credit" class="abs" data-t="credit">Reach High Studio　デモ v0.11</div>
+  <div id="credit" class="abs" data-t="credit">Reach High Studio　デモ v0.11.1</div>
   <svg id="fx" class="abs" viewBox="0 0 390 844"></svg>
   <div id="scrim" class="abs"></div>
   <div id="confetti" class="abs"></div>
@@ -441,7 +442,7 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
       <button class="vcta" id="tStart" style="top:396px;left:16px;right:16px"><span class="pl" aria-hidden="true"><svg viewBox="0 0 64 64" width="100%" height="100%"><path fill="currentColor" d="M60 30c0-2-2-3-5-3H40L26 6h-6l7 21H14l-5-7H4l3 12-3 12h5l5-7h13l-7 21h6l14-21h15c3 0 5-1 5-3z"/></svg></span><span data-t="start">ゲームを始める</span></button>
     </div>
     <div id="tPlane" aria-hidden="true"><svg viewBox="0 0 64 64" width="100%" height="100%"><path fill="currentColor" d="M60 30c0-2-2-3-5-3H40L26 6h-6l7 21H14l-5-7H4l3 12-3 12h5l5-7h13l-7 21h6l14-21h15c3 0 5-1 5-3z"/></svg></div>
-    <div class="tCredit" data-t="credit">Reach High Studio　デモ v0.11</div>
+    <div class="tCredit" data-t="credit">Reach High Studio　デモ v0.11.1</div>
   </section>
   <section id="scrHome" class="screen v10" aria-label="ホーム" data-ta="home">
     <h1 class="sr" data-t="home">ホーム</h1>
@@ -517,7 +518,7 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
   <div class="sheet2" id="sAbout" role="dialog" aria-modal="true" aria-labelledby="sAboutH">
     <div class="grab"></div>
     <h2 id="sAboutH" data-t="about">このアプリについて</h2>
-    <p class="desc">Take to the sky<br><span data-t="madeBy">制作：Reach High Studio</span><br><span data-t="demoVer">デモ v0.11（ステージ2まで遊べるよ）</span></p>
+    <p class="desc">Take to the sky<br><span data-t="madeBy">制作：Reach High Studio</span><br><span data-t="demoVer">デモ v0.11.1（ステージ2まで遊べるよ）</span></p>
     <button class="obtn" data-close data-t="close">閉じる</button>
   </div>
   <div class="sheet2" id="sHeart" role="dialog" aria-modal="true" aria-labelledby="sHeartH"></div>
@@ -1394,7 +1395,7 @@ function celebrate(){
   }, c.cardDelayMs);
 }
 var LANG = /[?&]lang=en/.test(QSTR) ? 'en' : 'ja';
-document.title = LANG === 'en' ? 'Take to the sky demo v0.11' : 'Take to the sky デモ v0.11';
+document.title = LANG === 'en' ? 'Take to the sky demo v0.11.1' : 'Take to the sky デモ v0.11.1';
 var STR = {
   ja: {
     tut: {
@@ -1472,16 +1473,16 @@ var STR = {
     settingsScr: { tone: 'official',
       soundGrp: '音'  , soundFx: '効果音', replayTut: 'チュートリアルをもう一度見る',
       lang: '言語', langs: { ja: '日本語', en: 'English' }, aboutGrp: 'このアプリについて',
-      links: ['プライバシーポリシー', '利用規約', 'お問い合わせ'], linkSoon: 'デモにはありません', madeBy: '制作', madeByVal: 'Reach High Studio', version: 'バージョン', versionVal: 'デモ v0.11（ステージ2まで）', noSave: 'デモでは、ステージの進み具合とコインは保存されません。'   },
+      links: ['プライバシーポリシー', '利用規約', 'お問い合わせ'], linkSoon: 'デモにはありません', madeBy: '制作', madeByVal: 'Reach High Studio', version: 'バージョン', versionVal: 'デモ v0.11.1（ステージ2まで）', noSave: 'デモでは、ステージの進み具合とコインは保存されません。'   },
     ui: {
-      titleAria: '扉絵', about: 'このアプリについて', settings: '設定', jamOpen: 'ゲートを開ける', jamNote: 'ここでやめると、使ったハートは戻らないよ',   start: 'ゲームを始める', credit: 'Reach High Studio　デモ v0.11',
+      titleAria: '扉絵', about: 'このアプリについて', settings: '設定', jamOpen: 'ゲートを開ける', jamNote: 'ここでやめると、使ったハートは戻らないよ',   start: 'ゲームを始める', credit: 'Reach High Studio　デモ v0.11.1',
       passJa: '搭乗券', tagline: '飛行機へ、全員搭乗！',   home: 'ホーム', route: '飛行ルート', stamps: 'スタンプ', profile: 'マイページ',
       back: '戻る', backHome: 'ホームに戻る', nextStage: '次のステージ', hearts: 'ハート', coins: 'コイン', flights: '飛ばした便', departures: 'あなたの発着案内',
       flightsUnit: function(){ return '便'; }, flightsAria: function(s){ return '飛ばした便、' + s + '便'; }, coinsAria: function(s){ return 'コイン、' + s + '枚'; },
       heartBubA: 'あと ', heartBubB: ' で1つ回復', heartsAria: function(h, m, s){ return 'ハート' + h + '個、次の回復まであと' + m + '分' + s + '秒'; }, heartsFull: function(h){ return 'ハート' + h + '個、満タン'; },
       routeDone: function(n){ return 'ステージ' + n + '、クリア'; }, here: 'いまここ', nextAria: function(n){ return '次はステージ' + n; },
       playStart: function(s){ return 'ステージ' + s + 'を始める'; }, stageSp: function(s){ return 'ステージ ' + s; },
-      coinsHead: 'コインについて', coinsBody: 'コインは、ステージクリアとスタンプでもらえるよ。ハートの回復やゲートを開けるのに使えるよ', playReplay: '最後のステージをもう一度遊ぶ', newCard: '7日目のあとは、新しいカードになるよ', close: '閉じる', madeBy: '制作：Reach High Studio', demoVer: 'デモ v0.11（ステージ2まで遊べるよ）',
+      coinsHead: 'コインについて', coinsBody: 'コインは、ステージクリアとスタンプでもらえるよ。ハートの回復やゲートを開けるのに使えるよ', playReplay: '最後のステージをもう一度遊ぶ', newCard: '7日目のあとは、新しいカードになるよ', close: '閉じる', madeBy: '制作：Reach High Studio', demoVer: 'デモ v0.11.1（ステージ2まで遊べるよ）',
       restart: 'やり直す', stuckHead: 'ここで渋滞みたい。作戦を立て直そうか', tryAgain: 'やり直す', tryAgainHeart: 'やり直す（ハートを1つ使うよ）', waiting: '搭乗待ち', waitAria: function(n){ return 'まだ乗っていない人、' + n + '人'; }, next: '次',   boardingArea: '搭乗口', gateOpen: '空き', jamClose: '閉じる',
       waitN: function(n){ return n + '人'; }, routeEnd: 'デモはここまで', dayN: function(n){ return n + '日目'; }, stageN: function(n){ return 'ステージ' + n; },
       rowAria: function(k, v){ return k + '：' + v; },
@@ -1555,16 +1556,16 @@ var STR = {
       full: 'Your hearts are full.', short: function(d){ return (d === 1 ? '1 more coin' : d + ' more coins') + ' to refill.'; }, refillDone: 'Your hearts are full.' },
     settingsScr: { tone: 'official', soundGrp: 'Sound'  , soundFx: 'Sound effects', replayTut: 'Replay tutorial',
       lang: 'Language', langs: { ja: '日本語', en: 'English' }, aboutGrp: 'About this app',
-      links: ['Privacy policy', 'Terms of use', 'Contact us'], linkSoon: 'Not in the demo', madeBy: 'Made by', madeByVal: 'Reach High Studio', version: 'Version', versionVal: 'Demo v0.11 (stages 1–2)', noSave: 'This demo doesn’t save your progress or coins.' },
+      links: ['Privacy policy', 'Terms of use', 'Contact us'], linkSoon: 'Not in the demo', madeBy: 'Made by', madeByVal: 'Reach High Studio', version: 'Version', versionVal: 'Demo v0.11.1 (stages 1–2)', noSave: 'This demo doesn’t save your progress or coins.' },
     ui: {
-      titleAria: 'Title screen', about: 'About this app', settings: 'Settings', jamOpen: 'Open a gate', jamNote: 'If you stop here, the heart you used won’t come back.', start: 'Start the game', credit: 'Reach High Studio Demo v0.11',
+      titleAria: 'Title screen', about: 'About this app', settings: 'Settings', jamOpen: 'Open a gate', jamNote: 'If you stop here, the heart you used won’t come back.', start: 'Start the game', credit: 'Reach High Studio Demo v0.11.1',
       passJa: '', tagline: 'All aboard for takeoff!', home: 'Home', route: 'Flight route', stamps: 'Stamps', profile: 'Profile',
       back: 'Back', backHome: 'Back to Home', nextStage: 'Next stage', hearts: 'Hearts', coins: 'Coins', flights: 'Flights flown', departures: 'Your departures',
       flightsUnit: function(n){ return n === 1 ? 'flight' : 'flights'; }, flightsAria: function(s, n){ return 'Flights flown, ' + s + (n === 1 ? ' flight' : ' flights'); }, coinsAria: function(s){ return 'Coins: ' + s; },
       heartBubA: '+1 in ', heartBubB: '', heartsAria: function(h, m, s){ return (h === 1 ? '1 heart' : h + ' hearts') + ', next one in ' + (m === 1 ? '1 minute ' : m + ' minutes ') + (s === 1 ? '1 second' : s + ' seconds'); }, heartsFull: function(h){ return 'Hearts: ' + h + ' of 5'; },
       routeDone: function(n){ return 'Stage ' + n + ', cleared'; }, here: 'You are here', nextAria: function(n){ return 'Next: stage ' + n; },
       playStart: function(s){ return 'Start Stage ' + s; }, stageSp: function(s){ return 'Stage ' + s; },
-      coinsHead: 'About coins', coinsBody: null, playReplay: null,   newCard: 'After day 7, you’ll get a new card.', close: 'Close', madeBy: 'Made by Reach High Studio', demoVer: 'Demo v0.11 (stages 1–2)',
+      coinsHead: 'About coins', coinsBody: null, playReplay: null,   newCard: 'After day 7, you’ll get a new card.', close: 'Close', madeBy: 'Made by Reach High Studio', demoVer: 'Demo v0.11.1 (stages 1–2)',
       restart: 'Restart', stuckHead: 'Looks like a traffic jam. Time for a new plan.', tryAgain: 'Restart', tryAgainHeart: 'Restart (uses 1 heart)', waiting: 'To board', waitAria: function(n){ return n === 1 ? '1 passenger still to board' : n + ' passengers still to board'; }, next: 'Next', boardingArea: 'Boarding area', gateOpen: 'Empty', jamClose: 'Close',
       waitN: function(n){ return String(n); }, routeEnd: 'End of demo', dayN: function(n){ return 'Day ' + n; }, stageN: function(n){ return 'Stage ' + n; },
       rowAria: function(k, v){ return k + ': ' + v; },
@@ -2005,19 +2006,18 @@ var HUD_LOST = false;
 var DECK_PREV = null, DECK_TIMERS = [], HOME_SHOWN = false, HOME_QUIET = false;
 var HP = { timer: null, flying: 0, idx: 0, anims: [], first: null };
 function homePlanesStop(){ clearTimeout(HP.timer); HP.timer = null; HP.anims.forEach(function(a){ try { a.cancel(); } catch (e) {} }); HP.anims = []; HP.flying = HP.first && HP.first.playState === 'running' ? 1 : 0;
-  document.querySelectorAll('#hDeck .fw.xtra').forEach(function(x){ x.remove(); }); var dk = document.getElementById('hDeck'); if (dk) dk.classList.remove('xfly'); }
+  document.querySelectorAll('#hDeck .fw.xtra').forEach(function(x){ x.remove(); }); }
 function homePlanesNext(){ clearTimeout(HP.timer); HP.timer = null; if (RM || SCREEN !== 'home' || document.hidden) return; HP.timer = setTimeout(homePlaneLaunch, L.homePlaneDelay()); }
 function homePlaneLaunch(){
   HP.timer = null; if (SCREEN !== 'home') return;
-  var el = document.getElementById('hDeck'), rest = el.querySelector('.fw:not(.xtra)');
-  if (!L.homePlaneCanLaunch(HP.flying + (rest ? 1 : 0), document.hidden, RM)){ homePlanesNext(); return; }
+  var el = document.getElementById('hDeck');
+  if (!L.homePlaneCanLaunch(HP.flying, document.hidden, RM)){ homePlanesNext(); return; }
   var to = Math.random() < 0.5, idx = ++HP.idx, dy = 0;
-  el.classList.add('xfly');
   var fw = document.createElement('div'); fw.className = 'fw xtra ' + (to ? 'to' : 'ld'); fw.style.left = (to ? 308 : 70) + 'px'; fw.style.top = ((to ? 14 : 18) + dy) + 'px';
-  fw.innerHTML = '<div class="fp"' + (to ? '' : ' style="transform:scaleX(-1) rotate(14deg)"') + '>' + PLANE_SVG + '</div>'; el.appendChild(fw);
+  fw.innerHTML = '<div class="fp"' + (to ? '' : ' style="transform:scaleX(-1) rotate(14deg)"') + '>' + PLANE_SVG + '</div>'; el.insertBefore(fw, el.firstChild);
   var a = fw.animate(deckKeys(to ? 'takeoff' : 'landing'), { duration: 4000, easing: 'linear', fill: 'both' }); HP.anims.push(a); HP.flying++;
   if (SOUND_ON && !HOME_QUIET && SFX.buf && SFX.ctx && SFX.ctx.state === 'running') sfxBuf(SFX.buf, L.homePlaneGain(idx));
-  a.finished.then(function(){ fw.remove(); HP.flying = Math.max(0, HP.flying - 1); HP.anims = HP.anims.filter(function(x){ return x !== a; }); if (!HP.flying) el.classList.remove('xfly'); }).catch(function(){});
+  a.finished.then(function(){ fw.remove(); HP.flying = Math.max(0, HP.flying - 1); HP.anims = HP.anims.filter(function(x){ return x !== a; }); }).catch(function(){});
   homePlanesNext();
 }
 function deckKeys(mode){ return mode === 'takeoff'
@@ -2039,13 +2039,13 @@ function deckPlay(){
   el.className = 'vdeck'; el.innerHTML = deckHtml({ n: 9, x0: 22, step: 40, plane: pk.mode === 'takeoff' ? 'to' : 'ld' });
   var fw = el.querySelector('.fw'), tr = el.querySelector('.tr');
   if (!HOME_QUIET) DECK_TIMERS.push(setTimeout(sfxFlyby, 300));
-  if (RM){ el.classList.add('still'); return pk; }
+  if (RM){ el.classList.add('still'); fw.remove(); tr.remove(); return pk; }
   var K = deckKeys(pk.mode);
   tr.style.opacity = 0;
-  var a0 = fw.animate(K, { duration: 4000, delay: 300, easing: 'linear', fill: 'backwards' }); HP.first = a0; HP.flying = 1; HP.idx = 0;
+  var a0 = fw.animate(K, { duration: 4000, delay: 300, easing: 'linear', fill: 'both' }); HP.first = a0; HP.flying = 1; HP.idx = 0;
   homePlanesNext();
   a0.finished.then(function(){ HP.flying = Math.max(0, HP.flying - 1); if (HP.first === a0) HP.first = null;
-    if (!el.contains(fw)) return; fw.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 600, easing: 'ease-out' }); tr.style.transition = 'opacity .6s'; tr.style.opacity = 1; el.classList.add('idle');
+    fw.remove(); tr.remove(); el.classList.add('idle');
   }).catch(function(){});
   DECK_TIMERS.push(setTimeout(function(){ el.classList.add('wave'); }, 1500), setTimeout(function(){ el.classList.remove('wave'); }, 2900));
   return pk;
