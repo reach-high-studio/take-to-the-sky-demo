@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>Take to the sky デモ v0.11.1</title>
+<title>Take to the sky デモ v0.11.2</title>
 <style>
 :root{--paper:#F6F5F1;--ink:#1F1F1D;--graphite:#5B5A56;--sky:#2B5C8A;--band:#E6EFF6;--room:#EEF3F8;--gate:#E4ECF4;--runway:#E6E3DC;--edge:#CFCBC3;--sign:#24272B;--signText:#F2C94C;--taxi:#D9B44A}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -29,13 +29,18 @@ body{display:flex;align-items:flex-start;justify-content:center;font-family:-app
 #hcGo{background:#FFFFFF;color:var(--ink);border:1px solid #CFCBC3}
 #hcStay{background:var(--sky);color:#FFFFFF;border:0}
 .gflash{position:absolute;inset:-2px;border:2px solid #FFFFFF;border-radius:14px;pointer-events:none;opacity:0}
-#gHearts{left:calc(20px + 44px*var(--seatInv,1) + 92px);top:61px;display:flex;gap:2px;align-items:center}
+#gHearts,#gCoins{top:93px;height:32px;padding:0 10px;border-radius:16px;background:rgba(255,255,255,.85);display:flex;align-items:center;gap:2px;box-sizing:border-box;color:#1F1F1D;white-space:nowrap}
+#gHearts{left:16px}
+#gCoins{gap:6px;padding:0 12px 0 6px}
+#gCoins b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+#play{left:0;top:0;width:390px;height:844px;transform-origin:195px 790px;transform:scale(var(--playS,1))}
 #gHearts .hs.use{opacity:.35}
 #gHearts .inf{margin-left:3px;font-size:15px;font-weight:700;color:var(--graphite)}
 #heartTip{left:96px;top:3px;z-index:25;max-width:300px;padding:8px 12px;border:0;border-radius:12px;background:rgba(31,31,29,.88);color:#fff;font:inherit;font-size:13px;line-height:18px;text-align:left;opacity:0;pointer-events:none;transition:opacity .2s}
 #heartTip.on{opacity:1;pointer-events:auto}
 #heartTip::before{content:'';position:absolute;left:var(--ax,28px);bottom:-6px;border:6px solid transparent;border-bottom:0;border-top-color:rgba(31,31,29,.88)}
-#restart{right:8px;top:47px;height:44px;padding:0 10px;border:0;background:none;font:inherit;font-size:15px;font-weight:600;color:var(--graphite);cursor:pointer}
+#restart{right:6px;top:45px;width:48px;height:48px;border-radius:24px;border:0;padding:0;background:rgba(255,255,255,.7);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.kbd #restart:focus-visible{outline:2px solid var(--sky);outline-offset:2px}
 #nextLbl{left:16px;top:111px;font-size:12px;font-weight:700;color:var(--graphite)}
 #dots{left:270px;top:108px;font-size:15px;color:var(--graphite)}
 #waitLbl{right:16px;top:101px;font-size:12px;color:var(--graphite);text-align:right}
@@ -151,7 +156,7 @@ h2{margin:0 0 8px;font-size:20px;font-weight:700}
 #toast.on{opacity:1}
 #tut{left:0;top:0;width:390px;height:844px;z-index:26;display:none;--tk:1;--tf:1}
 #tut.on{display:block}
-#tutSvg{position:absolute;left:0;top:0;width:390px;height:844px;overflow:visible}
+#tutSvg{position:absolute;left:0;top:0;width:390px;height:844px;overflow:visible;transform-origin:195px 790px;transform:scale(var(--playS,1))}
 .tcard{position:absolute;left:16px;width:358px;box-sizing:border-box;background:#FFFFFF;border-radius:20px;box-shadow:0 8px 24px rgba(31,31,29,.18);padding:calc(14px*var(--tk)) calc(16px*var(--tk)) calc(10px*var(--tk))}
 .tstep{font-size:calc(13px*var(--tk)*var(--tf));font-weight:700;color:var(--sky);letter-spacing:.04em;line-height:1.3}
 .ttext{margin:calc(4px*var(--tk)) 0 0;word-break:auto-phrase;font-size:calc(17px*var(--tk)*var(--tf));font-weight:600;line-height:1.45;color:var(--ink)}
@@ -374,8 +379,10 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
   <button id="homeBtn" class="abs" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10.6 12 4l8 6.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.2 9.4V19a1 1 0 0 0 1 1h3.3v-5.2h3V20h3.3a1 1 0 0 0 1-1V9.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg></button>
   <div id="stagePill" class="abs">ステージ1</div>
   <div id="gHearts" class="abs" role="img"></div>
+  <div id="gCoins" class="abs" role="img"></div>
   <button id="heartTip" class="abs" type="button"></button>
-  <button id="restart" class="abs" data-t="restart">やり直す</button>
+  <button id="restart" class="abs" type="button" data-ta="restart" aria-label="やり直す"><svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13.2A7.5 7.5 0 1 1 17 6.6" fill="none" stroke="#1E3A6E" stroke-width="2.2" stroke-linecap="round"/><path d="M18.6 2.8v4.6H14" fill="none" stroke="#1E3A6E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div id="play" class="abs">
   <div id="nextLbl" class="abs" data-t="next">次</div>
   <div id="dots" class="abs">…</div>
   <div id="waitLbl" class="abs" data-t="waiting" aria-hidden="true">搭乗待ち</div>
@@ -392,8 +399,9 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
   <div id="paxLayer"></div>
   <div id="whyTag" class="abs" lang="ja" aria-hidden="true"></div>
   <div id="waitTag" class="abs" aria-hidden="true"></div>
-  <div id="credit" class="abs" data-t="credit">Reach High Studio　デモ v0.11.1</div>
   <svg id="fx" class="abs" viewBox="0 0 390 844"></svg>
+  </div>
+  <div id="credit" class="abs" data-t="credit">Reach High Studio　デモ v0.11.2</div>
   <div id="scrim" class="abs"></div>
   <div id="confetti" class="abs"></div>
   <div id="card" class="abs" role="dialog" aria-modal="true" aria-labelledby="cardTitle cardSub">
@@ -442,7 +450,7 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
       <button class="vcta" id="tStart" style="top:396px;left:16px;right:16px"><span class="pl" aria-hidden="true"><svg viewBox="0 0 64 64" width="100%" height="100%"><path fill="currentColor" d="M60 30c0-2-2-3-5-3H40L26 6h-6l7 21H14l-5-7H4l3 12-3 12h5l5-7h13l-7 21h6l14-21h15c3 0 5-1 5-3z"/></svg></span><span data-t="start">ゲームを始める</span></button>
     </div>
     <div id="tPlane" aria-hidden="true"><svg viewBox="0 0 64 64" width="100%" height="100%"><path fill="currentColor" d="M60 30c0-2-2-3-5-3H40L26 6h-6l7 21H14l-5-7H4l3 12-3 12h5l5-7h13l-7 21h6l14-21h15c3 0 5-1 5-3z"/></svg></div>
-    <div class="tCredit" data-t="credit">Reach High Studio　デモ v0.11.1</div>
+    <div class="tCredit" data-t="credit">Reach High Studio　デモ v0.11.2</div>
   </section>
   <section id="scrHome" class="screen v10" aria-label="ホーム" data-ta="home">
     <h1 class="sr" data-t="home">ホーム</h1>
@@ -518,7 +526,7 @@ button.row + .row,.row + button.row{border-top:1px solid #E6E3DC}
   <div class="sheet2" id="sAbout" role="dialog" aria-modal="true" aria-labelledby="sAboutH">
     <div class="grab"></div>
     <h2 id="sAboutH" data-t="about">このアプリについて</h2>
-    <p class="desc">Take to the sky<br><span data-t="madeBy">制作：Reach High Studio</span><br><span data-t="demoVer">デモ v0.11.1（ステージ2まで遊べるよ）</span></p>
+    <p class="desc">Take to the sky<br><span data-t="madeBy">制作：Reach High Studio</span><br><span data-t="demoVer">デモ v0.11.2（ステージ2まで遊べるよ）</span></p>
     <button class="obtn" data-close data-t="close">閉じる</button>
   </div>
   <div class="sheet2" id="sHeart" role="dialog" aria-modal="true" aria-labelledby="sHeartH"></div>
@@ -923,10 +931,12 @@ var L = (function () {
     return true;
   }
   function stampDoneShown(day, alreadyShown) { return day === 7 && !alreadyShown; }
+  function coinCountMs(diff){ return Math.max(400, Math.min(900, 400 + Math.abs(diff) * 5)); }
+  function coinCountAt(from, to, k){ k = Math.max(0, Math.min(1, k)); if (k >= 1) return to; var e = 1 - Math.pow(1 - k, 3); return Math.round(from + (to - from) * e); }
   return { greetBand: greetBand, greetKind: greetKind, jaNoBreakHtml: jaNoBreakHtml, ariaJoin: ariaJoin, planeAria: planeAria, gateAria: gateAria, stampCoins: stampCoins, stampCardTotal: stampCardTotal, stampAdvance: stampAdvance, stampStatus: stampStatus, boardSfxIndex: boardSfxIndex, sfxGroup: sfxGroup, sfxAllow: sfxAllow, tapVariation: tapVariation, HOME_PLANE: HOME_PLANE, homePlaneDelay: homePlaneDelay, homePlaneCanLaunch: homePlaneCanLaunch, homePlaneGain: homePlaneGain, flightCount: flightCount, deckPick: deckPick, flybySoundOk: flybySoundOk, heartClock: heartClock, publicSearch: publicSearch, unboardedCount: unboardedCount, stampAria: stampAria, stampDoneShown: stampDoneShown, stampAutoDue: stampAutoDue, isInnerCell: isInnerCell, createGame: createGame, canMove: canMove, legalMoves: legalMoves, tap: tap, isClear: isClear,
            isStuck: isStuck, status: status, solve: solve, randomClearRate: randomClearRate, mulberry32: mulberry32,
            planeById: planeById, hasMatch: hasMatch, DIRS: DIRS,
-           moveRange: moveRange, isPerfectClear: isPerfectClear, pickClear: pickClear, quitNeedsConfirm: quitNeedsConfirm, saveProgress: saveProgress, restoreProgress: restoreProgress, heartRegen: heartRegen, guardedNow: guardedNow, adButtonState: adButtonState, heartSpend: heartSpend, heartGain: heartGain, heartClearRefund: heartClearRefund, heartAdOffered: heartAdOffered, heartAdReward: heartAdReward, heartShopRefill: heartShopRefill, unlockCapState: unlockCapState, freeGate: freeGate, lockedSlots: lockedSlots, unlockGate: unlockGate, unlockHelps: unlockHelps, unlockPrice: unlockPrice, unlockWithCoins: unlockWithCoins, demoStars: demoStars, tutorialRewardCoins: tutorialRewardCoins, jamRetryLabel: jamRetryLabel, heartRefillOffer: heartRefillOffer, clearReward: clearReward, applyRevocation: applyRevocation, spendCoins: spendCoins, grantPack: grantPack, unlimitedOffers: unlimitedOffers, unlimitedEnd: unlimitedEnd, adDayKey: adDayKey, adToday: adToday, adCounter: adCounter, adFinish: adFinish };
+           moveRange: moveRange, isPerfectClear: isPerfectClear, pickClear: pickClear, quitNeedsConfirm: quitNeedsConfirm, saveProgress: saveProgress, restoreProgress: restoreProgress, heartRegen: heartRegen, guardedNow: guardedNow, adButtonState: adButtonState, heartSpend: heartSpend, heartGain: heartGain, heartClearRefund: heartClearRefund, heartAdOffered: heartAdOffered, heartAdReward: heartAdReward, heartShopRefill: heartShopRefill, unlockCapState: unlockCapState, freeGate: freeGate, lockedSlots: lockedSlots, unlockGate: unlockGate, unlockHelps: unlockHelps, unlockPrice: unlockPrice, unlockWithCoins: unlockWithCoins, demoStars: demoStars, tutorialRewardCoins: tutorialRewardCoins, jamRetryLabel: jamRetryLabel, heartRefillOffer: heartRefillOffer, clearReward: clearReward, applyRevocation: applyRevocation, spendCoins: spendCoins, grantPack: grantPack, unlimitedOffers: unlimitedOffers, unlimitedEnd: unlimitedEnd, adDayKey: adDayKey, adToday: adToday, adCounter: adCounter, adFinish: adFinish, coinCountMs: coinCountMs, coinCountAt: coinCountAt };
 })();
 var RULES = {"gates":{"base":4,"max":8,"lockedInDemo":true},"boardingArea":{"capacity":20,"cols":5,"rows":4},"waitingLine":{"visible":8},"seats":{"S":4,"M":8,"L":12},"planeLengthPt":{"runway":{"S":48,"M":60,"L":76.8},"gate":{"S":48,"M":52.8,"L":57.6}},"directions":["up","down","left","right"],"colors":[{"id":"red","hex":"#E5484D","symbol":"circle","ja":"赤の丸","en":"red circle"},{"id":"blue","hex":"#2F6FED","symbol":"square","ja":"青の四角","en":"blue square"},{"id":"yellow","hex":"#AC7600","symbol":"triangle","ja":"黄色の三角","en":"yellow triangle"},{"id":"green","hex":"#289446","symbol":"star","ja":"緑の星","en":"green star"}],"tokens":{"paper":"#F6F5F1","ink":"#1F1F1D","graphite":"#5B5A56","sky":"#2B5C8A","skyBand":"#E6EFF6","room":"#EEF3F8","gate":"#E4ECF4","runway":"#E6E3DC","runwayEdge":"#CFCBC3","white":"#FFFFFF"},"resolution":{"gateChoice":"lowestFreeIndex","boardingPriority":"gateArrivalOrder","refillSlot":"lowestEmptyIndex","boardWhom":"allMatchingInBoardingArea","tapCheckOrder":["pathClear","freeGate"],"boardWhen":"afterEveryMoveBoardTakeoffRefillUntilStable","noMatchPlaneMayPark":true},"hearts":{"max":5,"regenMinutes":30,"spentAtStageStart":true,"quitMidStageCostsHeart":true,"retryMidStageCostsHeart":true,"quitBeforeFirstMoveCostsHeart":true,"maxCreditPerGapMin":150,"regenStopsWhenFull":true},"clear":{"milestones":[10,25,50,100]},"gateUnlock":{"currency":"coins","slots":[{"slot":5,"coins":true,"priceCoins":30},{"slot":6,"coins":true,"priceCoins":30},{"slot":7,"coins":true,"priceCoins":30},{"slot":8,"coins":true,"priceCoins":30}]},"loginBonus":{"loginResetHour":0,"cardDays":7,"stampCoins":10,"stampCoinsLastDay":30},"tutorialReward":{"coins":100,"coinKind":"free","items":[]},"clearReward":{"firstClearByStars":[20,25,30],"hardBonus":10,"reclear":5,"minCoins":1},"iap":{"heartRefill":{"currency":"coins","price":60,"paidSpentFirst":true,"isIAP":false}}};
 var STAGES = [{"id":1,"board":{"cols":4,"rows":3},"planes":[{"id":"p01","color":"red","size":"L","col":0,"row":0,"dir":"down"},{"id":"p02","color":"blue","size":"S","col":1,"row":0,"dir":"up"},{"id":"p03","color":"yellow","size":"M","col":2,"row":0,"dir":"up"},{"id":"p04","color":"green","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"blue","size":"M","col":0,"row":1,"dir":"left"},{"id":"p06","color":"green","size":"M","col":1,"row":1,"dir":"left"},{"id":"p07","color":"red","size":"S","col":2,"row":1,"dir":"up"},{"id":"p08","color":"yellow","size":"S","col":3,"row":1,"dir":"right"},{"id":"p09","color":"yellow","size":"S","col":0,"row":2,"dir":"left"},{"id":"p10","color":"green","size":"L","col":1,"row":2,"dir":"right"},{"id":"p11","color":"red","size":"M","col":2,"row":2,"dir":"up"},{"id":"p12","color":"blue","size":"S","col":3,"row":2,"dir":"right"}],"passengers":["green","green","green","green","red","red","red","red","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","green","green","green","green","green","green","green","green","yellow","yellow","yellow","yellow","red","red","red","red","red","red","red","red","yellow","yellow","yellow","yellow","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","red","red","red","red","yellow","yellow","yellow","yellow"],"moveRange":{"min":12,"max":12}},{"id":2,"board":{"cols":4,"rows":4},"planes":[{"id":"p01","color":"green","size":"M","col":0,"row":0,"dir":"down"},{"id":"p02","color":"red","size":"S","col":1,"row":0,"dir":"down"},{"id":"p03","color":"blue","size":"L","col":2,"row":0,"dir":"left"},{"id":"p04","color":"yellow","size":"S","col":3,"row":0,"dir":"right"},{"id":"p05","color":"red","size":"M","col":0,"row":1,"dir":"right"},{"id":"p06","color":"yellow","size":"M","col":2,"row":1,"dir":"right"},{"id":"p07","color":"green","size":"S","col":3,"row":1,"dir":"up"},{"id":"p08","color":"blue","size":"S","col":0,"row":2,"dir":"down"},{"id":"p09","color":"red","size":"L","col":1,"row":2,"dir":"left"},{"id":"p10","color":"yellow","size":"S","col":3,"row":2,"dir":"up"},{"id":"p11","color":"green","size":"M","col":1,"row":3,"dir":"right"},{"id":"p12","color":"blue","size":"M","col":2,"row":3,"dir":"right"},{"id":"p13","color":"yellow","size":"S","col":3,"row":3,"dir":"up"}],"passengers":["blue","blue","blue","blue","yellow","yellow","yellow","yellow","green","green","green","green","red","red","red","red","red","red","red","red","blue","blue","blue","blue","blue","blue","blue","blue","green","green","green","green","blue","blue","blue","blue","blue","blue","blue","blue","yellow","yellow","yellow","yellow","red","red","red","red","yellow","yellow","yellow","yellow","yellow","yellow","yellow","yellow","blue","blue","blue","blue","green","green","green","green","green","green","green","green","red","red","red","red","green","green","green","green","red","red","red","red","yellow","yellow","yellow","yellow","red","red","red","red"],"moveRange":{"min":13,"max":13}}], STAGE = STAGES[0];
@@ -944,7 +954,8 @@ var app = document.getElementById('app');
 var SVGNS = 'http://www.w3.org/2000/svg';
 var DT_LARGE = /[?&]dt=large/.test(QSTR); if (DT_LARGE) app.classList.add('dt-large');
 var SEAT_GLYPH = '<svg viewBox="0 0 7 10" aria-hidden="true"><path fill="#5B5A56" d="M3.5 0.2a2.05 2.05 0 0 1 1.35 3.6C6 4.2 7 5.3 7 6.7V8.6A1.4 1.4 0 0 1 5.6 10H1.4A1.4 1.4 0 0 1 0 8.6V6.7C0 5.3 1 4.2 2.15 3.8A2.05 2.05 0 0 1 3.5 0.2Z"/></svg>';
-var BOARD_K = 1;
+var BOARD_K = 1, APP_K = 1;
+var PLAY_S = (790 - 131) / (790 - 101);
 var RW = { x: 16, y: 482, w: 358, h: 308 };
 var CELL = { w: RW.w / S.board.cols, h: RW.h / S.board.rows };
 var GATE_X = function(i){ return 28 + i * 85.5; }, GATE_Y = 377, GATE_W = 77.5;
@@ -1371,7 +1382,7 @@ function celebrate(){
   var first = !CLEARED_SET[STAGE_N], stars = L.demoStars({ retried: RETRIED, unlocked: GATE_UNLOCKED }), got = L.clearReward(R, { first: first, stars: stars, hard: false }), tut = L.tutorialRewardCoins(R, { first: first, stage: STAGE_N, given: TUT_REWARD_GIVEN });
   if (first && STAGE_N === 1) TUT_REWARD_GIVEN = true;
   var clearedBefore = CLEARED; CLEAR_STARS = stars;
-  CLEARED_SET[STAGE_N] = true; CLEARED = Math.max(CLEARED, STAGE_N); WALLET = { paid: WALLET.paid, free: WALLET.free + got + tut }; CLEAR_COINS = got; CLEAR_TUT = tut; renderClearCoins(got, tut);
+  CLEARED_SET[STAGE_N] = true; CLEARED = Math.max(CLEARED, STAGE_N); WALLET = { paid: WALLET.paid, free: WALLET.free + got + tut }; CLEAR_COINS = got; CLEAR_TUT = tut; renderClearCoins(got, tut); renderGameCoins(true);
   renderClear(pickClear(clearedBefore), back); RETRIED = false;
   if (RM){ scrim.classList.add('on'); card.classList.add('on'); setInert(); document.getElementById('cardNext').focus({ preventScroll: true }); card.animate([{ opacity: 0 }, { opacity: 1 }], { duration: M.reducedMotion.cardFadeMs }); return; }
   var rnd = L.mulberry32(20261103), cols = R.colors, origin = { x: 195, y: 330 };
@@ -1395,7 +1406,7 @@ function celebrate(){
   }, c.cardDelayMs);
 }
 var LANG = /[?&]lang=en/.test(QSTR) ? 'en' : 'ja';
-document.title = LANG === 'en' ? 'Take to the sky demo v0.11.1' : 'Take to the sky デモ v0.11.1';
+document.title = LANG === 'en' ? 'Take to the sky demo v0.11.2' : 'Take to the sky デモ v0.11.2';
 var STR = {
   ja: {
     tut: {
@@ -1473,16 +1484,16 @@ var STR = {
     settingsScr: { tone: 'official',
       soundGrp: '音'  , soundFx: '効果音', replayTut: 'チュートリアルをもう一度見る',
       lang: '言語', langs: { ja: '日本語', en: 'English' }, aboutGrp: 'このアプリについて',
-      links: ['プライバシーポリシー', '利用規約', 'お問い合わせ'], linkSoon: 'デモにはありません', madeBy: '制作', madeByVal: 'Reach High Studio', version: 'バージョン', versionVal: 'デモ v0.11.1（ステージ2まで）', noSave: 'デモでは、ステージの進み具合とコインは保存されません。'   },
+      links: ['プライバシーポリシー', '利用規約', 'お問い合わせ'], linkSoon: 'デモにはありません', madeBy: '制作', madeByVal: 'Reach High Studio', version: 'バージョン', versionVal: 'デモ v0.11.2（ステージ2まで）', noSave: 'デモでは、ステージの進み具合とコインは保存されません。'   },
     ui: {
-      titleAria: '扉絵', about: 'このアプリについて', settings: '設定', jamOpen: 'ゲートを開ける', jamNote: 'ここでやめると、使ったハートは戻らないよ',   start: 'ゲームを始める', credit: 'Reach High Studio　デモ v0.11.1',
+      titleAria: '扉絵', about: 'このアプリについて', settings: '設定', jamOpen: 'ゲートを開ける', jamNote: 'ここでやめると、使ったハートは戻らないよ',   start: 'ゲームを始める', credit: 'Reach High Studio　デモ v0.11.2',
       passJa: '搭乗券', tagline: '飛行機へ、全員搭乗！',   home: 'ホーム', route: '飛行ルート', stamps: 'スタンプ', profile: 'マイページ',
       back: '戻る', backHome: 'ホームに戻る', nextStage: '次のステージ', hearts: 'ハート', coins: 'コイン', flights: '飛ばした便', departures: 'あなたの発着案内',
-      flightsUnit: function(){ return '便'; }, flightsAria: function(s){ return '飛ばした便、' + s + '便'; }, coinsAria: function(s){ return 'コイン、' + s + '枚'; },
+      flightsUnit: function(){ return '便'; }, flightsAria: function(s){ return '飛ばした便、' + s + '便'; }, coinsAria: function(s){ return 'コイン、' + s + '枚'; }, gameCoinsAria: function(s){ return 'コイン ' + s; },
       heartBubA: 'あと ', heartBubB: ' で1つ回復', heartsAria: function(h, m, s){ return 'ハート' + h + '個、次の回復まであと' + m + '分' + s + '秒'; }, heartsFull: function(h){ return 'ハート' + h + '個、満タン'; },
       routeDone: function(n){ return 'ステージ' + n + '、クリア'; }, here: 'いまここ', nextAria: function(n){ return '次はステージ' + n; },
       playStart: function(s){ return 'ステージ' + s + 'を始める'; }, stageSp: function(s){ return 'ステージ ' + s; },
-      coinsHead: 'コインについて', coinsBody: 'コインは、ステージクリアとスタンプでもらえるよ。ハートの回復やゲートを開けるのに使えるよ', playReplay: '最後のステージをもう一度遊ぶ', newCard: '7日目のあとは、新しいカードになるよ', close: '閉じる', madeBy: '制作：Reach High Studio', demoVer: 'デモ v0.11.1（ステージ2まで遊べるよ）',
+      coinsHead: 'コインについて', coinsBody: 'コインは、ステージクリアとスタンプでもらえるよ。ハートの回復やゲートを開けるのに使えるよ', playReplay: '最後のステージをもう一度遊ぶ', newCard: '7日目のあとは、新しいカードになるよ', close: '閉じる', madeBy: '制作：Reach High Studio', demoVer: 'デモ v0.11.2（ステージ2まで遊べるよ）',
       restart: 'やり直す', stuckHead: 'ここで渋滞みたい。作戦を立て直そうか', tryAgain: 'やり直す', tryAgainHeart: 'やり直す（ハートを1つ使うよ）', waiting: '搭乗待ち', waitAria: function(n){ return 'まだ乗っていない人、' + n + '人'; }, next: '次',   boardingArea: '搭乗口', gateOpen: '空き', jamClose: '閉じる',
       waitN: function(n){ return n + '人'; }, routeEnd: 'デモはここまで', dayN: function(n){ return n + '日目'; }, stageN: function(n){ return 'ステージ' + n; },
       rowAria: function(k, v){ return k + '：' + v; },
@@ -1556,16 +1567,16 @@ var STR = {
       full: 'Your hearts are full.', short: function(d){ return (d === 1 ? '1 more coin' : d + ' more coins') + ' to refill.'; }, refillDone: 'Your hearts are full.' },
     settingsScr: { tone: 'official', soundGrp: 'Sound'  , soundFx: 'Sound effects', replayTut: 'Replay tutorial',
       lang: 'Language', langs: { ja: '日本語', en: 'English' }, aboutGrp: 'About this app',
-      links: ['Privacy policy', 'Terms of use', 'Contact us'], linkSoon: 'Not in the demo', madeBy: 'Made by', madeByVal: 'Reach High Studio', version: 'Version', versionVal: 'Demo v0.11.1 (stages 1–2)', noSave: 'This demo doesn’t save your progress or coins.' },
+      links: ['Privacy policy', 'Terms of use', 'Contact us'], linkSoon: 'Not in the demo', madeBy: 'Made by', madeByVal: 'Reach High Studio', version: 'Version', versionVal: 'Demo v0.11.2 (stages 1–2)', noSave: 'This demo doesn’t save your progress or coins.' },
     ui: {
-      titleAria: 'Title screen', about: 'About this app', settings: 'Settings', jamOpen: 'Open a gate', jamNote: 'If you stop here, the heart you used won’t come back.', start: 'Start the game', credit: 'Reach High Studio Demo v0.11.1',
+      titleAria: 'Title screen', about: 'About this app', settings: 'Settings', jamOpen: 'Open a gate', jamNote: 'If you stop here, the heart you used won’t come back.', start: 'Start the game', credit: 'Reach High Studio Demo v0.11.2',
       passJa: '', tagline: 'All aboard for takeoff!', home: 'Home', route: 'Flight route', stamps: 'Stamps', profile: 'Profile',
       back: 'Back', backHome: 'Back to Home', nextStage: 'Next stage', hearts: 'Hearts', coins: 'Coins', flights: 'Flights flown', departures: 'Your departures',
-      flightsUnit: function(n){ return n === 1 ? 'flight' : 'flights'; }, flightsAria: function(s, n){ return 'Flights flown, ' + s + (n === 1 ? ' flight' : ' flights'); }, coinsAria: function(s){ return 'Coins: ' + s; },
+      flightsUnit: function(n){ return n === 1 ? 'flight' : 'flights'; }, flightsAria: function(s, n){ return 'Flights flown, ' + s + (n === 1 ? ' flight' : ' flights'); }, coinsAria: function(s){ return 'Coins: ' + s; }, gameCoinsAria: function(s){ return 'Coins ' + s; },
       heartBubA: '+1 in ', heartBubB: '', heartsAria: function(h, m, s){ return (h === 1 ? '1 heart' : h + ' hearts') + ', next one in ' + (m === 1 ? '1 minute ' : m + ' minutes ') + (s === 1 ? '1 second' : s + ' seconds'); }, heartsFull: function(h){ return 'Hearts: ' + h + ' of 5'; },
       routeDone: function(n){ return 'Stage ' + n + ', cleared'; }, here: 'You are here', nextAria: function(n){ return 'Next: stage ' + n; },
       playStart: function(s){ return 'Start Stage ' + s; }, stageSp: function(s){ return 'Stage ' + s; },
-      coinsHead: 'About coins', coinsBody: null, playReplay: null,   newCard: 'After day 7, you’ll get a new card.', close: 'Close', madeBy: 'Made by Reach High Studio', demoVer: 'Demo v0.11.1 (stages 1–2)',
+      coinsHead: 'About coins', coinsBody: null, playReplay: null,   newCard: 'After day 7, you’ll get a new card.', close: 'Close', madeBy: 'Made by Reach High Studio', demoVer: 'Demo v0.11.2 (stages 1–2)',
       restart: 'Restart', stuckHead: 'Looks like a traffic jam. Time for a new plan.', tryAgain: 'Restart', tryAgainHeart: 'Restart (uses 1 heart)', waiting: 'To board', waitAria: function(n){ return n === 1 ? '1 passenger still to board' : n + ' passengers still to board'; }, next: 'Next', boardingArea: 'Boarding area', gateOpen: 'Empty', jamClose: 'Close',
       waitN: function(n){ return String(n); }, routeEnd: 'End of demo', dayN: function(n){ return 'Day ' + n; }, stageN: function(n){ return 'Stage ' + n; },
       rowAria: function(k, v){ return k + ': ' + v; },
@@ -1660,10 +1671,19 @@ function heartRefund(){
 function renderHearts(anim){
   var el = document.getElementById('gHearts'), Hs = STR[LANG].heart; if (!el) return;
   var h = ''; for (var i = 0; i < 5; i++) h += '<span class="hs' + (i === HEARTS - (anim ? 1 : 0) && anim ? ' back' : i === HEARTS && HEART_IN_USE ? ' use' : '') + '">' + ICON.heart(16, i < HEARTS || (i === HEARTS && HEART_IN_USE)) + '</span>';
-  el.innerHTML = h; el.setAttribute('aria-label', Hs.hud(HEARTS, HEART_IN_USE));
+  el.innerHTML = h; el.setAttribute('aria-label', Hs.hud(HEARTS, HEART_IN_USE)); renderGameCoins();
   var b = el.querySelector('.back');
   if (b){ if (RM){ b.style.opacity = 1; } else b.animate([{ opacity: .35, transform: 'scale(1)' }, { opacity: 1, transform: 'scale(1.25)', offset: .6 }, { opacity: 1, transform: 'scale(1)' }], { duration: 600, easing: 'ease-out' }); }
 }
+var GC = { shown: null, raf: 0 };
+function gameCoinsSet(n){ var el = document.getElementById('gCoins'); if (!el) return; GC.shown = n;
+  if (!el.firstChild) el.innerHTML = ICON.gift(22) + '<b aria-hidden="true"></b>';
+  el.lastChild.textContent = fmtN(n); el.setAttribute('aria-label', STR[LANG].ui.gameCoinsAria(fmtN(n)));
+  var hs = document.getElementById('gHearts'); el.style.left = (hs.offsetLeft + hs.offsetWidth + 8) + 'px'; }
+function renderGameCoins(count){ var to = WALLET.free, from = GC.shown; cancelAnimationFrame(GC.raf);
+  if (!count || RM || from == null || to <= from){ gameCoinsSet(to); return; }
+  var t0 = performance.now(), ms = L.coinCountMs(to - from);
+  (function step(now){ var k = Math.min(1, (now - t0) / ms); gameCoinsSet(L.coinCountAt(from, to, k)); if (k < 1) GC.raf = requestAnimationFrame(step); })(t0); }
 var HEART_TIP_SHOWN = false;
 function heartTip(){
   if (HEART_TIP_SHOWN || !HEART_IN_USE) return;
@@ -2230,7 +2250,7 @@ document.getElementById('tut').lang = LANG; document.getElementById('whyTag').la
 var TUT_TEXT = TUT_COPY.steps;
 var TUT_MOTION = { cardFadeMs: 250, holeMs: 300, trailFadeMs: 300 };
 function tutRectOf(el, pad){
-  var a = app.getBoundingClientRect(), r = el.getBoundingClientRect(), k = BOARD_K; pad = pad || 0;
+  var a = document.getElementById('play').getBoundingClientRect(), r = el.getBoundingClientRect(), k = BOARD_K; pad = pad || 0;
   return { x: (r.left - a.left) / k - pad, y: (r.top - a.top) / k - pad, w: r.width / k + pad * 2, h: r.height / k + pad * 2 };
 }
 function tutPlaneRing(id){ var p = L.planeById(state, id), c = cellCenter(p.col, p.row); return { x: c.x, y: c.y, r: R.planeLengthPt.runway[p.size] / 2 + 8 }; }
@@ -2386,10 +2406,10 @@ function tutHoles(to, animate){
 }
 function tutLayout(holes){
   var t = document.getElementById('tut'), card = document.getElementById('tutCard');
-  t.style.setProperty('--tk', 1 / Math.min(BOARD_K, 1)); t.style.setProperty('--tf', DT_LARGE ? 1.18 : 1);
+  t.style.setProperty('--tk', 1 / Math.min(APP_K, 1)); t.style.setProperty('--tf', DT_LARGE ? 1.18 : 1);
   holes = holes || TUT.holesNow || []; if (!holes.length && TUT.holesNow) holes = TUT.holesNow;
   var h = card.offsetHeight, top = 52, minY = 844;
-  holes.forEach(function(o){ minY = Math.min(minY, o.y); });
+  holes.forEach(function(o){ minY = Math.min(minY, 790 + (o.y - 790) * PLAY_S); });
   if (top + h + 12 > minY) top = Math.max(52, 844 - 34 - h);
   card.style.top = top + 'px';
 }
@@ -2406,7 +2426,7 @@ function tutGo(step){
 }
 document.getElementById('tut').addEventListener('click', function(e){
   if (!TUT.on || !TUT.target || TUT.busy || e.target.closest('#tutCard')) return;
-  var a = app.getBoundingClientRect(), x = (e.clientX - a.left) / BOARD_K, y = (e.clientY - a.top) / BOARD_K, r = TUT.target.ring;
+  var a = document.getElementById('play').getBoundingClientRect(), x = (e.clientX - a.left) / BOARD_K, y = (e.clientY - a.top) / BOARD_K, r = TUT.target.ring;
   if (Math.hypot(x - r.x, y - r.y) <= r.r) tutTapTarget();
 });
 function tutTapTarget(){ if (!TUT.on || !TUT.target || TUT.busy) return;
@@ -2424,7 +2444,7 @@ document.getElementById('tutNext').addEventListener('click', function(){ if (TUT
 document.addEventListener('keydown', function(e){ if (e.key === 'Tab' || e.key.indexOf('Arrow') === 0 || e.key === ' ' || e.key === 'Enter') document.documentElement.classList.add('kbd'); }, true);
 document.addEventListener('pointerdown', function(){ document.documentElement.classList.remove('kbd'); }, true);
 document.getElementById('tutSkip').addEventListener('click', tutEnd);
-function fit(){ var k = Math.min(window.innerWidth / 390, window.innerHeight / 844); app.style.transform = 'scale(' + k + ')'; BOARD_K = k; layoutSeats(); if (TUT.on) tutLayout(); }
+function fit(){ var k = Math.min(window.innerWidth / 390, window.innerHeight / 844); app.style.transform = 'scale(' + k + ')'; APP_K = k; BOARD_K = k * PLAY_S; app.style.setProperty('--playS', PLAY_S); layoutSeats(); if (TUT.on) tutLayout(); }
 function say(t){ var lv = document.getElementById('live'); lv.textContent = ''; setTimeout(function(){ lv.textContent = t; }, 60); }
 function walletTotal(){ return WALLET.free; }
 function refreshWalletViews(){ if (SCREEN === 'home') renderHud(); if (SCREEN === 'my') buildMy(); renderHearts(false); }
